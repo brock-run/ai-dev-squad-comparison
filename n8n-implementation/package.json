@@ -1,0 +1,20 @@
+{
+  "name": "n8n-ai-dev-squad",
+  "version": "1.0.0",
+  "description": "AI Development Squad implementation using n8n",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "n8n": "^1.0.0",
+    "n8n-nodes-base": "^1.0.0",
+    "dotenv": "^16.0.0",
+    "axios": "^1.6.0",
+    "octokit": "^3.1.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "@types/node": "^20.0.0"
+  }
+}

@@ -1,0 +1,348 @@
+{
+  "name": "AI Development Squad Workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "development-task",
+        "options": {}
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "analyzeRequirements",
+        "requirements": "={{ $json.requirements.join('\\n') }}"
+      },
+      "name": "Architect - Analyze Requirements",
+      "type": "n8n-nodes-base.architect",
+      "typeVersion": 1,
+      "position": [
+        450,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "createDesign",
+        "taskDescription": "={{ $json.task }}",
+        "requirements": "={{ $json.requirements.join('\\n') }}"
+      },
+      "name": "Architect - Create Design",
+      "type": "n8n-nodes-base.architect",
+      "typeVersion": 1,
+      "position": [
+        650,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "implementCode",
+        "taskDescription": "={{ $json.task }}",
+        "design": "={{ $node['Architect - Create Design'].json.rawResponse }}",
+        "language": "={{ $json.language || 'javascript' }}"
+      },
+      "name": "Developer - Implement Code",
+      "type": "n8n-nodes-base.developer",
+      "typeVersion": 1,
+      "position": [
+        850,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "createTestCases",
+        "code": "={{ $node['Developer - Implement Code'].json.code }}",
+        "requirements": "={{ $json.requirements.join('\\n') }}",
+        "language": "={{ $json.language || 'javascript' }}"
+      },
+      "name": "Tester - Create Test Cases",
+      "type": "n8n-nodes-base.tester",
+      "typeVersion": 1,
+      "position": [
+        1050,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "runTests",
+        "code": "={{ $node['Developer - Implement Code'].json.code }}",
+        "testCases": "={{ $node['Tester - Create Test Cases'].json.testCode }}",
+        "language": "={{ $json.language || 'javascript' }}"
+      },
+      "name": "Tester - Run Tests",
+      "type": "n8n-nodes-base.tester",
+      "typeVersion": 1,
+      "position": [
+        1250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "evaluateCode",
+        "code": "={{ $node['Developer - Implement Code'].json.code }}",
+        "requirements": "={{ $json.requirements.join('\\n') }}",
+        "testResults": "={{ $node['Tester - Run Tests'].json.rawResponse }}",
+        "language": "={{ $json.language || 'javascript' }}"
+      },
+      "name": "Tester - Evaluate Code",
+      "type": "n8n-nodes-base.tester",
+      "typeVersion": 1,
+      "position": [
+        1450,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $node['Tester - Evaluate Code'].json.evaluation.rating < 7 }}",
+              "operation": "equal",
+              "value2": "true"
+            }
+          ]
+        }
+      },
+      "name": "IF - Needs Refinement",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1650,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "refineCode",
+        "code": "={{ $node['Developer - Implement Code'].json.code }}",
+        "feedback": "={{ $node['Tester - Evaluate Code'].json.rawResponse }}"
+      },
+      "name": "Developer - Refine Code",
+      "type": "n8n-nodes-base.developer",
+      "typeVersion": 1,
+      "position": [
+        1850,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "runTests",
+        "code": "={{ $node['Developer - Refine Code'].json.refinedCode }}",
+        "testCases": "={{ $node['Tester - Create Test Cases'].json.testCode }}",
+        "language": "={{ $json.language || 'javascript' }}"
+      },
+      "name": "Tester - Run Tests (Refined)",
+      "type": "n8n-nodes-base.tester",
+      "typeVersion": 1,
+      "position": [
+        2050,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "evaluateCode",
+        "code": "={{ $node['Developer - Refine Code'].json.refinedCode }}",
+        "requirements": "={{ $json.requirements.join('\\n') }}",
+        "testResults": "={{ $node['Tester - Run Tests (Refined)'].json.rawResponse }}",
+        "language": "={{ $json.language || 'javascript' }}"
+      },
+      "name": "Tester - Evaluate Code (Refined)",
+      "type": "n8n-nodes-base.tester",
+      "typeVersion": 1,
+      "position": [
+        2250,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "content": "={{ \n  {\n    \"task\": $json.task,\n    \"requirements\": $json.requirements,\n    \"design\": $node['Architect - Create Design'].json.rawResponse,\n    \"code\": $node['IF - Needs Refinement'].json.true ? $node['Developer - Refine Code'].json.refinedCode : $node['Developer - Implement Code'].json.code,\n    \"testCases\": $node['Tester - Create Test Cases'].json.testCode,\n    \"testResults\": $node['IF - Needs Refinement'].json.true ? $node['Tester - Run Tests (Refined)'].json.rawResponse : $node['Tester - Run Tests'].json.rawResponse,\n    \"evaluation\": $node['IF - Needs Refinement'].json.true ? $node['Tester - Evaluate Code (Refined)'].json.rawResponse : $node['Tester - Evaluate Code'].json.rawResponse\n  }\n}}",
+        "options": {}
+      },
+      "name": "Prepare Final Output",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        2450,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        2650,
+        300
+      ]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Architect - Analyze Requirements",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Architect - Analyze Requirements": {
+      "main": [
+        [
+          {
+            "node": "Architect - Create Design",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Architect - Create Design": {
+      "main": [
+        [
+          {
+            "node": "Developer - Implement Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Developer - Implement Code": {
+      "main": [
+        [
+          {
+            "node": "Tester - Create Test Cases",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tester - Create Test Cases": {
+      "main": [
+        [
+          {
+            "node": "Tester - Run Tests",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tester - Run Tests": {
+      "main": [
+        [
+          {
+            "node": "Tester - Evaluate Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tester - Evaluate Code": {
+      "main": [
+        [
+          {
+            "node": "IF - Needs Refinement",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF - Needs Refinement": {
+      "main": [
+        [
+          {
+            "node": "Developer - Refine Code",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Prepare Final Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Developer - Refine Code": {
+      "main": [
+        [
+          {
+            "node": "Tester - Run Tests (Refined)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tester - Run Tests (Refined)": {
+      "main": [
+        [
+          {
+            "node": "Tester - Evaluate Code (Refined)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tester - Evaluate Code (Refined)": {
+      "main": [
+        [
+          {
+            "node": "Prepare Final Output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Final Output": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {},
+  "versionId": "1.0.0",
+  "id": "1",
+  "meta": {
+    "instanceId": "1"
+  },
+  "tags": []
+}
