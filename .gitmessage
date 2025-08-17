@@ -1,0 +1,91 @@
+Use the following template for all commit messages:
+<type>(<optional-scope>): <subject>
+
+<body>
+
+<footer>
+
+branch:
+
+# Types: feat, fix, docs, style, refactor, perf, test, chore
+# Scope: auth, api, ui, db, etc.
+# Subject: imperative mood, no period, 70 chars or less
+# Body: explain what and why vs. how
+# Footer: breaking changes, issue references
+<type>(<optional-scope>): <subject>
+
+[optional body]
+
+[optional footer(s)]
+
+branch: $GIT_BRANCH_NAME
+
+---
+
+Types
+- feat: A new feature
+- fix: A bug fix
+- docs: Documentation changes
+- style: Code style changes (formatting, missing semicolons, etc)
+- refactor: Code changes that neither fix a bug nor add a feature
+- perf: Performance improvements
+- test: Adding or updating tests
+- chore: Maintenance tasks, dependency updates, etc
+
+# Scope
+- Affected component, module, or area of codebase (e.g., auth, db, ui)
+
+# Subject Rules
+- Imperative mood ("add" not "added" or "adds")
+- No period at end
+- 70 characters or less
+- Start with lowercase
+- Describe what the change does, not how
+
+# Body Rules
+- Wrap at 72 characters
+- Explain what and why vs. how
+- Use bullet points for multiple points
+- Separate from subject with blank line
+
+# Footer Rules
+- One issue reference per line
+- Breaking changes must be indicated
+- Format: BREAKING CHANGE: <description>
+
+# Examples:
+
+feat(auth): add OAuth2 login with Google
+
+- Implements Google OAuth2 flow for user authentication
+- Adds necessary security middleware
+- Updates user model to store OAuth provider info
+
+Closes #123
+
+branch: task1.2-google-oauth2
+
+---
+
+fix(api): prevent race condition in payment processing
+
+Adds distributed locking mechanism to ensure concurrent
+transactions don't result in duplicate charges.
+
+BREAKING CHANGE: Payment API now requires Redis for locking
+
+Fixes #456
+
+branch: task2.3-payment-processing
+
+---
+
+refactor(db): optimize user query performance
+
+- Adds index on email field
+- Reduces unnecessary joins
+- Implements query caching
+
+Performance improved by 60% in load tests
+
+branch: task1.5-user-query
