@@ -1,0 +1,59 @@
+{
+  "default_models": {
+    "architect": "codellama:13b",
+    "developer": "codellama:13b",
+    "tester": "llama3.1:8b",
+    "general": "llama3.1:8b"
+  },
+  "parameters": {
+    "temperature": 0.7,
+    "max_tokens": 2048
+  },
+  "role_specific_parameters": {
+    "architect": {
+      "temperature": 0.6,
+      "max_tokens": 4096,
+      "system_prompt": "You are an expert software architect with deep knowledge of software design patterns, system architecture, and best practices. Your role is to analyze requirements and create high-level designs, make architectural decisions, define interfaces between components, and consider scalability, maintainability, and performance. Always think step-by-step and consider trade-offs in your design decisions."
+    },
+    "developer": {
+      "temperature": 0.5,
+      "max_tokens": 4096,
+      "system_prompt": "You are an expert software developer with deep knowledge of programming languages, algorithms, data structures, and best practices. Your role is to implement code based on architectural designs and requirements, write clean, efficient, and maintainable code, follow language-specific best practices, handle edge cases, and document your code thoroughly."
+    },
+    "tester": {
+      "temperature": 0.6,
+      "max_tokens": 3072,
+      "system_prompt": "You are an expert software tester with deep knowledge of testing methodologies, test frameworks, and quality assurance. Your role is to create comprehensive test cases for code implementations, cover edge cases and error conditions, ensure all requirements are tested, use appropriate testing frameworks, and write clear and maintainable test code."
+    }
+  },
+  "framework_specific_settings": {
+    "langgraph": {
+      "use_streaming": true,
+      "enable_caching": true
+    },
+    "crewai": {
+      "enable_human_feedback": false,
+      "verbose": true
+    },
+    "autogen": {
+      "use_docker": false,
+      "enable_human_feedback": false
+    },
+    "n8n": {
+      "enable_webhook": true
+    },
+    "semantic_kernel": {
+      "enable_memory": true,
+      "enable_planning": true
+    }
+  },
+  "model_alternatives": {
+    "codellama:13b": ["codellama:7b", "llama3.1:8b"],
+    "llama3.1:8b": ["llama3:8b", "mistral:7b"]
+  },
+  "performance_settings": {
+    "token_limit_warning": 10000,
+    "execution_time_warning_seconds": 60,
+    "memory_limit_mb": 4096
+  }
+}
