@@ -55,9 +55,12 @@ class ArchitectAgent:
         Returns:
             Dictionary containing architectural considerations
         """
+        # Format the requirements as a bulleted list
+        requirements_text = "\n".join([f"- {req}" for req in requirements])
+        
         prompt = ChatPromptTemplate.from_messages([
             SystemMessage(content=self.system_prompt),
-            HumanMessage(content=f"Analyze the following requirements and extract key architectural considerations:\n\n{requirements}")
+            HumanMessage(content=f"Analyze the following requirements and extract key architectural considerations:\n\nRequirements:\n{requirements_text}")
         ])
         
         response = self.model.invoke(prompt)
@@ -144,38 +147,65 @@ class ArchitectAgent:
             
             if not line:
                 continue
-                
-            if "component" in line.lower() and (":" in line or line.endswith("s")):
-                current_section = "components"
-                continue
-            elif "interface" in line.lower() and (":" in line or line.endswith("s")):
-                current_section = "interfaces"
-                continue
-            elif "data flow" in line.lower() and (":" in line or line.endswith("s")):
-                current_section = "data_flow"
-                continue
-            elif "design pattern" in line.lower() and (":" in line or line.endswith("s")):
-                current_section = "design_patterns"
-                continue
-            elif "challenge" in line.lower() and (":" in line or line.endswith("s")):
-                current_section = "challenges"
-                continue
             
-            if current_section == "components" and (line.startswith("-") or line.startswith("*") or 
-                                                  (len(line) > 2 and line[0].isdigit() and line[1] == ".")):
-                components.append(line)
-            elif current_section == "interfaces" and (line.startswith("-") or line.startswith("*") or 
-                                                   (len(line) > 2 and line[0].isdigit() and line[1] == ".")):
-                interfaces.append(line)
-            elif current_section == "data_flow" and (line.startswith("-") or line.startswith("*") or 
-                                                  (len(line) > 2 and line[0].isdigit() and line[1] == ".")):
-                data_flow.append(line)
-            elif current_section == "design_patterns" and (line.startswith("-") or line.startswith("*") or 
-                                                        (len(line) > 2 and line[0].isdigit() and line[1] == ".")):
-                design_patterns.append(line)
-            elif current_section == "challenges" and (line.startswith("-") or line.startswith("*") or 
-                                                   (len(line) > 2 and line[0].isdigit() and line[1] == ".")):
-                challenges.append(line)
+            # Check for section headers with more robust patterns
+            # Look for markdown headers (##) or section names followed by colons
+            if line.startswith("##") or line.startswith("#"):
+                # Reset current section
+                current_section = None
+                
+                # Check for specific section headers
+                lower_line = line.lower()
+                if "component" in lower_line:
+                    current_section = "components"
+                    continue
+                elif "interface" in lower_line:
+                    current_section = "interfaces"
+                    continue
+                elif "data flow" in lower_line:
+                    current_section = "data_flow"
+                    continue
+                elif "design pattern" in lower_line:
+                    current_section = "design_patterns"
+                    continue
+                elif "challenge" in lower_line:
+                    current_section = "challenges"
+                    continue
+            # Also check for section headers without markdown formatting
+            elif ":" in line:
+                lower_line = line.lower()
+                if "component" in lower_line:
+                    current_section = "components"
+                    continue
+                elif "interface" in lower_line:
+                    current_section = "interfaces"
+                    continue
+                elif "data flow" in lower_line:
+                    current_section = "data_flow"
+                    continue
+                elif "design pattern" in lower_line:
+                    current_section = "design_patterns"
+                    continue
+                elif "challenge" in lower_line:
+                    current_section = "challenges"
+                    continue
+            
+            # Check if the line is a bullet point or numbered item
+            is_list_item = (line.startswith("-") or line.startswith("*") or 
+                           (len(line) > 2 and line[0].isdigit() and line[1] == "."))
+            
+            # Add the line to the appropriate section if it's a list item
+            if is_list_item:
+                if current_section == "components":
+                    components.append(line)
+                elif current_section == "interfaces":
+                    interfaces.append(line)
+                elif current_section == "data_flow":
+                    data_flow.append(line)
+                elif current_section == "design_patterns":
+                    design_patterns.append(line)
+                elif current_section == "challenges":
+                    challenges.append(line)
         
         return {
             "components": components,

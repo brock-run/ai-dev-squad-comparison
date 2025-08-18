@@ -193,19 +193,20 @@ class TesterAgent:
             if not line:
                 continue
                 
-            if "test strategy" in line.lower() or "strategy" in line.lower() and (":" in line or line.endswith("w")):
+            # Check for markdown headers (## Section) or regular headers (Section:)
+            if ("test strategy" in line.lower() or "strategy" in line.lower()) and (line.startswith("#") or ":" in line):
                 current_section = "strategy"
                 continue
-            elif "unit test" in line.lower() and (":" in line or line.endswith("s")):
+            elif "unit test" in line.lower() and (line.startswith("#") or ":" in line):
                 current_section = "unit_tests"
                 continue
-            elif "integration test" in line.lower() and (":" in line or line.endswith("s")):
+            elif "integration test" in line.lower() and (line.startswith("#") or ":" in line):
                 current_section = "integration_tests"
                 continue
-            elif "edge case" in line.lower() and (":" in line or line.endswith("s")):
+            elif "edge case" in line.lower() and (line.startswith("#") or ":" in line):
                 current_section = "edge_cases"
                 continue
-            elif "performance" in line.lower() and (":" in line or line.endswith("s")):
+            elif "performance" in line.lower() and (line.startswith("#") or ":" in line):
                 current_section = "performance"
                 continue
             
@@ -279,16 +280,17 @@ class TesterAgent:
             if not line:
                 continue
                 
-            if "assessment" in line.lower() or "overall" in line.lower() and (":" in line):
+            # Check for markdown headers (## Section) or regular headers (Section:)
+            if ("assessment" in line.lower() or "overall" in line.lower()) and (line.startswith("#") or ":" in line):
                 current_section = "assessment"
                 continue
-            elif "issue" in line.lower() or "bug" in line.lower() and (":" in line or line.endswith("s")):
+            elif ("issue" in line.lower() or "bug" in line.lower()) and (line.startswith("#") or ":" in line):
                 current_section = "issues"
                 continue
-            elif "suggestion" in line.lower() or "improvement" in line.lower() and (":" in line or line.endswith("s")):
+            elif ("suggestion" in line.lower() or "improvement" in line.lower()) and (line.startswith("#") or ":" in line):
                 current_section = "suggestions"
                 continue
-            elif "coverage" in line.lower() and (":" in line):
+            elif "coverage" in line.lower() and (line.startswith("#") or ":" in line):
                 current_section = "coverage"
                 continue
             
