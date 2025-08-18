@@ -17,7 +17,7 @@
 SHELL := /bin/bash
 
 # Interpreters and commands
-PYTHON := python3      # Python interpreter
+PYTHON := python      # Python interpreter
 NODE := node           # Node.js interpreter
 DOTNET := dotnet       # .NET CLI
 OLLAMA := ollama       # Ollama command for LLM management
