@@ -6,7 +6,7 @@ It writes code, handles implementation details, and follows best practices.
 """
 
 import os
-import autogen
+import pyautogen as autogen
 from typing import Dict, List, Any
 
 # Load environment variables

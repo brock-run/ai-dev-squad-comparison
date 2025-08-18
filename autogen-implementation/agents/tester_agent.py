@@ -6,7 +6,7 @@ It creates test cases, validates functionality, and ensures code quality.
 """
 
 import os
-import autogen
+import pyautogen as autogen
 from typing import Dict, List, Any
 
 # Load environment variables

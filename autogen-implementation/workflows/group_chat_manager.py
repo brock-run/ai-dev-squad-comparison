@@ -6,7 +6,7 @@ It orchestrates the architect, developer, tester, and user proxy agents to compl
 """
 
 import os
-import autogen
+import pyautogen as autogen
 from typing import List, Dict, Any, Optional
 
 # Import agent factories

@@ -6,7 +6,7 @@ It analyzes requirements and creates high-level designs.
 """
 
 import os
-import autogen
+import pyautogen as autogen
 from typing import Dict, List, Any
 
 # Load environment variables
