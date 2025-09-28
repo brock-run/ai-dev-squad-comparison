@@ -1,0 +1,107 @@
+# Production Security Policy
+# Strict security policy for production environments with maximum protection
+
+name: "production"
+version: "1.0.0"
+level: "strict"
+scope: "global"
+description: "Strict security policy for production environments with comprehensive protection"
+
+# Execution sandbox configuration
+execution:
+  enabled: true
+  sandbox_type: "docker"
+  max_memory_mb: 512
+  max_cpu_percent: 70
+  timeout_seconds: 300
+  network_enabled: false
+  allowed_languages:
+    - "python"
+  denied_imports:
+    - "os"
+    - "subprocess"
+    - "sys"
+    - "importlib"
+    - "eval"
+    - "exec"
+  resource_monitoring: true
+
+# Filesystem access policy
+filesystem:
+  restrict_to_repo: true
+  temp_dir_access: true
+  system_access: false
+  max_file_size: 10485760  # 10MB
+  max_files_created: 100
+  allowed_extensions:
+    - ".py"
+    - ".json"
+    - ".txt"
+    - ".md"
+  denied_extensions:
+    - ".exe"
+    - ".dll"
+    - ".so"
+    - ".sh"
+    - ".bat"
+    - ".js"
+    - ".ts"
+  audit_enabled: true
+
+# Network access policy
+network:
+  default_deny: true
+  allowed_domains:
+    - "api.github.com"
+    - "api.gitlab.com"
+  denied_domains:
+    - "*"  # Deny all except explicitly allowed
+  allowed_ports:
+    - 443  # HTTPS only
+  denied_ports:
+    - 22   # SSH
+    - 23   # Telnet
+    - 25   # SMTP
+    - 53   # DNS
+    - 80   # HTTP (force HTTPS)
+  request_timeout: 30
+  max_response_size: 5242880  # 5MB
+  verify_ssl: true
+  rate_limit: 30
+  audit_enabled: true
+
+# Policy enforcement settings
+enforce_all: true
+fail_open: false
+audit_enabled: true
+violation_threshold: 5
+
+# Policy metadata
+tags:
+  - "production"
+  - "strict"
+  - "enterprise"
+  - "secure"
+
+# Enhanced injection patterns for production
+injection_patterns:
+  - name: "production_bypass"
+    pattern: "(production|prod|live)\\s+(bypass|override|disable)"
+    injection_type: "jailbreak_attempt"
+    threat_level: "critical"
+    description: "Attempts to bypass production security"
+    action: "block"
+    
+  - name: "sensitive_data_request"
+    pattern: "(database|db|credentials|keys?)\\s+(access|connection|string)"
+    injection_type: "credential_extraction"
+    threat_level: "critical"
+    description: "Attempts to access sensitive production data"
+    action: "block"
+    
+  - name: "system_modification"
+    pattern: "(modify|change|update)\\s+(system|config|settings)"
+    injection_type: "jailbreak_attempt"
+    threat_level: "high"
+    description: "Attempts to modify system configuration"
+    action: "block"

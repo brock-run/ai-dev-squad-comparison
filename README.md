@@ -11,6 +11,9 @@ This project compares different frameworks for building AI development squads, i
 - **AutoGen**: A framework for building LLM applications with multiple conversational agents
 - **n8n**: A workflow automation platform with AI capabilities
 - **Semantic Kernel**: A framework for building AI applications with plugins
+- **Claude Code Subagents**: Extensive Claude Code subagent catalog for specialized roles. See [claude-code-subagents/agents/README.md](claude-code-subagents/agents/README.md)
+- **Langroid**: A conversation-style multi-agent framework with turn-taking logic
+- **LlamaIndex Agents**: Retrieval-augmented multi-agent workflows
 
 Each implementation demonstrates how these frameworks can be used to create AI development teams with specialized roles (architects, developers, testers) that collaborate to accomplish software development tasks.
 
@@ -20,6 +23,9 @@ Each implementation demonstrates how these frameworks can be used to create AI d
 ai-dev-squad-comparison/
 ├── README.md                                      # Project overview (this file)
 ├── docs/
+│   ├── observability.md                           # Complete observability guide
+│   ├── observability-user-guide.md                # Quick start user guide
+│   ├── observability-developer-guide.md           # Technical integration guide
 │   ├── benchmark/                                 # Benchmarking methodology
 │   │   ├── benchmark_methodology.md               # Detailed benchmarking approach
 │   │   └── unit_test_framework.md                 # Common test framework
@@ -29,6 +35,11 @@ ai-dev-squad-comparison/
 │   └── templates/
 │       └── implementation_documentation_template.md # Documentation template
 ├── common/
+│   ├── telemetry/                                 # Observability components
+│   │   ├── logger.py                              # Structured logging
+│   │   ├── otel.py                                # OpenTelemetry tracing
+│   │   ├── cost_tracker.py                        # Cost and token tracking
+│   │   └── dashboard.py                           # Web dashboard
 │   ├── ollama_integration.py                      # Common Ollama integration module
 │   └── ollama_config.json                         # Ollama configuration
 ├── benchmark/
@@ -47,36 +58,36 @@ ai-dev-squad-comparison/
 
 ## Getting Started
 
+For a complete setup guide including observability configuration, see the [Getting Started Guide](docs/getting-started.md).
+
+### Quick Start
+
+1. **Clone and Setup**:
+   ```bash
+   git clone https://github.com/yourusername/ai-dev-squad-comparison.git
+   cd ai-dev-squad-comparison
+   ```
+
+2. **Choose a Framework** (LangGraph recommended for beginners):
+   ```bash
+   cd langgraph-implementation
+   pip install -r requirements.txt
+   python simple_test.py
+   ```
+
+3. **Enable Observability** (optional but recommended):
+   ```bash
+   pip install opentelemetry-api opentelemetry-sdk flask flask-socketio
+   python examples/dashboard_demo.py
+   # Visit http://localhost:8080 for the dashboard
+   ```
+
 ### Prerequisites
 
 - Python 3.8+ for Python-based implementations
 - Node.js 14+ for n8n and JavaScript implementations
 - .NET 7.0+ for C# Semantic Kernel implementation
 - [Ollama](https://ollama.ai/) for local model execution
-
-### Installation
-
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/yourusername/ai-dev-squad-comparison.git
-   cd ai-dev-squad-comparison
-   ```
-
-2. Set up Ollama:
-   ```bash
-   # Install Ollama following instructions at https://ollama.ai/
-   
-   # Pull recommended models
-   ollama pull llama3.1:8b
-   ollama pull codellama:13b
-   ```
-
-3. Install framework-specific dependencies:
-   ```bash
-   # For example, to set up the LangGraph implementation:
-   cd langgraph-implementation
-   pip install -r requirements.txt
-   ```
 
 ## Framework Implementations
 
@@ -106,6 +117,40 @@ n8n is a workflow automation platform with AI capabilities. See [n8n-implementat
 ### Semantic Kernel Implementation
 
 Semantic Kernel is a framework for building AI applications with plugins. See [semantic-kernel-implementation/README.md](semantic-kernel-implementation/README.md) for details.
+
+## Observability
+
+The platform includes comprehensive observability capabilities for monitoring AI agent operations, costs, and performance:
+
+- **Structured Logging**: JSON-formatted event tracking with filtering and real-time processing
+- **OpenTelemetry Tracing**: Distributed tracing for agent operations and LLM interactions
+- **Cost & Token Tracking**: Real-time cost monitoring with budget management and optimization recommendations
+- **Enhanced Dashboard**: Web-based visualization with real-time updates and framework comparisons
+
+### Quick Start with Observability
+
+```python
+from common.telemetry import (
+    configure_logging,
+    configure_tracing,
+    configure_cost_tracking,
+    create_dashboard
+)
+
+# Configure observability
+logger = configure_logging(log_dir="logs", enable_console=True)
+tracer = configure_tracing(service_name="my-ai-service")
+cost_tracker = configure_cost_tracking(enable_budget_alerts=True)
+
+# Start dashboard
+dashboard = create_dashboard(host="localhost", port=8080)
+dashboard.run()
+```
+
+For complete setup and usage instructions, see:
+- [Observability User Guide](docs/observability-user-guide.md) - Quick start guide
+- [Observability Guide](docs/observability.md) - Complete technical reference
+- [Developer Guide](docs/observability-developer-guide.md) - Advanced integration patterns
 
 ## Ollama Integration
 
@@ -196,3 +241,72 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 - The creators and maintainers of all the frameworks compared in this project
 - The open-source AI community for their valuable resources and tools
+
+---
+
+## Capabilities and Roadmap
+
+This repository provides a practical, apples-to-apples comparison of multiple AI agent orchestration frameworks for software development squads. Here is what is implemented today and what is planned next.
+
+### Implemented Capabilities (current state)
+- **Comprehensive Observability System**:
+  - Structured logging with JSON Lines format and event filtering
+  - OpenTelemetry distributed tracing for agent operations
+  - Real-time cost and token tracking with budget management
+  - Enhanced web dashboard with live metrics and framework comparisons
+  - See [Observability Guide](docs/observability.md) for complete documentation
+- Consistent per-framework scaffolds with agents, workflows, and docs:
+  - LangGraph: agents, workflow scaffold, tests present; see langgraph-implementation/README.md
+  - CrewAI: agents and workflow scaffold; see crewai-implementation/README.md
+  - AutoGen: agents, group chat manager scaffold, and tests; see autogen-implementation/README.md
+  - n8n: visual workflow (JSON) and custom agent nodes; see n8n-implementation/README.md
+  - Semantic Kernel: documented Python/C# structures; see semantic-kernel-implementation/README.md
+- Common Ollama integration (local-first execution): common/ollama_integration.py with role-based model selection and shared parameters (see common/ollama_config.json)
+- Benchmarking suite and dashboard:
+  - Benchmarks: benchmark/benchmark_suite.py
+  - Results visualization: comparison-results/dashboard.py
+- Standard development workflows and prompts:
+  - Workflows: workflows/development_workflow.md
+  - Requirements and prompts: docs/requirements/*
+- Documentation and planning artifacts:
+  - PRD and methodology: docs/requirements/prd.md, docs/requirements/benchmark_methodology.md
+  - Selection guide: docs/requirements/framework_selection_guide.md
+  - Improvement plan: docs/plan.md
+
+### Planned/Upcoming Enhancements
+- Centralized GitHub integration utilities with retries/backoff and least-privilege auth
+- Parity of tests across all frameworks with shared fixtures and deterministic runs
+- Dependency pinning and Makefile targets for setup/test/bench/dash
+- Confirm and/or scaffold Semantic Kernel Python and C# code to match README structure
+- Unified configuration docs and .env.example parity across implementations
+
+For details and the actionable backlog, see docs/enhancements.md. Raw review notes with TODO and POTENTIAL PROBLEM tags live in docs/review-scratchpad.md.
+
+### Framework Status Snapshot (high level)
+- LangGraph: In progress (agents, workflow, and tests present)
+- CrewAI: In progress (agents and workflows)
+- AutoGen: In progress (agents, group chat, tests)
+- n8n: In progress (nodes and workflow JSON)
+- Semantic Kernel: In progress (README structure; verify/scaffold code)
+- Claude Code Subagents: Available as a prompt and role library; see claude-code-subagents/agents/README.md
+
+## Deep Dives and Requirements
+- Product Requirements: docs/requirements/prd.md
+- Benchmark Methodology: docs/requirements/benchmark_methodology.md
+- Framework Selection Guide: docs/requirements/framework_selection_guide.md
+- Sample Agent Prompts: docs/requirements/sample_agent_prompts.md
+- Research Prompt (for AI agent to extend this project): docs/research/agent_research_prompt.md
+- Enhancements Backlog: docs/enhancements.md
+- Review Scratchpad (raw notes): docs/review-scratchpad.md
+
+Additional research documents:
+- docs/research/ai-orchestration-options.md
+- docs/research/multi-agent-orchestration-details.md
+
+## Benchmark Quickstart (recap)
+- Run benchmarks using benchmark/benchmark_suite.py (see section above). Results will populate comparison-results.
+- Launch the dashboard from comparison-results/dashboard.py to explore comparisons.
+
+## Contributing Roadmap
+- Before contributing, review docs/plan.md and docs/enhancements.md to align with capability parity and benchmarking requirements.
+- Contributions should include tests and a benchmark run where applicable to maintain comparability across frameworks.

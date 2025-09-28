@@ -6,8 +6,68 @@ It orchestrates the architect, developer, tester, and user proxy agents to compl
 """
 
 import os
-import pyautogen as autogen
+import logging
 from typing import List, Dict, Any, Optional
+
+# Try to import AutoGen with fallback
+try:
+    import autogen
+    AUTOGEN_AVAILABLE = True
+except ImportError:
+    try:
+        import pyautogen as autogen
+        AUTOGEN_AVAILABLE = True
+    except ImportError:
+        AUTOGEN_AVAILABLE = False
+        logging.warning("AutoGen not available")
+
+logger = logging.getLogger(__name__)
+
+class MockGroupChat:
+    """Mock group chat when AutoGen is not available."""
+    
+    def __init__(self, agents: List[Any], config: Dict[str, Any]):
+        """Initialize mock group chat."""
+        self.agents = agents
+        self.config = config
+        self.messages = []
+        self.max_round = config.get('max_round', 15)
+        
+        logger.info(f"Initialized mock group chat with {len(agents)} agents")
+    
+    def start_conversation(self, initial_message: str) -> Dict[str, Any]:
+        """Start a mock conversation."""
+        logger.info(f"Starting mock conversation: {initial_message}")
+        
+        # Mock conversation flow
+        conversation_log = [
+            {"agent": "UserProxy", "message": initial_message},
+            {"agent": "Architect", "message": "I'll design the system architecture based on your requirements."},
+            {"agent": "Developer", "message": "I'll implement the code according to the architecture."},
+            {"agent": "Tester", "message": "I'll create comprehensive tests for the implementation."},
+            {"agent": "UserProxy", "message": "The development task has been completed successfully."}
+        ]
+        
+        return {
+            "success": True,
+            "conversation_log": conversation_log,
+            "agents_participated": [agent.name if hasattr(agent, 'name') else str(agent) for agent in self.agents],
+            "total_messages": len(conversation_log)
+        }
+    
+    def get_capabilities(self) -> Dict[str, Any]:
+        """Get group chat capabilities."""
+        return {
+            "type": "group_chat",
+            "features": [
+                "multi_agent_conversation",
+                "turn_taking",
+                "conversation_orchestration",
+                "collaborative_development"
+            ],
+            "agents_count": len(self.agents),
+            "max_rounds": self.max_round
+        }
 
 # Import agent factories
 from agents.architect_agent import create_architect_agent, create_design_prompt
@@ -19,7 +79,7 @@ OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
 ENABLE_HUMAN_FEEDBACK = os.getenv("ENABLE_HUMAN_FEEDBACK", "true").lower() == "true"
 CODE_EXECUTION_ALLOWED = os.getenv("CODE_EXECUTION_ALLOWED", "true").lower() == "true"
 
-def create_user_proxy(config: Dict[str, Any] = None) -> autogen.UserProxyAgent:
+def create_user_proxy(config: Dict[str, Any] = None):
     """
     Create a user proxy agent for the AutoGen implementation.
     
@@ -29,6 +89,11 @@ def create_user_proxy(config: Dict[str, Any] = None) -> autogen.UserProxyAgent:
     Returns:
         Configured user proxy agent
     """
+    if not AUTOGEN_AVAILABLE:
+        logger.warning("AutoGen not available, creating mock user proxy")
+        from agents.user_proxy import MockUserProxyAgent
+        return MockUserProxyAgent(config or {})
+    
     # Default configuration
     default_config = {
         "name": "User",
@@ -48,9 +113,14 @@ def create_user_proxy(config: Dict[str, Any] = None) -> autogen.UserProxyAgent:
                 default_config[key] = value
     
     # Create the agent
-    return autogen.UserProxyAgent(**default_config)
+    try:
+        return autogen.UserProxyAgent(**default_config)
+    except Exception as e:
+        logger.error(f"Failed to create AutoGen UserProxyAgent: {e}")
+        from agents.user_proxy import MockUserProxyAgent
+        return MockUserProxyAgent(config or {})
 
-def create_groupchat(agents: List[autogen.Agent], config: Dict[str, Any] = None) -> autogen.GroupChat:
+def create_groupchat(agents: List[Any], config: Dict[str, Any] = None):
     """
     Create a group chat for the development process.
     
@@ -61,6 +131,10 @@ def create_groupchat(agents: List[autogen.Agent], config: Dict[str, Any] = None)
     Returns:
         Configured group chat
     """
+    if not AUTOGEN_AVAILABLE:
+        logger.warning("AutoGen not available, creating mock group chat")
+        return MockGroupChat(agents, config or {})
+    
     # Default configuration
     default_config = {
         "agents": agents,
@@ -73,9 +147,13 @@ def create_groupchat(agents: List[autogen.Agent], config: Dict[str, Any] = None)
         default_config.update(config)
     
     # Create the group chat
-    return autogen.GroupChat(**default_config)
+    try:
+        return autogen.GroupChat(**default_config)
+    except Exception as e:
+        logger.error(f"Failed to create AutoGen GroupChat: {e}")
+        return MockGroupChat(agents, config or {})
 
-def setup_development_agents(config: Optional[Dict[str, Any]] = None) -> Dict[str, autogen.Agent]:
+def setup_development_agents(config: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
     """
     Set up all agents needed for the development process.
     

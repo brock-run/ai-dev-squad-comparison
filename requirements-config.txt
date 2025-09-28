@@ -1,0 +1,18 @@
+# Configuration Management System Dependencies
+# Core dependencies for the unified configuration system
+
+# Configuration and validation
+pydantic>=2.0.0,<3.0.0
+PyYAML>=6.0.0,<7.0.0
+
+# Logging and observability
+structlog>=23.0.0,<24.0.0
+
+# Testing dependencies (for development)
+pytest>=7.0.0,<8.0.0
+pytest-cov>=4.0.0,<5.0.0
+pytest-mock>=3.10.0,<4.0.0
+
+# Type checking (for development)
+mypy>=1.0.0,<2.0.0
+types-PyYAML>=6.0.0,<7.0.0

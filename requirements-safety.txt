@@ -1,0 +1,17 @@
+# Safety and Security Dependencies
+# Core dependencies for the execution sandbox and safety controls
+
+# Docker integration
+docker>=6.0.0,<7.0.0
+
+# System monitoring
+psutil>=5.9.0,<6.0.0
+
+# Testing dependencies (for development)
+pytest>=7.0.0,<8.0.0
+pytest-cov>=4.0.0,<5.0.0
+pytest-mock>=3.10.0,<4.0.0
+pytest-asyncio>=0.21.0,<1.0.0
+
+# Type checking (for development)
+mypy>=1.0.0,<2.0.0

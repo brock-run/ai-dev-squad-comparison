@@ -1,0 +1,214 @@
+{
+  "main": {
+    "id": "ddf560e90af1ddaa",
+    "type": "split",
+    "children": [
+      {
+        "id": "65040efe2a2862e6",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "54bd7f4bfffe9cf7",
+            "type": "leaf",
+            "state": {
+              "type": "empty",
+              "state": {},
+              "icon": "lucide-file",
+              "title": "New tab"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "87c329db2977f4ee",
+    "type": "split",
+    "children": [
+      {
+        "id": "df1d2e38d97b865d",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "3b8d80e8d3e8abbb",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
+            }
+          },
+          {
+            "id": "8530cc250dd804e6",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Search"
+            }
+          },
+          {
+            "id": "2e5e2e92fc241857",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "f18b5c701f53fbe6",
+    "type": "split",
+    "children": [
+      {
+        "id": "cb2d36f8270015d3",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "96f3e24499c12499",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Backlinks"
+            }
+          },
+          {
+            "id": "47e309cdc60f1c75",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links"
+            }
+          },
+          {
+            "id": "1ad2cf3fac92d7ff",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
+            }
+          },
+          {
+            "id": "3ebdc805bf48a425",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Outline"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false,
+      "bases:Create new base": false
+    }
+  },
+  "active": "54bd7f4bfffe9cf7",
+  "lastOpenFiles": [
+    "common/benchmarking.py",
+    "repo_export.zip",
+    "benchmark/tasks/feature_add.py",
+    "benchmark/tasks/bugfix.py",
+    "benchmark/tasks/base.py",
+    "benchmark/tasks/__init__.py",
+    "TASK_8.3_COMPLETION_SUMMARY.md",
+    "tests/test_streaming_context.py",
+    "examples/streaming_context_demo.py",
+    "common/context_management.py",
+    "TASK_8.2_COMPLETION_SUMMARY.md",
+    "tests/test_caching.py",
+    "examples/caching_demo.py",
+    "docs/requirements/v0.2/technical-architecture.md",
+    "docs/requirements/v0.2/review-scratchpad.md",
+    "docs/requirements/v0.2/plan.md",
+    "docs/requirements/v0.2/enhancements.md",
+    "TASK_8.1_COMPLETION_SUMMARY.md",
+    "docs/getting-started.md",
+    "docs/observability-developer-guide.md",
+    "docs/observability-user-guide.md",
+    "docs/requirements/v0.1/sample_agent_prompts.md",
+    "docs/requirements/v0.2/prd-v0.2.md",
+    "docs/requirements/v0.2/prd-enhanced.md",
+    "docs/requirements/v0.1/prd-v0.1.md",
+    "docs/requirements/v0.1/prd--v1.md",
+    "docs/requirements/v0.1/framework_selection_guide.md",
+    "docs/requirements/benchmark_methodology.md",
+    "docs/requirements/v0.1/benchmark_methodology.md",
+    "llamaindex-implementation/COMPLETION_SUMMARY.md",
+    "CREWAI_COMPLETION_CELEBRATION.md",
+    "IMPLEMENTATION_COMPLETION_STRATEGY.md",
+    "PROJECT_SUMMARY_AND_ROADMAP.md",
+    "docs/deployment-operations-guide.md",
+    "docs/technical-architecture.md",
+    "PLATFORM_STATUS_REPORT.md",
+    "venv/lib/python3.11/site-packages/scipy/ndimage/tests/dots.png",
+    "venv/lib/python3.11/site-packages/werkzeug/debug/shared/more.png",
+    "venv/lib/python3.11/site-packages/werkzeug/debug/shared/less.png",
+    "venv/lib/python3.11/site-packages/werkzeug/debug/shared/console.png",
+    "venv/lib/python3.11/site-packages/litellm/proxy/_experimental/out/assets/logos/xai.svg",
+    "venv/lib/python3.11/site-packages/litellm/proxy/_experimental/out/assets/logos/togetherai.svg",
+    "venv/lib/python3.11/site-packages/litellm/proxy/_experimental/out/assets/logos/secret_detect.png",
+    "venv/lib/python3.11/site-packages/litellm/proxy/_experimental/out/assets/logos/sambanova.svg",
+    "venv/lib/python3.11/site-packages/litellm/proxy/_experimental/out/assets/logos/presidio.png",
+    "venv/lib/python3.11/site-packages/litellm/proxy/_experimental/out/assets/logos/postgresql.svg"
+  ]
+}

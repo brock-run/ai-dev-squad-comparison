@@ -1,0 +1,531 @@
+# GitLab VCS Provider Configuration
+# This file contains example configurations for GitLab integration
+
+# GitLab API Configuration
+gitlab:
+  # API base URL (change for self-hosted GitLab instances)
+  base_url: "https://gitlab.com/api/v4"
+  
+  # API version
+  api_version: "v4"
+  
+  # User agent string for requests
+  user_agent: "ai-dev-squad-comparison/1.0"
+  
+  # Request timeout in seconds
+  timeout: 30
+  
+  # Authentication
+  auth:
+    # GitLab personal access token, OAuth token, or deploy token
+    # Can be set via environment variable: GITLAB_TOKEN
+    token: "${GITLAB_TOKEN}"
+    
+    # Token type: "pat" (personal access token), "oauth" (OAuth), or "deploy" (deploy token)
+    type: "pat"
+    
+    # Required scopes for different operations
+    required_scopes:
+      - "api"              # Full API access
+      - "read_api"         # Read-only API access
+      - "read_repository"  # Read repository content
+      - "write_repository" # Write repository content
+      - "read_user"        # Read user information
+  
+  # Retry configuration
+  retry:
+    max_retries: 3
+    base_delay: 1.0
+    max_delay: 60.0
+    exponential_base: 2.0
+    jitter: true
+    retry_on_rate_limit: true
+    rate_limit_delay_factor: 1.1
+  
+  # Rate limiting
+  rate_limit:
+    # Enable rate limit monitoring
+    monitoring: true
+    
+    # Conservative rate limiting (percentage of actual limit to use)
+    conservative_factor: 0.8
+    
+    # Rate limit buffer (requests to keep in reserve)
+    buffer_requests: 50
+  
+  # Merge Request Templates
+  mr_templates:
+    # Default template used when no specific template is requested
+    default: |
+      ## Description
+      {description}
+      
+      ## Type of Change
+      - [ ] Bug fix (non-breaking change which fixes an issue)
+      - [ ] New feature (non-breaking change which adds functionality)
+      - [ ] Breaking change (fix or feature that would cause existing functionality to not work as expected)
+      - [ ] Documentation update
+      
+      ## Testing
+      - [ ] Tests pass locally
+      - [ ] New tests added for changes (if applicable)
+      - [ ] Pipeline passes
+      
+      ## Checklist
+      - [ ] Code follows project style guidelines
+      - [ ] Self-review completed
+      - [ ] Documentation updated (if applicable)
+      - [ ] All discussions resolved
+    
+    # Feature-specific template
+    feature: |
+      ## 🚀 Feature Description
+      {description}
+      
+      ## 📋 Type of Change
+      - [ ] ✨ New feature (non-breaking change which adds functionality)
+      - [ ] 🐛 Bug fix (non-breaking change which fixes an issue)
+      - [ ] 💥 Breaking change (fix or feature that would cause existing functionality to not work as expected)
+      - [ ] 📚 Documentation update
+      
+      ## 🧪 Testing
+      - [ ] Tests pass locally
+      - [ ] New tests added for changes (if applicable)
+      - [ ] Manual testing completed
+      - [ ] Pipeline passes
+      
+      ## 📝 Checklist
+      - [ ] Code follows the project's style guidelines
+      - [ ] Self-review of code completed
+      - [ ] Code is commented, particularly in hard-to-understand areas
+      - [ ] Documentation updated (if applicable)
+      - [ ] No new warnings introduced
+      
+      ## 🔄 Pipeline & Approvals
+      - [ ] All pipeline jobs pass
+      - [ ] Required approvals obtained
+      - [ ] All discussions resolved
+      
+      ## 🔗 Related Issues
+      Closes #
+    
+    # Bug fix template
+    bugfix: |
+      ## 🐛 Bug Fix Description
+      {description}
+      
+      ## 🔍 Root Cause Analysis
+      <!-- Describe what caused the bug -->
+      
+      ## 🛠️ Solution Implementation
+      <!-- Describe how you fixed it -->
+      
+      ## 🧪 Testing & Validation
+      - [ ] Bug reproduction steps verified
+      - [ ] Fix tested locally
+      - [ ] Regression tests added
+      - [ ] All existing tests pass
+      - [ ] Pipeline passes
+      
+      ## 📋 Type of Change
+      - [x] 🐛 Bug fix (non-breaking change which fixes an issue)
+      - [ ] 💥 Breaking change (fix that would cause existing functionality to not work as expected)
+      
+      ## 🔄 Pipeline & Approvals
+      - [ ] All pipeline jobs pass
+      - [ ] Required approvals obtained
+      - [ ] All discussions resolved
+      
+      ## 🔗 Related Issues
+      Fixes #
+    
+    # Documentation template
+    docs: |
+      ## 📚 Documentation Update
+      {description}
+      
+      ## 📝 Changes Made
+      - [ ] Added new documentation
+      - [ ] Updated existing documentation
+      - [ ] Fixed documentation errors
+      - [ ] Improved documentation clarity
+      
+      ## 🔍 Review Checklist
+      - [ ] Documentation is accurate
+      - [ ] Links work correctly
+      - [ ] Examples are tested
+      - [ ] Spelling and grammar checked
+      
+      ## 📋 Type of Change
+      - [x] 📚 Documentation update
+      
+      ## 🔄 Pipeline
+      - [ ] Documentation build passes
+  
+  # Project settings
+  project:
+    # Default branch name for new projects
+    default_branch: "main"
+    
+    # Branch naming conventions
+    branch_naming:
+      feature_prefix: "feature/"
+      bugfix_prefix: "bugfix/"
+      hotfix_prefix: "hotfix/"
+      release_prefix: "release/"
+    
+    # Commit message conventions
+    commit_conventions:
+      # Use conventional commits format
+      conventional_commits: true
+      
+      # Commit types
+      types:
+        - "feat"      # New feature
+        - "fix"       # Bug fix
+        - "docs"      # Documentation
+        - "style"     # Code style changes
+        - "refactor"  # Code refactoring
+        - "test"      # Adding tests
+        - "chore"     # Maintenance tasks
+      
+      # Maximum commit message length
+      max_length: 72
+      
+      # Require issue reference in commit messages
+      require_issue_reference: false
+  
+  # Merge Request settings
+  merge_requests:
+    # Default merge method: "merge", "squash", or "rebase"
+    default_merge_method: "merge"
+    
+    # Remove source branch after merge
+    remove_source_branch: true
+    
+    # Squash commits when merging
+    squash_option: "default_off"
+    
+    # Require approvals before merge
+    require_approvals: true
+    
+    # Number of required approvals
+    required_approvals: 1
+    
+    # Reset approvals when new commits are pushed
+    reset_approvals_on_push: true
+    
+    # Require all discussions to be resolved
+    require_resolved_discussions: true
+    
+    # Require pipeline to succeed
+    require_pipeline_success: true
+    
+    # Allow merge when pipeline is skipped
+    allow_merge_on_skipped_pipeline: false
+    
+    # Only allow merge if all discussions are resolved
+    only_allow_merge_if_all_discussions_are_resolved: true
+  
+  # Pipeline configuration
+  pipelines:
+    # Enable pipeline integration
+    enabled: true
+    
+    # Auto-cancel redundant pipelines
+    auto_cancel_pending_pipelines: "enabled"
+    
+    # Default pipeline timeout (in minutes)
+    default_timeout: 60
+    
+    # Pipeline triggers
+    triggers:
+      - "push"
+      - "merge_request_event"
+      - "tag_push"
+    
+    # Pipeline variables
+    variables:
+      CI_DEBUG_TRACE: "false"
+      FF_USE_FASTZIP: "true"
+      ARTIFACT_COMPRESSION_LEVEL: "fast"
+    
+    # Cache configuration
+    cache:
+      key: "${CI_COMMIT_REF_SLUG}"
+      paths:
+        - "node_modules/"
+        - ".pip-cache/"
+        - "vendor/"
+  
+  # Webhook configuration
+  webhooks:
+    # Enable webhook processing
+    enabled: false
+    
+    # Webhook secret for signature verification
+    secret: "${GITLAB_WEBHOOK_SECRET}"
+    
+    # Events to subscribe to
+    events:
+      - "push"
+      - "merge_request"
+      - "pipeline"
+      - "issue"
+      - "note"
+      - "release"
+    
+    # Webhook endpoint URL
+    url: "https://your-app.com/webhooks/gitlab"
+  
+  # Security settings
+  security:
+    # Verify SSL certificates
+    verify_ssl: true
+    
+    # Token storage encryption
+    encrypt_tokens: true
+    
+    # Audit logging
+    audit_logging: true
+    
+    # IP allowlist for API access (empty = allow all)
+    ip_allowlist: []
+    
+    # User agent validation
+    validate_user_agent: true
+  
+  # Caching settings
+  cache:
+    # Enable response caching
+    enabled: true
+    
+    # Cache TTL in seconds
+    ttl: 300
+    
+    # Maximum cache size (number of entries)
+    max_size: 1000
+    
+    # Cache storage backend: "memory", "redis", "file"
+    backend: "memory"
+    
+    # Cache key prefix
+    key_prefix: "gitlab_api:"
+  
+  # Logging configuration
+  logging:
+    # Log level: DEBUG, INFO, WARNING, ERROR
+    level: "INFO"
+    
+    # Log API requests
+    log_requests: true
+    
+    # Log API responses (be careful with sensitive data)
+    log_responses: false
+    
+    # Log rate limit information
+    log_rate_limits: true
+    
+    # Log file path (optional)
+    log_file: "logs/gitlab_api.log"
+    
+    # Log rotation
+    log_rotation:
+      max_size: "10MB"
+      backup_count: 5
+
+# Environment-specific configurations
+environments:
+  development:
+    gitlab:
+      # More verbose logging in development
+      logging:
+        level: "DEBUG"
+        log_requests: true
+        log_responses: true
+      
+      # Shorter cache TTL for development
+      cache:
+        ttl: 60
+      
+      # More aggressive retries for development
+      retry:
+        max_retries: 5
+      
+      # Relaxed MR requirements for development
+      merge_requests:
+        require_approvals: false
+        require_pipeline_success: false
+  
+  staging:
+    gitlab:
+      # Balanced configuration for staging
+      logging:
+        level: "INFO"
+        log_requests: true
+      
+      cache:
+        ttl: 180
+      
+      retry:
+        max_retries: 3
+      
+      # Standard MR requirements for staging
+      merge_requests:
+        require_approvals: true
+        required_approvals: 1
+        require_pipeline_success: true
+  
+  production:
+    gitlab:
+      # Conservative configuration for production
+      logging:
+        level: "WARNING"
+        log_requests: false
+        log_responses: false
+      
+      cache:
+        ttl: 600
+        backend: "redis"
+      
+      retry:
+        max_retries: 2
+      
+      # Strict MR requirements for production
+      merge_requests:
+        require_approvals: true
+        required_approvals: 2
+        require_pipeline_success: true
+        require_resolved_discussions: true
+      
+      # Production security settings
+      security:
+        verify_ssl: true
+        encrypt_tokens: true
+        audit_logging: true
+        validate_user_agent: true
+      
+      # Conservative rate limiting
+      rate_limit:
+        conservative_factor: 0.7
+        buffer_requests: 100
+
+# Self-hosted GitLab configuration
+self_hosted:
+  gitlab:
+    # Self-hosted GitLab instance URL
+    base_url: "https://gitlab.example.com/api/v4"
+    
+    # Custom SSL certificate verification
+    ssl_verify: true
+    ssl_cert_path: "/path/to/certificate.pem"
+    
+    # Custom authentication
+    auth:
+      # LDAP integration
+      ldap_enabled: true
+      
+      # SAML integration
+      saml_enabled: false
+      
+      # OAuth providers
+      oauth_providers:
+        - "github"
+        - "google"
+    
+    # Custom features
+    features:
+      # GitLab Premium/Ultimate features
+      premium_features: true
+      
+      # Advanced security features
+      security_dashboard: true
+      dependency_scanning: true
+      container_scanning: true
+      
+      # Compliance features
+      compliance_dashboard: true
+      audit_events: true
+
+# Integration settings
+integrations:
+  # AI Dev Squad specific settings
+  ai_dev_squad:
+    # Default project for testing
+    test_project: "ai-dev-squad/test-project"
+    
+    # Branch naming for AI operations
+    ai_branch_prefix: "ai/"
+    
+    # MR labels for AI-generated MRs
+    ai_mr_labels:
+      - "ai-generated"
+      - "automated"
+      - "bot"
+    
+    # Commit message prefix for AI commits
+    ai_commit_prefix: "[AI]"
+    
+    # Maximum files per AI commit
+    max_files_per_commit: 10
+    
+    # AI-specific MR template
+    ai_mr_template: |
+      ## 🤖 AI-Generated Changes
+      {description}
+      
+      ## 📊 Analysis Summary
+      - **Files Modified**: {file_count}
+      - **Lines Added**: {lines_added}
+      - **Lines Removed**: {lines_removed}
+      - **Confidence Score**: {confidence_score}%
+      
+      ## 🔍 Changes Made
+      {changes_summary}
+      
+      ## 🧪 Validation
+      - [ ] Code compiles successfully
+      - [ ] Tests pass
+      - [ ] No security vulnerabilities introduced
+      - [ ] Performance impact assessed
+      - [ ] Pipeline passes
+      
+      ## 🤖 AI Agent Information
+      - **Agent**: {agent_name}
+      - **Model**: {model_name}
+      - **Version**: {agent_version}
+      - **Execution Time**: {execution_time}
+      
+      ## 📝 Human Review Required
+      - [ ] Code logic review
+      - [ ] Security review
+      - [ ] Performance review
+      - [ ] Documentation review
+      
+      ## 🔄 Pipeline & Approvals
+      - [ ] All pipeline jobs pass
+      - [ ] Required approvals obtained
+      - [ ] All discussions resolved
+      
+      ---
+      *This MR was automatically generated by an AI agent. Please review carefully before merging.*
+    
+    # Pipeline configuration for AI-generated code
+    ai_pipeline:
+      # Additional security scans for AI code
+      security_scans:
+        - "sast"
+        - "dependency_scanning"
+        - "container_scanning"
+        - "secret_detection"
+      
+      # Code quality checks
+      quality_checks:
+        - "code_quality"
+        - "test_coverage"
+        - "performance"
+      
+      # Manual approval gates
+      manual_approvals:
+        - "security_review"
+        - "architecture_review"

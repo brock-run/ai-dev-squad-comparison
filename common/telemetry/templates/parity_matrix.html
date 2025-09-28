@@ -1,0 +1,558 @@
+{% extends "base.html" %}
+
+{% block title %}AI Dev Squad Dashboard - Framework Parity Matrix{% endblock %}
+
+{% block content %}
+<div class="col-12">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center py-3">
+        <h1>Framework Parity Matrix</h1>
+        <div>
+            <button class="btn btn-outline-primary btn-sm" onclick="exportMatrix()">Export CSV</button>
+            <button class="btn btn-outline-secondary btn-sm" onclick="toggleView()">Toggle View</button>
+        </div>
+    </div>
+    
+    <!-- Filter Controls -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h6>Filter by Framework</h6>
+                    <div id="framework-filters" class="d-flex flex-wrap gap-2">
+                        <!-- Framework checkboxes will be populated here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h6>Filter by Status</h6>
+                    <div id="status-filters" class="d-flex flex-wrap gap-2">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input status-filter" type="checkbox" id="status-supported" value="supported" checked>
+                            <label class="form-check-label status-supported px-2 py-1 rounded" for="status-supported">Supported</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input status-filter" type="checkbox" id="status-partial" value="partial" checked>
+                            <label class="form-check-label status-partial px-2 py-1 rounded" for="status-partial">Partial</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input status-filter" type="checkbox" id="status-not_supported" value="not_supported" checked>
+                            <label class="form-check-label status-not_supported px-2 py-1 rounded" for="status-not_supported">Not Supported</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input status-filter" type="checkbox" id="status-planned" value="planned" checked>
+                            <label class="form-check-label status-planned px-2 py-1 rounded" for="status-planned">Planned</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Matrix View Toggle -->
+    <div class="row mb-3">
+        <div class="col-12">
+            <div class="btn-group" role="group">
+                <input type="radio" class="btn-check" name="matrix-view" id="table-view" checked>
+                <label class="btn btn-outline-primary" for="table-view">Table View</label>
+                
+                <input type="radio" class="btn-check" name="matrix-view" id="grid-view">
+                <label class="btn btn-outline-primary" for="grid-view">Grid View</label>
+                
+                <input type="radio" class="btn-check" name="matrix-view" id="comparison-view">
+                <label class="btn btn-outline-primary" for="comparison-view">Comparison View</label>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Loading Indicator -->
+    <div id="loading-indicator" class="text-center py-5">
+        <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+        <p class="mt-2">Loading parity matrix...</p>
+    </div>
+    
+    <!-- Table View -->
+    <div id="table-view-container" class="card" style="display: none;">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Feature</th>
+                            <th>LangGraph</th>
+                            <th>CrewAI</th>
+                            <th>AutoGen</th>
+                            <th>Langroid</th>
+                            <th>LlamaIndex</th>
+                            <th>Haystack</th>
+                        </tr>
+                    </thead>
+                    <tbody id="matrix-table-body">
+                        <!-- Table rows will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Grid View -->
+    <div id="grid-view-container" style="display: none;">
+        <div class="row" id="grid-container">
+            <!-- Grid cards will be populated here -->
+        </div>
+    </div>
+    
+    <!-- Comparison View -->
+    <div id="comparison-view-container" style="display: none;">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Performance Scores</h5>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="performance-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Cost Efficiency</h5>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="cost-efficiency-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>Feature Support Comparison</h5>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="feature-support-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Feature Details Modal -->
+    <div class="modal fade" id="feature-modal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="feature-modal-title">Feature Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="feature-modal-body">
+                    <!-- Feature details will be populated here -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    let matrixData = [];
+    let filteredData = [];
+    let currentView = 'table-view';
+    let performanceChart, costEfficiencyChart, featureSupportChart;
+    
+    // Load parity matrix data
+    async function loadParityMatrix() {
+        try {
+            const response = await fetch('/api/parity-matrix');
+            matrixData = await response.json();
+            filteredData = [...matrixData];
+            
+            populateFilters();
+            updateView();
+            hideLoading();
+        } catch (error) {
+            console.error('Error loading parity matrix:', error);
+            hideLoading();
+        }
+    }
+    
+    // Hide loading indicator
+    function hideLoading() {
+        document.getElementById('loading-indicator').style.display = 'none';
+    }
+    
+    // Populate filter controls
+    function populateFilters() {
+        const frameworks = [...new Set(matrixData.map(item => item.framework))];
+        const frameworkFilters = document.getElementById('framework-filters');
+        
+        frameworkFilters.innerHTML = '';
+        frameworks.forEach(framework => {
+            const div = document.createElement('div');
+            div.className = 'form-check form-check-inline';
+            div.innerHTML = `
+                <input class="form-check-input framework-filter" type="checkbox" id="framework-${framework}" value="${framework}" checked>
+                <label class="form-check-label" for="framework-${framework}">${framework}</label>
+            `;
+            frameworkFilters.appendChild(div);
+        });
+        
+        // Add event listeners
+        document.querySelectorAll('.framework-filter, .status-filter').forEach(filter => {
+            filter.addEventListener('change', applyFilters);
+        });
+    }
+    
+    // Apply filters
+    function applyFilters() {
+        const selectedFrameworks = Array.from(document.querySelectorAll('.framework-filter:checked')).map(cb => cb.value);
+        const selectedStatuses = Array.from(document.querySelectorAll('.status-filter:checked')).map(cb => cb.value);
+        
+        filteredData = matrixData.filter(item => 
+            selectedFrameworks.includes(item.framework) && 
+            selectedStatuses.includes(item.status)
+        );
+        
+        updateView();
+    }
+    
+    // Update current view
+    function updateView() {
+        // Hide all views
+        document.getElementById('table-view-container').style.display = 'none';
+        document.getElementById('grid-view-container').style.display = 'none';
+        document.getElementById('comparison-view-container').style.display = 'none';
+        
+        // Show current view
+        if (currentView === 'table-view') {
+            updateTableView();
+            document.getElementById('table-view-container').style.display = 'block';
+        } else if (currentView === 'grid-view') {
+            updateGridView();
+            document.getElementById('grid-view-container').style.display = 'block';
+        } else if (currentView === 'comparison-view') {
+            updateComparisonView();
+            document.getElementById('comparison-view-container').style.display = 'block';
+        }
+    }
+    
+    // Update table view
+    function updateTableView() {
+        const tbody = document.getElementById('matrix-table-body');
+        const features = [...new Set(filteredData.map(item => item.feature))];
+        const frameworks = [...new Set(filteredData.map(item => item.framework))];
+        
+        tbody.innerHTML = '';
+        
+        features.forEach(feature => {
+            const row = document.createElement('tr');
+            row.innerHTML = `<td><strong>${feature}</strong></td>`;
+            
+            frameworks.forEach(framework => {
+                const item = filteredData.find(d => d.feature === feature && d.framework === framework);
+                const cell = document.createElement('td');
+                
+                if (item) {
+                    cell.innerHTML = `
+                        <span class="badge status-${item.status}" 
+                              style="cursor: pointer;" 
+                              onclick="showFeatureDetails('${feature}', '${framework}')">
+                            ${item.status.replace('_', ' ')}
+                        </span>
+                    `;
+                } else {
+                    cell.innerHTML = '<span class="text-muted">-</span>';
+                }
+                
+                row.appendChild(cell);
+            });
+            
+            tbody.appendChild(row);
+        });
+    }
+    
+    // Update grid view
+    function updateGridView() {
+        const container = document.getElementById('grid-container');
+        const frameworks = [...new Set(filteredData.map(item => item.framework))];
+        
+        container.innerHTML = '';
+        
+        frameworks.forEach(framework => {
+            const frameworkData = filteredData.filter(item => item.framework === framework);
+            const supportedCount = frameworkData.filter(item => item.status === 'supported').length;
+            const partialCount = frameworkData.filter(item => item.status === 'partial').length;
+            const notSupportedCount = frameworkData.filter(item => item.status === 'not_supported').length;
+            const plannedCount = frameworkData.filter(item => item.status === 'planned').length;
+            
+            const col = document.createElement('div');
+            col.className = 'col-md-4 mb-4';
+            col.innerHTML = `
+                <div class="card h-100">
+                    <div class="card-header">
+                        <h5>${framework}</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-2">
+                            <span class="badge status-supported">${supportedCount} Supported</span>
+                        </div>
+                        <div class="mb-2">
+                            <span class="badge status-partial">${partialCount} Partial</span>
+                        </div>
+                        <div class="mb-2">
+                            <span class="badge status-not_supported">${notSupportedCount} Not Supported</span>
+                        </div>
+                        <div class="mb-2">
+                            <span class="badge status-planned">${plannedCount} Planned</span>
+                        </div>
+                        <div class="mt-3">
+                            <div class="progress">
+                                <div class="progress-bar bg-success" style="width: ${(supportedCount / frameworkData.length) * 100}%"></div>
+                            </div>
+                            <small class="text-muted">${((supportedCount / frameworkData.length) * 100).toFixed(1)}% fully supported</small>
+                        </div>
+                    </div>
+                </div>
+            `;
+            container.appendChild(col);
+        });
+    }
+    
+    // Update comparison view
+    function updateComparisonView() {
+        const frameworks = [...new Set(filteredData.map(item => item.framework))];
+        
+        // Performance scores
+        const performanceScores = frameworks.map(framework => {
+            const frameworkData = filteredData.filter(item => item.framework === framework);
+            const avgScore = frameworkData.reduce((sum, item) => sum + (item.performance_score || 0), 0) / frameworkData.length;
+            return avgScore;
+        });
+        
+        // Cost efficiency scores
+        const costEfficiencyScores = frameworks.map(framework => {
+            const frameworkData = filteredData.filter(item => item.framework === framework);
+            const avgScore = frameworkData.reduce((sum, item) => sum + (item.cost_efficiency || 0), 0) / frameworkData.length;
+            return avgScore;
+        });
+        
+        // Feature support percentages
+        const supportPercentages = frameworks.map(framework => {
+            const frameworkData = filteredData.filter(item => item.framework === framework);
+            const supportedCount = frameworkData.filter(item => item.status === 'supported').length;
+            return (supportedCount / frameworkData.length) * 100;
+        });
+        
+        // Update charts
+        updatePerformanceChart(frameworks, performanceScores);
+        updateCostEfficiencyChart(frameworks, costEfficiencyScores);
+        updateFeatureSupportChart(frameworks, supportPercentages);
+    }
+    
+    // Update performance chart
+    function updatePerformanceChart(frameworks, scores) {
+        const ctx = document.getElementById('performance-chart').getContext('2d');
+        
+        if (performanceChart) {
+            performanceChart.destroy();
+        }
+        
+        performanceChart = new Chart(ctx, {
+            type: 'radar',
+            data: {
+                labels: frameworks,
+                datasets: [{
+                    label: 'Performance Score',
+                    data: scores,
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    pointBackgroundColor: 'rgba(54, 162, 235, 1)'
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    r: {
+                        beginAtZero: true,
+                        max: 1
+                    }
+                }
+            }
+        });
+    }
+    
+    // Update cost efficiency chart
+    function updateCostEfficiencyChart(frameworks, scores) {
+        const ctx = document.getElementById('cost-efficiency-chart').getContext('2d');
+        
+        if (costEfficiencyChart) {
+            costEfficiencyChart.destroy();
+        }
+        
+        costEfficiencyChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: frameworks,
+                datasets: [{
+                    label: 'Cost Efficiency',
+                    data: scores,
+                    backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 1
+                    }
+                }
+            }
+        });
+    }
+    
+    // Update feature support chart
+    function updateFeatureSupportChart(frameworks, percentages) {
+        const ctx = document.getElementById('feature-support-chart').getContext('2d');
+        
+        if (featureSupportChart) {
+            featureSupportChart.destroy();
+        }
+        
+        featureSupportChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: frameworks,
+                datasets: [{
+                    label: 'Feature Support %',
+                    data: percentages,
+                    backgroundColor: 'rgba(255, 206, 86, 0.6)',
+                    borderColor: 'rgba(255, 206, 86, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100
+                    }
+                }
+            }
+        });
+    }
+    
+    // Show feature details modal
+    function showFeatureDetails(feature, framework) {
+        const item = filteredData.find(d => d.feature === feature && d.framework === framework);
+        
+        if (!item) return;
+        
+        document.getElementById('feature-modal-title').textContent = `${feature} - ${framework}`;
+        
+        const modalBody = document.getElementById('feature-modal-body');
+        modalBody.innerHTML = `
+            <div class="row">
+                <div class="col-md-6">
+                    <h6>Status</h6>
+                    <span class="badge status-${item.status} fs-6">${item.status.replace('_', ' ')}</span>
+                </div>
+                <div class="col-md-6">
+                    <h6>Performance Score</h6>
+                    <div class="progress">
+                        <div class="progress-bar" style="width: ${(item.performance_score || 0) * 100}%"></div>
+                    </div>
+                    <small>${((item.performance_score || 0) * 100).toFixed(1)}%</small>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-md-6">
+                    <h6>Cost Efficiency</h6>
+                    <div class="progress">
+                        <div class="progress-bar bg-success" style="width: ${(item.cost_efficiency || 0) * 100}%"></div>
+                    </div>
+                    <small>${((item.cost_efficiency || 0) * 100).toFixed(1)}%</small>
+                </div>
+                ${item.version_added ? `
+                <div class="col-md-6">
+                    <h6>Version Added</h6>
+                    <span class="badge bg-info">${item.version_added}</span>
+                </div>
+                ` : ''}
+            </div>
+            ${item.notes ? `
+            <div class="mt-3">
+                <h6>Notes</h6>
+                <p class="text-muted">${item.notes}</p>
+            </div>
+            ` : ''}
+        `;
+        
+        new bootstrap.Modal(document.getElementById('feature-modal')).show();
+    }
+    
+    // Export matrix to CSV
+    function exportMatrix() {
+        const features = [...new Set(filteredData.map(item => item.feature))];
+        const frameworks = [...new Set(filteredData.map(item => item.framework))];
+        
+        let csv = 'Feature,' + frameworks.join(',') + '\n';
+        
+        features.forEach(feature => {
+            let row = feature;
+            frameworks.forEach(framework => {
+                const item = filteredData.find(d => d.feature === feature && d.framework === framework);
+                row += ',' + (item ? item.status : 'not_supported');
+            });
+            csv += row + '\n';
+        });
+        
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'framework_parity_matrix.csv';
+        a.click();
+        window.URL.revokeObjectURL(url);
+    }
+    
+    // Toggle view
+    function toggleView() {
+        const views = ['table-view', 'grid-view', 'comparison-view'];
+        const currentIndex = views.indexOf(currentView);
+        const nextIndex = (currentIndex + 1) % views.length;
+        currentView = views[nextIndex];
+        
+        document.getElementById(currentView).checked = true;
+        updateView();
+    }
+    
+    // Initialize when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+        loadParityMatrix();
+        
+        // View change handlers
+        document.querySelectorAll('input[name="matrix-view"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                if (this.checked) {
+                    currentView = this.id;
+                    updateView();
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,250 @@
+version: 1
+owner: brock.butler@spreetail.com
+epics:
+  - id: EPIC-API
+    title: Common Agent API & Wiring
+    tasks:
+      - id: T-API-001
+        title: Define AgentAdapter protocol and RunResult/Event schemas
+        files:
+          - common/agent_api.py
+        acceptance:
+          - "Unit tests validate adapter conformance across mock adapters"
+          - "Docstring examples render in README"
+      - id: T-API-002
+        title: Add task schema & config loader with seed/model prefs
+        files:
+          - common/config.py
+        acceptance:
+          - "Seed, model, provider, mode parsed and exposed to adapters"
+    depends_on: []
+
+  - id: EPIC-SAFETY
+    title: Central Safety Module
+    tasks:
+      - id: T-SAFE-001
+        title: Sandbox executor (no-net, time/mem/CPU limits)
+        files:
+          - common/safety/execute.py
+          - common/safety/policy.yaml
+        acceptance:
+          - "Exec blocked on disallowed network"
+          - "Exceeding limits raises SafetyTimeoutError"
+      - id: T-SAFE-002
+        title: FS allowlist & safe I/O wrappers
+        files:
+          - common/safety/fs.py
+        acceptance:
+          - "Writes outside repo root denied; tests cover escapes"
+      - id: T-SAFE-003
+        title: Network allowlist + resolver
+        files:
+          - common/safety/net.py
+        acceptance:
+          - "Denied by default; allowlist honored in tests"
+      - id: T-SAFE-004
+        title: Prompt injection guards (+ optional LLM judge)
+        files:
+          - common/safety/injection.py
+        acceptance:
+          - "Malicious patterns flagged; judge path stores rationale"
+    depends_on: [EPIC-API]
+
+  - id: EPIC-VCS
+    title: GitHub & GitLab Modules
+    tasks:
+      - id: T-VCS-001
+        title: Provider base + retry/backoff middleware
+        files:
+          - common/vcs/base.py
+        acceptance:
+          - "429 triggers exponential backoff with jitter (unit test)"
+      - id: T-VCS-002
+        title: GitHub provider (branch, commit, PR)
+        files:
+          - common/vcs/github.py
+        acceptance:
+          - "Opens branch+PR in sandbox repo; templates applied"
+      - id: T-VCS-003
+        title: GitLab provider (branch, commit, MR)
+        files:
+          - common/vcs/gitlab.py
+        acceptance:
+          - "Opens branch+MR; minimal scopes validated"
+      - id: T-VCS-004
+        title: Commit message generator (Ollama small model)
+        files:
+          - common/vcs/commit_msgs.py
+        acceptance:
+          - "Given diff, returns concise imperative subject (<60 chars)"
+    depends_on: [EPIC-API]
+
+  - id: EPIC-PARITY
+    title: Upgrade Existing Orchestrators to Parity
+    tasks:
+      - id: T-PAR-001
+        title: LangGraph adapter wiring (safety, VCS, telemetry)
+        files:
+          - langgraph-implementation/adapter.py
+        acceptance:
+          - "Runs 5 tasks (advisory+autonomous) on GH+GL"
+      - id: T-PAR-002
+        title: CrewAI v2 migration + adapter
+        files:
+          - crewai-implementation/adapter.py
+        acceptance:
+          - "Event hooks emit telemetry; guardrails active"
+      - id: T-PAR-003
+        title: AutoGen adapter
+        files:
+          - autogen-implementation/adapter.py
+      - id: T-PAR-004
+        title: n8n parity (advisory if needed) + API trigger
+        files:
+          - n8n-implementation/adapter.py
+      - id: T-PAR-005
+        title: Semantic Kernel (Py & C#) parity
+        files:
+          - semantic-kernel-implementation/python/adapter.py
+          - semantic-kernel-implementation/csharp/Adapter.cs
+      - id: T-PAR-006
+        title: Claude Code Subagents adapter
+        files:
+          - claude-subagents-implementation/adapter.py
+    depends_on: [EPIC-API, EPIC-SAFETY, EPIC-VCS, EPIC-TELEM]
+
+  - id: EPIC-NEW
+    title: New Orchestrators (Full Parity)
+    tasks:
+      - id: T-NEW-001
+        title: Langroid adapter
+        files:
+          - langroid-implementation/adapter.py
+      - id: T-NEW-002
+        title: LlamaIndex Agents adapter (+ optional index build step)
+        files:
+          - llamaindex-implementation/adapter.py
+      - id: T-NEW-003
+        title: Haystack Agents adapter
+        files:
+          - haystack-implementation/adapter.py
+      - id: T-NEW-004
+        title: Strands Agents adapter
+        files:
+          - strands-implementation/adapter.py
+    acceptance:
+      - "Each runs 5 tasks on GH+GL; safety + telemetry enforced"
+    depends_on: [EPIC-PARITY]
+
+  - id: EPIC-BENCH
+    title: Benchmark Suite v2
+    tasks:
+      - id: T-BENCH-001
+        title: Task specs & fixtures for 5 tasks
+        files:
+          - benchmark/tasks/**/*
+      - id: T-BENCH-002
+        title: Verification runners (pytest, lint/type, semantic)
+        files:
+          - benchmark/verifier/*
+      - id: T-BENCH-003
+        title: Self-consistency (N runs, majority/score)
+        files:
+          - benchmark/benchmark_suite.py
+      - id: T-BENCH-004
+        title: Record–replay (recorder/player)
+        files:
+          - benchmark/replay/*
+      - id: T-BENCH-005
+        title: CLI & JSON artifact outputs
+        files:
+          - benchmark/benchmark_suite.py
+    acceptance:
+      - "CLI runs, outputs results.json + artifacts/, replay works"
+    depends_on: [EPIC-API]
+
+  - id: EPIC-TELEM
+    title: Observability & Dashboard
+    tasks:
+      - id: T-TELEM-001
+        title: Event schema + JSON logger
+        files:
+          - common/telemetry/schema.py
+          - common/telemetry/logger.py
+      - id: T-TELEM-002
+        title: OpenTelemetry spans + Jaeger docker
+        files:
+          - common/telemetry/otel.py
+          - docker-compose.yml
+      - id: T-TELEM-003
+        title: Dashboard drill-down (traces, tokens, parity)
+        files:
+          - comparison-results/dashboard.py
+    acceptance:
+      - "Per-run traces viewable; dashboard shows parity matrix"
+    depends_on: [EPIC-BENCH]
+
+  - id: EPIC-PERF
+    title: Ollama-first Performance
+    tasks:
+      - id: T-PERF-001
+        title: Model routing by task; streaming; caching
+        files:
+          - common/ollama_integration.py
+      - id: T-PERF-002
+        title: Small-model fallbacks & partial reruns
+        files:
+          - common/ollama_integration.py
+    depends_on: [EPIC-PARITY, EPIC-BENCH]
+
+  - id: EPIC-REPRO
+    title: Reproducibility & Packaging
+    tasks:
+      - id: T-REPRO-001
+        title: Docker Compose services (agents, Jaeger, dashboard)
+        files:
+          - docker-compose.yml
+          - Dockerfile
+      - id: T-REPRO-002
+        title: Lockfiles/pins + env capture
+        files:
+          - requirements.txt
+          - poetry.lock
+          - requirements-csharp.txt
+      - id: T-REPRO-003
+        title: Seeds & config doc
+        files:
+          - docs/guides/running_locally.md
+    depends_on: [EPIC-TELEM]
+
+  - id: EPIC-DOCS
+    title: Documentation & Guides
+    tasks:
+      - id: T-DOCS-001
+        title: Parity matrix & orchestrator guides
+        files:
+          - docs/requirements/framework_selection_guide.md
+          - docs/parity_matrix.md
+      - id: T-DOCS-002
+        title: Safety policy & sandbox guide
+        files:
+          - docs/guides/safety.md
+      - id: T-DOCS-003
+        title: GitHub/GitLab setup & scopes
+        files:
+          - docs/guides/vcs_setup.md
+      - id: T-DOCS-004
+        title: Telemetry & Jaeger guide
+        files:
+          - docs/guides/telemetry.md
+      - id: T-DOCS-005
+        title: Benchmark CLI + replay guide
+        files:
+          - docs/guides/benchmark.md
+      - id: T-DOCS-006
+        title: Research findings & proposals
+        files:
+          - docs/research/research_findings.md
+          - docs/research/landscapes/*
+          - docs/research/proposals/*
+    depends_on: [EPIC-PARITY, EPIC-NEW, EPIC-BENCH, EPIC-TELEM, EPIC-PERF, EPIC-REPRO]

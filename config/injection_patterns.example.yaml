@@ -1,0 +1,217 @@
+# Prompt Injection Detection Patterns
+# This file defines patterns for detecting various types of prompt injection attacks.
+# Copy this file to injection_patterns.yaml and customize for your security needs.
+
+# Direct injection attempts - trying to override system instructions
+direct_injection:
+  - name: "ignore_previous_instructions"
+    pattern: "ignore\\s+(all\\s+)?(previous|prior|above|earlier)\\s+(instructions?|prompts?|commands?)"
+    injection_type: "direct_injection"
+    threat_level: "high"
+    description: "Attempts to ignore previous instructions"
+    action: "block"
+    
+  - name: "forget_context"
+    pattern: "forget\\s+(everything|all|what)\\s+(above|before|previously)"
+    injection_type: "context_manipulation"
+    threat_level: "high"
+    description: "Attempts to clear context or memory"
+    action: "block"
+    
+  - name: "override_instructions"
+    pattern: "(override|replace|change)\\s+(the\\s+)?(instructions?|rules?|guidelines?)"
+    injection_type: "instruction_override"
+    threat_level: "high"
+    description: "Attempts to override system instructions"
+    action: "block"
+    
+  - name: "new_instructions"
+    pattern: "(new|different|updated)\\s+(instructions?|rules?|guidelines?|prompts?)"
+    injection_type: "instruction_override"
+    threat_level: "medium"
+    description: "Attempts to provide new instructions"
+    action: "flag"
+
+# Role hijacking - trying to change AI identity or behavior
+role_hijacking:
+  - name: "role_change"
+    pattern: "you\\s+are\\s+now\\s+(a\\s+)?(different|new|another)"
+    injection_type: "role_hijacking"
+    threat_level: "high"
+    description: "Attempts to change AI role or identity"
+    action: "block"
+    
+  - name: "pretend_to_be"
+    pattern: "pretend\\s+(to\\s+be|you\\s+are)\\s+"
+    injection_type: "role_hijacking"
+    threat_level: "medium"
+    description: "Attempts to make AI pretend to be something else"
+    action: "flag"
+    
+  - name: "act_as"
+    pattern: "act\\s+as\\s+(if\\s+you\\s+are\\s+)?(a\\s+)?"
+    injection_type: "role_hijacking"
+    threat_level: "medium"
+    description: "Attempts to make AI act as different entity"
+    action: "flag"
+
+# System prompt extraction - trying to reveal system instructions
+system_extraction:
+  - name: "system_prompt_query"
+    pattern: "(what\\s+(is|are)\\s+your|show\\s+me\\s+your|tell\\s+me\\s+your)\\s+(system\\s+)?(prompt|instructions?|guidelines?)"
+    injection_type: "system_prompt_extraction"
+    threat_level: "medium"
+    description: "Attempts to extract system prompt"
+    action: "block"
+    
+  - name: "initial_instructions"
+    pattern: "(initial|original|first)\\s+(instructions?|prompt|message)"
+    injection_type: "system_prompt_extraction"
+    threat_level: "medium"
+    description: "Attempts to access initial instructions"
+    action: "flag"
+    
+  - name: "configuration_query"
+    pattern: "(configuration|settings|parameters)\\s+(of|for)\\s+this\\s+(ai|assistant|system)"
+    injection_type: "system_prompt_extraction"
+    threat_level: "medium"
+    description: "Attempts to extract system configuration"
+    action: "flag"
+
+# Code injection - attempting to execute arbitrary code
+code_injection:
+  - name: "code_execution_request"
+    pattern: "(execute|run|eval)\\s+(this\\s+)?(code|script|command)"
+    injection_type: "code_injection"
+    threat_level: "critical"
+    description: "Attempts to execute arbitrary code"
+    action: "block"
+    
+  - name: "dangerous_imports"
+    pattern: "(import\\s+os|import\\s+subprocess|import\\s+sys)"
+    injection_type: "code_injection"
+    threat_level: "critical"
+    description: "Dangerous system imports"
+    action: "block"
+    
+  - name: "system_commands"
+    pattern: "(os\\.system|subprocess\\.|exec\\(|eval\\()"
+    injection_type: "code_injection"
+    threat_level: "critical"
+    description: "Dangerous system command patterns"
+    action: "block"
+    
+  - name: "shell_commands"
+    pattern: "(rm\\s+-rf|chmod\\s+777|sudo\\s+|>/dev/null)"
+    injection_type: "code_injection"
+    threat_level: "critical"
+    description: "Dangerous shell command patterns"
+    action: "block"
+
+# Credential extraction - trying to get sensitive information
+credential_extraction:
+  - name: "password_extraction"
+    pattern: "(what\\s+is\\s+the|tell\\s+me\\s+the|show\\s+me\\s+the)\\s+(password|api\\s+key|secret|token)"
+    injection_type: "credential_extraction"
+    threat_level: "critical"
+    description: "Attempts to extract credentials"
+    action: "block"
+    
+  - name: "key_patterns"
+    pattern: "(api[_\\s]?key|access[_\\s]?token|secret[_\\s]?key)\\s*[:=]"
+    injection_type: "credential_extraction"
+    threat_level: "high"
+    description: "Credential key patterns"
+    action: "block"
+    
+  - name: "credential_request"
+    pattern: "(give\\s+me|provide|share)\\s+(your|the)\\s+(credentials|login|auth)"
+    injection_type: "credential_extraction"
+    threat_level: "high"
+    description: "Direct credential requests"
+    action: "block"
+
+# Jailbreak attempts - trying to bypass safety measures
+jailbreak_attempts:
+  - name: "jailbreak_keywords"
+    pattern: "(jailbreak|bypass\\s+safety|ignore\\s+safety|disable\\s+filters?)"
+    injection_type: "jailbreak_attempt"
+    threat_level: "high"
+    description: "Common jailbreak attempt phrases"
+    action: "block"
+    
+  - name: "hypothetical_jailbreak"
+    pattern: "(hypothetically|imagine\\s+if|what\\s+if|suppose\\s+that).{0,50}(ignore|bypass|disable)"
+    injection_type: "jailbreak_attempt"
+    threat_level: "medium"
+    description: "Hypothetical scenario jailbreak attempts"
+    action: "flag"
+    
+  - name: "developer_mode"
+    pattern: "(developer\\s+mode|debug\\s+mode|admin\\s+mode)"
+    injection_type: "jailbreak_attempt"
+    threat_level: "medium"
+    description: "Attempts to activate special modes"
+    action: "flag"
+    
+  - name: "unrestricted_mode"
+    pattern: "(unrestricted|uncensored|unfiltered)\\s+(mode|version|ai)"
+    injection_type: "jailbreak_attempt"
+    threat_level: "high"
+    description: "Attempts to activate unrestricted mode"
+    action: "block"
+
+# Output manipulation - trying to control response format
+output_manipulation:
+  - name: "output_format_override"
+    pattern: "(output|respond|answer)\\s+(only|just)\\s+(with|in)\\s+"
+    injection_type: "output_manipulation"
+    threat_level: "low"
+    description: "Attempts to override output format"
+    action: "sanitize"
+    
+  - name: "response_control"
+    pattern: "(don't\\s+mention|never\\s+say|avoid\\s+saying)"
+    injection_type: "output_manipulation"
+    threat_level: "low"
+    description: "Attempts to control response content"
+    action: "flag"
+
+# Context manipulation - trying to alter conversation context
+context_manipulation:
+  - name: "conversation_reset"
+    pattern: "(reset|restart|clear)\\s+(conversation|chat|context)"
+    injection_type: "context_manipulation"
+    threat_level: "medium"
+    description: "Attempts to reset conversation context"
+    action: "flag"
+    
+  - name: "memory_manipulation"
+    pattern: "(delete|remove|erase)\\s+(memory|history|previous)"
+    injection_type: "context_manipulation"
+    threat_level: "medium"
+    description: "Attempts to manipulate conversation memory"
+    action: "flag"
+
+# Advanced injection techniques
+advanced_techniques:
+  - name: "encoding_bypass"
+    pattern: "(base64|hex|url\\s+encod|rot13)"
+    injection_type: "jailbreak_attempt"
+    threat_level: "medium"
+    description: "Attempts to use encoding to bypass filters"
+    action: "flag"
+    
+  - name: "language_switching"
+    pattern: "(translate|in\\s+(spanish|french|german|chinese)).*?(ignore|bypass)"
+    injection_type: "jailbreak_attempt"
+    threat_level: "medium"
+    description: "Attempts to use foreign languages for bypass"
+    action: "flag"
+    
+  - name: "character_substitution"
+    pattern: "[a-zA-Z]*[0-9@$!]+[a-zA-Z]*\\s+(ignore|bypass|jailbreak)"
+    injection_type: "jailbreak_attempt"
+    threat_level: "medium"
+    description: "Character substitution bypass attempts"
+    action: "flag"

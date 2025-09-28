@@ -1,0 +1,56 @@
+# Model Pricing Configuration Example
+# Copy this file to model_pricing.yaml and customize for your pricing
+
+# API Model Pricing (per 1K tokens)
+api_models:
+  openai:
+    gpt-4:
+      input: 0.03
+      output: 0.06
+    gpt-3.5-turbo:
+      input: 0.0015
+      output: 0.002
+  anthropic:
+    claude-3-opus:
+      input: 0.015
+      output: 0.075
+    claude-3-sonnet:
+      input: 0.003
+      output: 0.015
+    claude-3-haiku:
+      input: 0.00025
+      output: 0.00125
+
+# Local Model Pricing (estimated cost per 1K tokens based on compute)
+local_models:
+  codellama:13b:
+    input: 0.0001
+    output: 0.0001
+  codellama:7b:
+    input: 0.00005
+    output: 0.00005
+  llama2:13b:
+    input: 0.0001
+    output: 0.0001
+  llama2:7b:
+    input: 0.00005
+    output: 0.00005
+  mistral:7b:
+    input: 0.00005
+    output: 0.00005
+  deepseek-coder:6.7b:
+    input: 0.00004
+    output: 0.00004
+
+# Hardware cost estimation (per hour)
+hardware_costs:
+  gpu:
+    rtx_4090: 0.50
+    rtx_3090: 0.35
+    rtx_3080: 0.25
+    a100: 2.00
+    h100: 4.00
+  cpu:
+    high_end: 0.10
+    mid_range: 0.05
+    low_end: 0.02

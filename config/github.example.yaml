@@ -1,0 +1,402 @@
+# GitHub VCS Provider Configuration
+# This file contains example configurations for GitHub integration
+
+# GitHub API Configuration
+github:
+  # API base URL (usually don't need to change this)
+  base_url: "https://api.github.com"
+  
+  # API version to use
+  api_version: "2022-11-28"
+  
+  # User agent string for requests
+  user_agent: "ai-dev-squad-comparison/1.0"
+  
+  # Request timeout in seconds
+  timeout: 30
+  
+  # Authentication
+  auth:
+    # GitHub personal access token or GitHub App token
+    # Can be set via environment variable: GITHUB_TOKEN
+    token: "${GITHUB_TOKEN}"
+    
+    # Token type: "pat" (personal access token) or "app" (GitHub App)
+    type: "pat"
+    
+    # Required scopes for different operations
+    required_scopes:
+      - "repo"              # Full repository access
+      - "pull_requests:write"  # Create and update PRs
+      - "contents:write"    # Create and update files
+      - "metadata:read"     # Read repository metadata
+  
+  # Retry configuration
+  retry:
+    max_retries: 3
+    base_delay: 1.0
+    max_delay: 60.0
+    exponential_base: 2.0
+    jitter: true
+    retry_on_rate_limit: true
+    rate_limit_delay_factor: 1.1
+  
+  # Rate limiting
+  rate_limit:
+    # Enable rate limit monitoring
+    monitoring: true
+    
+    # Conservative rate limiting (percentage of actual limit to use)
+    conservative_factor: 0.8
+    
+    # Rate limit buffer (requests to keep in reserve)
+    buffer_requests: 100
+  
+  # Pull Request Templates
+  pr_templates:
+    # Default template used when no specific template is requested
+    default: |
+      ## Description
+      {description}
+      
+      ## Type of Change
+      - [ ] Bug fix (non-breaking change which fixes an issue)
+      - [ ] New feature (non-breaking change which adds functionality)
+      - [ ] Breaking change (fix or feature that would cause existing functionality to not work as expected)
+      - [ ] Documentation update
+      
+      ## Testing
+      - [ ] Tests pass locally
+      - [ ] New tests added for changes (if applicable)
+      
+      ## Checklist
+      - [ ] Code follows project style guidelines
+      - [ ] Self-review completed
+      - [ ] Documentation updated (if applicable)
+    
+    # Feature-specific template
+    feature: |
+      ## 🚀 Feature Description
+      {description}
+      
+      ## 📋 Type of Change
+      - [ ] ✨ New feature (non-breaking change which adds functionality)
+      - [ ] 🐛 Bug fix (non-breaking change which fixes an issue)
+      - [ ] 💥 Breaking change (fix or feature that would cause existing functionality to not work as expected)
+      - [ ] 📚 Documentation update
+      
+      ## 🧪 Testing
+      - [ ] Tests pass locally with `pytest`
+      - [ ] New tests added for changes (if applicable)
+      - [ ] Manual testing completed
+      
+      ## 📝 Checklist
+      - [ ] Code follows the project's style guidelines
+      - [ ] Self-review of code completed
+      - [ ] Code is commented, particularly in hard-to-understand areas
+      - [ ] Documentation updated (if applicable)
+      - [ ] No new warnings introduced
+      
+      ## 🔗 Related Issues
+      Closes #
+    
+    # Bug fix template
+    bugfix: |
+      ## 🐛 Bug Fix Description
+      {description}
+      
+      ## 🔍 Root Cause
+      <!-- Describe what caused the bug -->
+      
+      ## 🛠️ Solution
+      <!-- Describe how you fixed it -->
+      
+      ## 🧪 Testing
+      - [ ] Bug reproduction steps verified
+      - [ ] Fix tested locally
+      - [ ] Regression tests added
+      - [ ] All existing tests pass
+      
+      ## 📋 Type of Change
+      - [x] 🐛 Bug fix (non-breaking change which fixes an issue)
+      - [ ] 💥 Breaking change (fix that would cause existing functionality to not work as expected)
+      
+      ## 🔗 Related Issues
+      Fixes #
+    
+    # Documentation template
+    docs: |
+      ## 📚 Documentation Update
+      {description}
+      
+      ## 📝 Changes Made
+      - [ ] Added new documentation
+      - [ ] Updated existing documentation
+      - [ ] Fixed documentation errors
+      - [ ] Improved documentation clarity
+      
+      ## 🔍 Review Checklist
+      - [ ] Documentation is accurate
+      - [ ] Links work correctly
+      - [ ] Examples are tested
+      - [ ] Spelling and grammar checked
+      
+      ## 📋 Type of Change
+      - [x] 📚 Documentation update
+  
+  # Repository settings
+  repository:
+    # Default branch name for new repositories
+    default_branch: "main"
+    
+    # Branch naming conventions
+    branch_naming:
+      feature_prefix: "feature/"
+      bugfix_prefix: "bugfix/"
+      hotfix_prefix: "hotfix/"
+      release_prefix: "release/"
+    
+    # Commit message conventions
+    commit_conventions:
+      # Use conventional commits format
+      conventional_commits: true
+      
+      # Commit types
+      types:
+        - "feat"      # New feature
+        - "fix"       # Bug fix
+        - "docs"      # Documentation
+        - "style"     # Code style changes
+        - "refactor"  # Code refactoring
+        - "test"      # Adding tests
+        - "chore"     # Maintenance tasks
+      
+      # Maximum commit message length
+      max_length: 72
+      
+      # Require issue reference in commit messages
+      require_issue_reference: false
+  
+  # Pull Request settings
+  pull_requests:
+    # Default merge method: "merge", "squash", or "rebase"
+    default_merge_method: "squash"
+    
+    # Auto-delete head branches after merge
+    delete_branch_on_merge: true
+    
+    # Require reviews before merge
+    require_reviews: true
+    
+    # Number of required reviews
+    required_reviews: 1
+    
+    # Dismiss stale reviews when new commits are pushed
+    dismiss_stale_reviews: true
+    
+    # Require status checks to pass
+    require_status_checks: true
+    
+    # Status checks that must pass
+    required_status_checks:
+      - "continuous-integration"
+      - "security-scan"
+    
+    # Allow merge commits
+    allow_merge_commit: true
+    
+    # Allow squash merging
+    allow_squash_merge: true
+    
+    # Allow rebase merging
+    allow_rebase_merge: true
+  
+  # Webhook configuration (for GitHub Apps)
+  webhooks:
+    # Enable webhook processing
+    enabled: false
+    
+    # Webhook secret for signature verification
+    secret: "${GITHUB_WEBHOOK_SECRET}"
+    
+    # Events to subscribe to
+    events:
+      - "push"
+      - "pull_request"
+      - "pull_request_review"
+      - "issues"
+      - "issue_comment"
+      - "release"
+    
+    # Webhook endpoint URL
+    url: "https://your-app.com/webhooks/github"
+  
+  # Security settings
+  security:
+    # Verify SSL certificates
+    verify_ssl: true
+    
+    # Token storage encryption
+    encrypt_tokens: true
+    
+    # Audit logging
+    audit_logging: true
+    
+    # IP allowlist for API access (empty = allow all)
+    ip_allowlist: []
+    
+    # User agent validation
+    validate_user_agent: true
+  
+  # Caching settings
+  cache:
+    # Enable response caching
+    enabled: true
+    
+    # Cache TTL in seconds
+    ttl: 300
+    
+    # Maximum cache size (number of entries)
+    max_size: 1000
+    
+    # Cache storage backend: "memory", "redis", "file"
+    backend: "memory"
+    
+    # Cache key prefix
+    key_prefix: "github_api:"
+  
+  # Logging configuration
+  logging:
+    # Log level: DEBUG, INFO, WARNING, ERROR
+    level: "INFO"
+    
+    # Log API requests
+    log_requests: true
+    
+    # Log API responses (be careful with sensitive data)
+    log_responses: false
+    
+    # Log rate limit information
+    log_rate_limits: true
+    
+    # Log file path (optional)
+    log_file: "logs/github_api.log"
+    
+    # Log rotation
+    log_rotation:
+      max_size: "10MB"
+      backup_count: 5
+
+# Environment-specific configurations
+environments:
+  development:
+    github:
+      # More verbose logging in development
+      logging:
+        level: "DEBUG"
+        log_requests: true
+        log_responses: true
+      
+      # Shorter cache TTL for development
+      cache:
+        ttl: 60
+      
+      # More aggressive retries for development
+      retry:
+        max_retries: 5
+  
+  staging:
+    github:
+      # Balanced configuration for staging
+      logging:
+        level: "INFO"
+        log_requests: true
+      
+      cache:
+        ttl: 180
+      
+      retry:
+        max_retries: 3
+  
+  production:
+    github:
+      # Conservative configuration for production
+      logging:
+        level: "WARNING"
+        log_requests: false
+        log_responses: false
+      
+      cache:
+        ttl: 600
+        backend: "redis"
+      
+      retry:
+        max_retries: 2
+      
+      # Production security settings
+      security:
+        verify_ssl: true
+        encrypt_tokens: true
+        audit_logging: true
+        validate_user_agent: true
+      
+      # Conservative rate limiting
+      rate_limit:
+        conservative_factor: 0.7
+        buffer_requests: 200
+
+# Integration settings
+integrations:
+  # AI Dev Squad specific settings
+  ai_dev_squad:
+    # Default repository for testing
+    test_repository: "ai-dev-squad/test-repo"
+    
+    # Branch naming for AI operations
+    ai_branch_prefix: "ai/"
+    
+    # PR labels for AI-generated PRs
+    ai_pr_labels:
+      - "ai-generated"
+      - "automated"
+    
+    # Commit message prefix for AI commits
+    ai_commit_prefix: "[AI]"
+    
+    # Maximum files per AI commit
+    max_files_per_commit: 10
+    
+    # AI-specific PR template
+    ai_pr_template: |
+      ## 🤖 AI-Generated Changes
+      {description}
+      
+      ## 📊 Analysis Summary
+      - **Files Modified**: {file_count}
+      - **Lines Added**: {lines_added}
+      - **Lines Removed**: {lines_removed}
+      - **Confidence Score**: {confidence_score}%
+      
+      ## 🔍 Changes Made
+      {changes_summary}
+      
+      ## 🧪 Validation
+      - [ ] Code compiles successfully
+      - [ ] Tests pass
+      - [ ] No security vulnerabilities introduced
+      - [ ] Performance impact assessed
+      
+      ## 🤖 AI Agent Information
+      - **Agent**: {agent_name}
+      - **Model**: {model_name}
+      - **Version**: {agent_version}
+      - **Execution Time**: {execution_time}
+      
+      ## 📝 Human Review Required
+      - [ ] Code logic review
+      - [ ] Security review
+      - [ ] Performance review
+      - [ ] Documentation review
+      
+      ---
+      *This PR was automatically generated by an AI agent. Please review carefully before merging.*

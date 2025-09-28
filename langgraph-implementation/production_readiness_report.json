@@ -1,0 +1,145 @@
+{
+  "timestamp": "2025-09-26T00:03:29.158777",
+  "summary": {
+    "total_tests": 19,
+    "passed": 18,
+    "failed": 1,
+    "success_rate": 94.73684210526315,
+    "production_ready": true
+  },
+  "results": [
+    {
+      "name": "Adapter Imports",
+      "passed": true,
+      "message": "LangGraph adapter imports successful",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:28.925010"
+    },
+    {
+      "name": "State Imports",
+      "passed": true,
+      "message": "State management imports successful",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:28.925023"
+    },
+    {
+      "name": "Adapter Creation",
+      "passed": true,
+      "message": "Created LangGraph Multi-Agent Squad v2.0.0",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:28.992231"
+    },
+    {
+      "name": "Adapter Properties",
+      "passed": true,
+      "message": "Basic properties available",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:28.992247"
+    },
+    {
+      "name": "State Creation",
+      "passed": true,
+      "message": "Initial state created correctly",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:28.992259"
+    },
+    {
+      "name": "State Transitions",
+      "passed": true,
+      "message": "State transition validation works",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:28.992267"
+    },
+    {
+      "name": "Design Creation",
+      "passed": true,
+      "message": "Design created: modular",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:29.076899"
+    },
+    {
+      "name": "Code Implementation",
+      "passed": true,
+      "message": "Code generated: 1662 chars",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:29.076924"
+    },
+    {
+      "name": "Test Creation",
+      "passed": true,
+      "message": "Tests created: 8 cases",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:29.076931"
+    },
+    {
+      "name": "Input Sanitization",
+      "passed": true,
+      "message": "Input sanitization works",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:29.106274"
+    },
+    {
+      "name": "Code Validation",
+      "passed": true,
+      "message": "Code validation works",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:29.106287"
+    },
+    {
+      "name": "Safety Components",
+      "passed": true,
+      "message": "2/2 components initialized",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:29.106291"
+    },
+    {
+      "name": "API Compliance",
+      "passed": false,
+      "message": "Failed: Instance and class checks can only be used with @runtime_checkable protocols",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:29.136811"
+    },
+    {
+      "name": "Error Analysis",
+      "passed": true,
+      "message": "Error type: general_error",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:29.158484"
+    },
+    {
+      "name": "Graceful Error Handling",
+      "passed": true,
+      "message": "Handles empty input gracefully",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:29.158497"
+    },
+    {
+      "name": "Documentation Files",
+      "passed": true,
+      "message": "All 4 files present",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:29.158546"
+    },
+    {
+      "name": "README Quality",
+      "passed": true,
+      "message": "1169 words, 22 code examples",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:29.158682"
+    },
+    {
+      "name": "Test Files",
+      "passed": true,
+      "message": "3 test files present",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:29.158709"
+    },
+    {
+      "name": "Test Coverage",
+      "passed": true,
+      "message": "18 test methods",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:29.158766"
+    }
+  ]
+}

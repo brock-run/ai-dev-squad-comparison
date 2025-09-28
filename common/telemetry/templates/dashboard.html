@@ -1,0 +1,466 @@
+{% extends "base.html" %}
+
+{% block title %}AI Dev Squad Dashboard - Overview{% endblock %}
+
+{% block content %}
+<div class="col-12">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center py-3">
+        <h1>Dashboard Overview</h1>
+        <div class="text-muted">
+            <small>Last updated: <span id="last-updated">Loading...</span></small>
+        </div>
+    </div>
+    
+    <!-- Key Metrics Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card metric-card h-100">
+                <div class="card-body text-center">
+                    <h5 class="card-title text-muted">Total Requests</h5>
+                    <h2 class="card-text text-primary" id="total-requests">-</h2>
+                    <small class="text-muted">Last 24 hours</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card metric-card h-100">
+                <div class="card-body text-center">
+                    <h5 class="card-title text-muted">Total Tokens</h5>
+                    <h2 class="card-text text-info" id="total-tokens">-</h2>
+                    <small class="text-muted">Input + Output</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card metric-card h-100">
+                <div class="card-body text-center">
+                    <h5 class="card-title text-muted">Total Cost</h5>
+                    <h2 class="card-text text-success" id="total-cost">-</h2>
+                    <small class="text-muted">USD</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card metric-card h-100">
+                <div class="card-body text-center">
+                    <h5 class="card-title text-muted">Avg Response Time</h5>
+                    <h2 class="card-text text-warning" id="avg-response-time">-</h2>
+                    <small class="text-muted">Milliseconds</small>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Charts Row -->
+    <div class="row mb-4">
+        <!-- Usage by Framework -->
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Usage by Framework</h5>
+                </div>
+                <div class="card-body">
+                    <div class="chart-container">
+                        <canvas id="framework-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Usage by Model -->
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Usage by Model</h5>
+                </div>
+                <div class="card-body">
+                    <div class="chart-container">
+                        <canvas id="model-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Cost Trends and Performance -->
+    <div class="row mb-4">
+        <!-- Cost Trends -->
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Cost Trends</h5>
+                </div>
+                <div class="card-body">
+                    <div class="chart-container">
+                        <canvas id="cost-trends-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Performance Metrics -->
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Performance</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between">
+                            <span>Success Rate</span>
+                            <span id="success-rate" class="text-success">-</span>
+                        </div>
+                        <div class="progress">
+                            <div id="success-rate-bar" class="progress-bar bg-success" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between">
+                            <span>Error Rate</span>
+                            <span id="error-rate" class="text-danger">-</span>
+                        </div>
+                        <div class="progress">
+                            <div id="error-rate-bar" class="progress-bar bg-danger" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center mt-4">
+                        <h6>System Health</h6>
+                        <div id="system-health" class="badge bg-success">Healthy</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Budget Status and Recommendations -->
+    <div class="row mb-4">
+        <!-- Budget Status -->
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Budget Status</h5>
+                </div>
+                <div class="card-body">
+                    <div id="budget-status">
+                        <p class="text-muted">No budgets configured</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Optimization Recommendations -->
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Optimization Recommendations</h5>
+                </div>
+                <div class="card-body">
+                    <div id="optimization-recommendations">
+                        <p class="text-muted">Loading recommendations...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Provider Breakdown Table -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Provider Breakdown</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Provider</th>
+                                    <th>Requests</th>
+                                    <th>Tokens</th>
+                                    <th>Cost (USD)</th>
+                                    <th>Avg Duration</th>
+                                    <th>Cost per 1K Tokens</th>
+                                </tr>
+                            </thead>
+                            <tbody id="provider-breakdown">
+                                <tr>
+                                    <td colspan="6" class="text-center text-muted">Loading...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    // Chart instances
+    let frameworkChart, modelChart, costTrendsChart;
+    
+    // Initialize charts
+    function initializeCharts() {
+        // Framework usage chart
+        const frameworkCtx = document.getElementById('framework-chart').getContext('2d');
+        frameworkChart = new Chart(frameworkCtx, {
+            type: 'doughnut',
+            data: {
+                labels: [],
+                datasets: [{
+                    data: [],
+                    backgroundColor: [
+                        '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0',
+                        '#9966FF', '#FF9F40', '#FF6384', '#C9CBCF'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+        
+        // Model usage chart
+        const modelCtx = document.getElementById('model-chart').getContext('2d');
+        modelChart = new Chart(modelCtx, {
+            type: 'bar',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Requests',
+                    data: [],
+                    backgroundColor: '#36A2EB'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+        
+        // Cost trends chart
+        const costTrendsCtx = document.getElementById('cost-trends-chart').getContext('2d');
+        costTrendsChart = new Chart(costTrendsCtx, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Cost (USD)',
+                    data: [],
+                    borderColor: '#28a745',
+                    backgroundColor: 'rgba(40, 167, 69, 0.1)',
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    }
+    
+    // Update dashboard with new data
+    function updateDashboard(data) {
+        console.log('Updating dashboard with data:', data);
+        
+        // Update timestamp
+        document.getElementById('last-updated').textContent = new Date().toLocaleTimeString();
+        
+        // Update key metrics
+        document.getElementById('total-requests').textContent = formatNumber(data.total_requests || 0);
+        document.getElementById('total-tokens').textContent = formatNumber(data.total_tokens || 0);
+        document.getElementById('total-cost').textContent = formatCurrency(data.total_cost_usd || 0);
+        document.getElementById('avg-response-time').textContent = formatDuration(data.avg_response_time || 0);
+        
+        // Update performance metrics
+        const successRate = (data.success_rate || 0) * 100;
+        const errorRate = (data.error_rate || 0) * 100;
+        
+        document.getElementById('success-rate').textContent = successRate.toFixed(1) + '%';
+        document.getElementById('success-rate-bar').style.width = successRate + '%';
+        
+        document.getElementById('error-rate').textContent = errorRate.toFixed(1) + '%';
+        document.getElementById('error-rate-bar').style.width = errorRate + '%';
+        
+        // Update system health
+        const healthElement = document.getElementById('system-health');
+        if (successRate >= 95) {
+            healthElement.textContent = 'Healthy';
+            healthElement.className = 'badge bg-success';
+        } else if (successRate >= 90) {
+            healthElement.textContent = 'Warning';
+            healthElement.className = 'badge bg-warning';
+        } else {
+            healthElement.textContent = 'Critical';
+            healthElement.className = 'badge bg-danger';
+        }
+        
+        // Update framework chart
+        if (data.framework_stats && Object.keys(data.framework_stats).length > 0) {
+            const frameworks = Object.keys(data.framework_stats);
+            const frameworkData = frameworks.map(f => data.framework_stats[f].requests || 0);
+            
+            frameworkChart.data.labels = frameworks;
+            frameworkChart.data.datasets[0].data = frameworkData;
+            frameworkChart.update();
+        }
+        
+        // Update model chart
+        if (data.model_stats && Object.keys(data.model_stats).length > 0) {
+            const models = Object.keys(data.model_stats);
+            const modelData = models.map(m => data.model_stats[m].requests || 0);
+            
+            modelChart.data.labels = models;
+            modelChart.data.datasets[0].data = modelData;
+            modelChart.update();
+        }
+        
+        // Update cost trends chart
+        if (data.cost_trends && data.cost_trends.length > 0) {
+            const labels = data.cost_trends.map(t => new Date(t.timestamp).toLocaleTimeString());
+            const costs = data.cost_trends.map(t => t.cost_usd || 0);
+            
+            costTrendsChart.data.labels = labels;
+            costTrendsChart.data.datasets[0].data = costs;
+            costTrendsChart.update();
+        }
+        
+        // Update budget status
+        updateBudgetStatus(data.budget_status || []);
+        
+        // Update optimization recommendations
+        updateOptimizationRecommendations(data.optimization_recommendations || []);
+        
+        // Update provider breakdown table
+        updateProviderBreakdown(data.provider_stats || {});
+    }
+    
+    // Update budget status
+    function updateBudgetStatus(budgets) {
+        const container = document.getElementById('budget-status');
+        
+        if (budgets.length === 0) {
+            container.innerHTML = '<p class="text-muted">No budgets configured</p>';
+            return;
+        }
+        
+        let html = '';
+        budgets.forEach(budget => {
+            const percentage = (budget.spend_ratio * 100).toFixed(1);
+            let progressClass = 'bg-success';
+            
+            if (budget.spend_ratio >= 0.9) {
+                progressClass = 'bg-danger';
+            } else if (budget.spend_ratio >= 0.7) {
+                progressClass = 'bg-warning';
+            }
+            
+            html += `
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between">
+                        <span>${budget.name}</span>
+                        <span>${formatCurrency(budget.current_spend)} / ${formatCurrency(budget.limit_usd)}</span>
+                    </div>
+                    <div class="progress">
+                        <div class="progress-bar ${progressClass}" style="width: ${percentage}%"></div>
+                    </div>
+                    <small class="text-muted">${percentage}% used</small>
+                </div>
+            `;
+        });
+        
+        container.innerHTML = html;
+    }
+    
+    // Update optimization recommendations
+    function updateOptimizationRecommendations(recommendations) {
+        const container = document.getElementById('optimization-recommendations');
+        
+        if (recommendations.length === 0) {
+            container.innerHTML = '<p class="text-muted">No recommendations at this time</p>';
+            return;
+        }
+        
+        let html = '';
+        recommendations.forEach((rec, index) => {
+            let badgeClass = 'bg-info';
+            if (rec.priority === 'high') badgeClass = 'bg-danger';
+            else if (rec.priority === 'medium') badgeClass = 'bg-warning';
+            
+            html += `
+                <div class="mb-2">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <span class="badge ${badgeClass}">${rec.priority.toUpperCase()}</span>
+                            <strong class="ms-2">${rec.type.replace('_', ' ').toUpperCase()}</strong>
+                        </div>
+                        ${rec.potential_savings_usd ? `<small class="text-success">Save ${formatCurrency(rec.potential_savings_usd)}</small>` : ''}
+                    </div>
+                    <p class="mb-0 mt-1 text-muted small">${rec.description}</p>
+                </div>
+            `;
+        });
+        
+        container.innerHTML = html;
+    }
+    
+    // Update provider breakdown table
+    function updateProviderBreakdown(providers) {
+        const tbody = document.getElementById('provider-breakdown');
+        
+        if (Object.keys(providers).length === 0) {
+            tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted">No data available</td></tr>';
+            return;
+        }
+        
+        let html = '';
+        Object.entries(providers).forEach(([provider, stats]) => {
+            const avgDuration = stats.requests > 0 ? (stats.duration_ms / stats.requests) : 0;
+            const costPer1k = stats.tokens > 0 ? ((stats.cost_usd / stats.tokens) * 1000) : 0;
+            
+            html += `
+                <tr>
+                    <td><strong>${provider.toUpperCase()}</strong></td>
+                    <td>${formatNumber(stats.requests)}</td>
+                    <td>${formatNumber(stats.tokens)}</td>
+                    <td>${formatCurrency(stats.cost_usd)}</td>
+                    <td>${formatDuration(avgDuration)}</td>
+                    <td>${stats.cost_usd > 0 ? formatCurrency(costPer1k) : 'Free'}</td>
+                </tr>
+            `;
+        });
+        
+        tbody.innerHTML = html;
+    }
+    
+    // Initialize when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+        initializeCharts();
+        
+        // Request initial data
+        requestMetricsUpdate();
+    });
+</script>
+{% endblock %}

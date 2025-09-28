@@ -1,0 +1,317 @@
+{
+  "timestamp": "2025-09-26T00:03:27.426271",
+  "summary": {
+    "total_tests": 23,
+    "passed": 22,
+    "failed": 1,
+    "success_rate": 95.65217391304348
+  },
+  "categories": {
+    "structure": [
+      {
+        "name": "File: adapter.py",
+        "passed": true,
+        "message": "File exists",
+        "details": {},
+        "timestamp": "2025-09-26T00:03:27.405270"
+      },
+      {
+        "name": "File: state/development_state.py",
+        "passed": true,
+        "message": "File exists",
+        "details": {},
+        "timestamp": "2025-09-26T00:03:27.405527"
+      },
+      {
+        "name": "File: README.md",
+        "passed": true,
+        "message": "File exists",
+        "details": {},
+        "timestamp": "2025-09-26T00:03:27.405542"
+      },
+      {
+        "name": "File: simple_test.py",
+        "passed": true,
+        "message": "File exists",
+        "details": {},
+        "timestamp": "2025-09-26T00:03:27.405551"
+      },
+      {
+        "name": "File: tests/test_langgraph_adapter.py",
+        "passed": true,
+        "message": "File exists",
+        "details": {},
+        "timestamp": "2025-09-26T00:03:27.405561"
+      },
+      {
+        "name": "File: requirements.txt",
+        "passed": true,
+        "message": "File exists",
+        "details": {},
+        "timestamp": "2025-09-26T00:03:27.405568"
+      }
+    ],
+    "code_quality": [
+      {
+        "name": "Required Methods",
+        "passed": true,
+        "message": "All 14 methods found",
+        "details": {},
+        "timestamp": "2025-09-26T00:03:27.417660"
+      },
+      {
+        "name": "Code Size",
+        "passed": true,
+        "message": "1607 lines of code",
+        "details": {},
+        "timestamp": "2025-09-26T00:03:27.420551"
+      },
+      {
+        "name": "State Classes",
+        "passed": true,
+        "message": "All 9 classes found",
+        "details": {},
+        "timestamp": "2025-09-26T00:03:27.423747"
+      },
+      {
+        "name": "Code Examples",
+        "passed": true,
+        "message": "Good coverage: 22 code blocks",
+        "details": {},
+        "timestamp": "2025-09-26T00:03:27.425225"
+      }
+    ],
+    "documentation": [
+      {
+        "name": "File: README.md",
+        "passed": true,
+        "message": "File exists",
+        "details": {},
+        "timestamp": "2025-09-26T00:03:27.405542"
+      },
+      {
+        "name": "README Sections",
+        "passed": true,
+        "message": "All 11 sections found",
+        "details": {},
+        "timestamp": "2025-09-26T00:03:27.425134"
+      },
+      {
+        "name": "Documentation Length",
+        "passed": true,
+        "message": "Comprehensive: 1169 words",
+        "details": {},
+        "timestamp": "2025-09-26T00:03:27.425207"
+      },
+      {
+        "name": "Code Examples",
+        "passed": true,
+        "message": "Good coverage: 22 code blocks",
+        "details": {},
+        "timestamp": "2025-09-26T00:03:27.425225"
+      },
+      {
+        "name": "Documentation Strings",
+        "passed": true,
+        "message": "Well documented: 78 docstrings",
+        "details": {},
+        "timestamp": "2025-09-26T00:03:27.425666"
+      }
+    ],
+    "testing": [
+      {
+        "name": "Simple Test",
+        "passed": true,
+        "message": "Structure test exists",
+        "details": {},
+        "timestamp": "2025-09-26T00:03:27.425270"
+      },
+      {
+        "name": "Test Coverage",
+        "passed": true,
+        "message": "Good coverage: 18 test methods",
+        "details": {},
+        "timestamp": "2025-09-26T00:03:27.425534"
+      }
+    ],
+    "requirements": [
+      {
+        "name": "Required Packages",
+        "passed": true,
+        "message": "All 4 packages listed",
+        "details": {},
+        "timestamp": "2025-09-26T00:03:27.426251"
+      },
+      {
+        "name": "Package Count",
+        "passed": true,
+        "message": "21 packages specified",
+        "details": {},
+        "timestamp": "2025-09-26T00:03:27.426261"
+      }
+    ]
+  },
+  "results": [
+    {
+      "name": "File: adapter.py",
+      "passed": true,
+      "message": "File exists",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:27.405270"
+    },
+    {
+      "name": "File: state/development_state.py",
+      "passed": true,
+      "message": "File exists",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:27.405527"
+    },
+    {
+      "name": "File: README.md",
+      "passed": true,
+      "message": "File exists",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:27.405542"
+    },
+    {
+      "name": "File: simple_test.py",
+      "passed": true,
+      "message": "File exists",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:27.405551"
+    },
+    {
+      "name": "File: tests/test_langgraph_adapter.py",
+      "passed": true,
+      "message": "File exists",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:27.405561"
+    },
+    {
+      "name": "File: requirements.txt",
+      "passed": true,
+      "message": "File exists",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:27.405568"
+    },
+    {
+      "name": "LangGraphAdapter Class",
+      "passed": true,
+      "message": "Class found",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:27.414254"
+    },
+    {
+      "name": "Required Methods",
+      "passed": true,
+      "message": "All 14 methods found",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:27.417660"
+    },
+    {
+      "name": "Core Imports",
+      "passed": true,
+      "message": "All core import patterns found",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:27.420447"
+    },
+    {
+      "name": "Code Size",
+      "passed": true,
+      "message": "1607 lines of code",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:27.420551"
+    },
+    {
+      "name": "State Classes",
+      "passed": true,
+      "message": "All 9 classes found",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:27.423747"
+    },
+    {
+      "name": "State Functions",
+      "passed": true,
+      "message": "All 2 functions found",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:27.424632"
+    },
+    {
+      "name": "README Sections",
+      "passed": true,
+      "message": "All 11 sections found",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:27.425134"
+    },
+    {
+      "name": "Documentation Length",
+      "passed": true,
+      "message": "Comprehensive: 1169 words",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:27.425207"
+    },
+    {
+      "name": "Code Examples",
+      "passed": true,
+      "message": "Good coverage: 22 code blocks",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:27.425225"
+    },
+    {
+      "name": "Simple Test",
+      "passed": true,
+      "message": "Structure test exists",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:27.425270"
+    },
+    {
+      "name": "Test Coverage",
+      "passed": true,
+      "message": "Good coverage: 18 test methods",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:27.425534"
+    },
+    {
+      "name": "Documentation Strings",
+      "passed": true,
+      "message": "Well documented: 78 docstrings",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:27.425666"
+    },
+    {
+      "name": "Error Handling",
+      "passed": true,
+      "message": "Good coverage: 14 try blocks",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:27.425760"
+    },
+    {
+      "name": "Logging Coverage",
+      "passed": true,
+      "message": "Good coverage: 16 log statements",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:27.425803"
+    },
+    {
+      "name": "Type Hints",
+      "passed": false,
+      "message": "Low coverage: 73.6%",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:27.426037"
+    },
+    {
+      "name": "Required Packages",
+      "passed": true,
+      "message": "All 4 packages listed",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:27.426251"
+    },
+    {
+      "name": "Package Count",
+      "passed": true,
+      "message": "21 packages specified",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:27.426261"
+    }
+  ]
+}

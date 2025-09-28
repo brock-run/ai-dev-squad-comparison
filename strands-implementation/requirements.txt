@@ -1,0 +1,24 @@
+# Strands Agents Implementation Dependencies
+
+# Core dependencies
+pydantic>=2.0.0
+httpx>=0.24.0
+
+# OpenTelemetry (optional for enterprise features)
+opentelemetry-api>=1.20.0
+opentelemetry-sdk>=1.20.0
+opentelemetry-exporter-jaeger-thrift>=1.20.0
+
+# Cloud provider SDKs (optional)
+boto3>=1.28.0
+azure-identity>=1.14.0
+azure-mgmt-resource>=23.0.0
+google-cloud-resource-manager>=1.10.0
+
+# Development and testing
+pytest>=7.0.0
+pytest-asyncio>=0.21.0
+pytest-cov>=4.1.0
+
+# Note: strands package is not publicly available
+# This is a placeholder for the actual Strands SDK

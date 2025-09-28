@@ -1,0 +1,233 @@
+# AI Dev Squad Comparison - System Configuration
+# This is the main configuration file for the AI Dev Squad Comparison platform.
+# Copy this file to system.yaml and customize for your environment.
+
+# Orchestrator Framework Configurations
+# Each orchestrator can be individually enabled/disabled and configured
+orchestrators:
+  # LangGraph - Enhanced with structured error handling and parallel execution
+  langgraph:
+    enabled: true
+    model_config:
+      primary: "codellama:13b"
+      fallback: "llama2:7b"
+    timeout_seconds: 1800
+    
+  # CrewAI v2 - With guardrails and event hooks
+  crewai:
+    enabled: true
+    version: "v2"
+    model_config:
+      primary: "codellama:13b"
+      fallback: "llama2:7b"
+    timeout_seconds: 1800
+    
+  # AutoGen - Enhanced with persistent memory and function calling
+  autogen:
+    enabled: true
+    model_config:
+      primary: "codellama:13b"
+      fallback: "llama2:7b"
+    timeout_seconds: 1800
+    
+  # n8n - API-driven integration with visual workflow export
+  n8n:
+    enabled: true
+    api_url: "http://localhost:5678"
+    timeout_seconds: 1800
+    
+  # Semantic Kernel - Unified Python/C# implementation
+  semantic_kernel:
+    enabled: true
+    language: "python"  # Options: "python", "csharp"
+    model_config:
+      primary: "codellama:13b"
+      fallback: "llama2:7b"
+    timeout_seconds: 1800
+    
+  # Claude Code Subagents - Secure subagent configuration
+  claude_subagents:
+    enabled: true
+    model_config:
+      primary: "codellama:13b"
+      fallback: "llama2:7b"
+    timeout_seconds: 1800
+    
+  # Langroid - Conversation-style multi-agent interactions
+  langroid:
+    enabled: true
+    model_config:
+      primary: "codellama:13b"
+      fallback: "llama2:7b"
+    timeout_seconds: 1800
+    
+  # LlamaIndex Agents - Retrieval-augmented workflows
+  llamaindex:
+    enabled: true
+    model_config:
+      primary: "codellama:13b"
+      fallback: "llama2:7b"
+    timeout_seconds: 1800
+    
+  # Haystack Agents - ReAct-style tool usage
+  haystack:
+    enabled: true
+    model_config:
+      primary: "codellama:13b"
+      fallback: "llama2:7b"
+    timeout_seconds: 1800
+    
+  # Strands Agents - Enterprise-grade observability
+  strands:
+    enabled: true
+    model_config:
+      primary: "codellama:13b"
+      fallback: "llama2:7b"
+    timeout_seconds: 1800
+
+# Safety and Security Configuration
+# Multi-layered security approach with defense in depth principles
+safety:
+  enabled: true
+  sandbox_type: "docker"  # Options: "docker", "subprocess"
+  
+  # Resource limits for code execution
+  resource_limits:
+    max_memory_mb: 1024      # Maximum memory usage (128-32768)
+    max_cpu_percent: 80      # Maximum CPU usage (10-100)
+    timeout_seconds: 300     # Execution timeout (30-3600)
+  
+  # Network access policy (default-deny with explicit allowlist)
+  network_policy:
+    default_deny: true
+    allowlist:
+      - "api.github.com"
+      - "gitlab.com"
+      - "ollama.local"
+      - "localhost"
+  
+  # Filesystem access policy
+  filesystem_policy:
+    restrict_to_repo: true    # Restrict access to repository root
+    temp_dir_access: true     # Allow temporary directory access
+    system_access: false     # Deny system directory access
+  
+  # Prompt injection detection
+  injection_detection:
+    enabled: true
+    patterns_file: "config/injection_patterns.yaml"
+  
+  # LLM judge for output filtering (optional)
+  llm_judge:
+    enabled: false
+    model: "llama2:7b"
+
+# Version Control System Integration
+# Professional-grade VCS integration supporting GitHub and GitLab
+vcs:
+  # GitHub configuration
+  github:
+    enabled: true
+    token_env: "GITHUB_TOKEN"  # Environment variable for token
+    base_url: "https://api.github.com"
+    rate_limit:
+      requests_per_hour: 5000
+      retry_backoff: "exponential"  # Options: "exponential", "linear", "fixed"
+  
+  # GitLab configuration
+  gitlab:
+    enabled: true
+    token_env: "GITLAB_TOKEN"  # Environment variable for token
+    base_url: "https://gitlab.com/api/v4"
+    rate_limit:
+      requests_per_hour: 2000
+      retry_backoff: "exponential"
+
+# Observability and Telemetry Configuration
+# Enterprise-grade observability with OpenTelemetry integration
+observability:
+  # Structured logging configuration
+  structured_logging:
+    enabled: true
+    format: "json"           # Options: "json", "text"
+    level: "INFO"            # Options: "DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"
+  
+  # OpenTelemetry distributed tracing
+  opentelemetry:
+    enabled: true
+    jaeger_endpoint: "http://localhost:14268/api/traces"
+    service_name: "ai-dev-squad"
+  
+  # Cost and token tracking
+  cost_tracking:
+    enabled: true
+    pricing_config: "config/model_pricing.yaml"
+  
+  # Web dashboard configuration
+  dashboard:
+    enabled: true
+    port: 8050
+
+# Ollama Configuration
+# Optimized for local model execution with performance enhancements
+ollama:
+  base_url: "http://localhost:11434"
+  
+  # Model categories for task-specific routing
+  models:
+    code_specialized:
+      - "codellama:13b"
+      - "deepseek-coder:6.7b"
+      - "codellama:7b"
+    general:
+      - "llama2:7b"
+      - "mistral:7b"
+      - "llama2:13b"
+  
+  # Intelligent caching for performance
+  caching:
+    enabled: true
+    ttl_seconds: 3600        # Cache time-to-live (300-86400)
+  
+  # Streaming response handling
+  streaming:
+    enabled: true
+    chunk_size: 1024         # Streaming chunk size (256-8192)
+
+# Benchmark Configuration
+# Comprehensive evaluation framework with multiple quality dimensions
+benchmarks:
+  # Supported task categories
+  tasks:
+    - "bugfix"      # Single-file bug fix scenarios
+    - "feature_add" # Multi-step feature addition tasks
+    - "qa"          # Question answering with codebase/logs
+    - "optimize"    # Code optimization challenges
+    - "edge_case"   # Edge cases with incorrect/misleading issues
+  
+  # Automated verification and quality assessment
+  verification:
+    pytest_enabled: true      # Automated test execution
+    linting_enabled: true     # Static analysis and linting
+    semantic_analysis: true   # Semantic correctness checking
+  
+  # Self-consistency evaluation
+  self_consistency:
+    enabled: true
+    runs: 5                   # Number of consistency runs (3-10)
+    voting_strategy: "majority"  # Options: "majority", "consensus"
+  
+  # Record-replay functionality for deterministic testing
+  record_replay:
+    enabled: true
+    storage_path: "benchmark/recordings"
+
+# Environment Variable Overrides
+# Any configuration value can be overridden using environment variables
+# Format: AI_DEV_SQUAD_<SECTION>_<SUBSECTION>_<KEY>
+# Example: AI_DEV_SQUAD_ORCHESTRATORS_LANGGRAPH_ENABLED=false
+
+# CLI Argument Overrides
+# Configuration values can also be overridden via CLI arguments
+# Format: --<section>.<subsection>.<key>=<value>
+# Example: --orchestrators.langgraph.enabled=false

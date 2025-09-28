@@ -1,0 +1,170 @@
+{
+  "timestamp": "2025-09-22T02:32:25.520504",
+  "summary": {
+    "dependency_setup": {
+      "total": 13,
+      "passed": 11,
+      "success_rate": 84.61538461538461
+    },
+    "implementation_tests": {
+      "total": 7,
+      "passed": 0,
+      "success_rate": 0.0
+    },
+    "overall": {
+      "total": 20,
+      "passed": 11,
+      "success_rate": 55.00000000000001,
+      "status": "NEEDS_ATTENTION"
+    }
+  },
+  "dependency_results": [
+    {
+      "name": "Python Version",
+      "passed": true,
+      "message": "Python 3.11.5",
+      "details": {},
+      "timestamp": "2025-09-22T02:31:42.560503"
+    },
+    {
+      "name": "Core Dependencies",
+      "passed": true,
+      "message": "All packages installed successfully",
+      "details": {},
+      "timestamp": "2025-09-22T02:32:10.059220"
+    },
+    {
+      "name": "Optional: docker",
+      "passed": true,
+      "message": "Installed successfully",
+      "details": {},
+      "timestamp": "2025-09-22T02:32:10.730502"
+    },
+    {
+      "name": "Optional: pytest",
+      "passed": true,
+      "message": "Installed successfully",
+      "details": {},
+      "timestamp": "2025-09-22T02:32:11.266220"
+    },
+    {
+      "name": "Optional: pytest-asyncio",
+      "passed": true,
+      "message": "Installed successfully",
+      "details": {},
+      "timestamp": "2025-09-22T02:32:11.834435"
+    },
+    {
+      "name": "Optional: black",
+      "passed": true,
+      "message": "Installed successfully",
+      "details": {},
+      "timestamp": "2025-09-22T02:32:12.456467"
+    },
+    {
+      "name": "Optional: flake8",
+      "passed": true,
+      "message": "Installed successfully",
+      "details": {},
+      "timestamp": "2025-09-22T02:32:13.066203"
+    },
+    {
+      "name": "Docker",
+      "passed": true,
+      "message": "Available: Docker version 28.3.2, build 578ccf6",
+      "details": {},
+      "timestamp": "2025-09-22T02:32:13.222591"
+    },
+    {
+      "name": "Docker Functionality",
+      "passed": true,
+      "message": "Docker is working correctly",
+      "details": {},
+      "timestamp": "2025-09-22T02:32:21.237536"
+    },
+    {
+      "name": "Env: OPENAI_API_KEY",
+      "passed": true,
+      "message": "Set",
+      "details": {},
+      "timestamp": "2025-09-22T02:32:21.237874"
+    },
+    {
+      "name": "Env: GITHUB_TOKEN",
+      "passed": false,
+      "message": "Not set - GitHub integration (optional)",
+      "details": {},
+      "timestamp": "2025-09-22T02:32:21.237942"
+    },
+    {
+      "name": "Env: GITLAB_TOKEN",
+      "passed": false,
+      "message": "Not set - GitLab integration (optional)",
+      "details": {},
+      "timestamp": "2025-09-22T02:32:21.237954"
+    },
+    {
+      "name": "Environment Template",
+      "passed": true,
+      "message": ".env template created",
+      "details": {},
+      "timestamp": "2025-09-22T02:32:21.238903"
+    }
+  ],
+  "test_results": [
+    {
+      "name": "Import System",
+      "passed": false,
+      "message": "Import failed: No module named 'common'",
+      "details": {},
+      "timestamp": "2025-09-22T02:32:21.239688"
+    },
+    {
+      "name": "Adapter Creation",
+      "passed": false,
+      "message": "Creation failed: No module named 'psutil'",
+      "details": {},
+      "timestamp": "2025-09-22T02:32:24.187641"
+    },
+    {
+      "name": "Safety Integration",
+      "passed": false,
+      "message": "Integration test failed: No module named 'psutil'",
+      "details": {},
+      "timestamp": "2025-09-22T02:32:24.188610"
+    },
+    {
+      "name": "Workflow Execution",
+      "passed": false,
+      "message": "Workflow test failed: No module named 'psutil'",
+      "details": {},
+      "timestamp": "2025-09-22T02:32:24.189139"
+    },
+    {
+      "name": "VCS Integration",
+      "passed": false,
+      "message": "VCS test failed: No module named 'psutil'",
+      "details": {},
+      "timestamp": "2025-09-22T02:32:24.189656"
+    },
+    {
+      "name": "Health Check",
+      "passed": false,
+      "message": "Health test failed: No module named 'psutil'",
+      "details": {},
+      "timestamp": "2025-09-22T02:32:24.190157"
+    },
+    {
+      "name": "Pytest Suite",
+      "passed": false,
+      "message": "Tests failed: ",
+      "details": {},
+      "timestamp": "2025-09-22T02:32:25.520319"
+    }
+  ],
+  "environment": {
+    "python_version": "3.11.5",
+    "docker_available": true,
+    "environment_setup": true
+  }
+}

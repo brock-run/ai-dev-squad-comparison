@@ -1,0 +1,397 @@
+# Security Policy Configuration Examples
+# This file contains example security policy configurations for different environments
+
+# Development Environment Policy
+development:
+  name: "development"
+  level: "permissive"
+  description: "Permissive policy for development environment"
+  execution:
+    enabled: true
+    sandbox_type: "subprocess"
+    max_memory_mb: 2048
+    max_cpu_percent: 90
+    timeout_seconds: 600
+    network_enabled: true
+    temp_dir_access: true
+    allowed_languages:
+      - "python"
+      - "javascript"
+      - "bash"
+      - "typescript"
+    denied_imports:
+      - "os"
+      - "subprocess"
+    resource_monitoring: true
+  filesystem:
+    enabled: true
+    restrict_to_repo: false
+    temp_dir_access: true
+    system_access: false
+    max_file_size_mb: 500
+    max_files_created: 2000
+    allowed_extensions:
+      - ".py"
+      - ".js"
+      - ".ts"
+      - ".json"
+      - ".yaml"
+      - ".yml"
+      - ".txt"
+      - ".md"
+      - ".csv"
+      - ".html"
+      - ".css"
+    denied_extensions:
+      - ".exe"
+      - ".dll"
+      - ".so"
+    audit_enabled: true
+  network:
+    enabled: true
+    default_deny: false
+    allowed_domains:
+      - "api.github.com"
+      - "api.gitlab.com"
+      - "httpbin.org"
+      - "jsonplaceholder.typicode.com"
+      - "localhost"
+    denied_domains: []
+    allowed_ports:
+      - 80
+      - 443
+      - 8000
+      - 8080
+      - 3000
+    denied_ports:
+      - 22
+      - 23
+      - 25
+    rate_limit: 200
+    request_timeout: 30
+    verify_ssl: false
+    audit_enabled: true
+  injection:
+    enabled: true
+    patterns_file: "config/injection_patterns.yaml"
+    block_critical: true
+    block_high: false
+    flag_medium: true
+    allow_low: true
+    output_filtering: true
+    llm_judge_enabled: false
+    audit_enabled: true
+  metadata:
+    environment: "development"
+    team: "ai-dev-squad"
+    created_by: "system"
+
+# Staging Environment Policy
+staging:
+  name: "staging"
+  level: "standard"
+  description: "Balanced security policy for staging environment"
+  execution:
+    enabled: true
+    sandbox_type: "docker"
+    max_memory_mb: 1024
+    max_cpu_percent: 80
+    timeout_seconds: 300
+    network_enabled: false
+    temp_dir_access: true
+    allowed_languages:
+      - "python"
+      - "javascript"
+      - "typescript"
+    denied_imports:
+      - "os"
+      - "subprocess"
+      - "sys"
+    resource_monitoring: true
+  filesystem:
+    enabled: true
+    restrict_to_repo: true
+    temp_dir_access: true
+    system_access: false
+    max_file_size_mb: 100
+    max_files_created: 1000
+    allowed_extensions:
+      - ".py"
+      - ".js"
+      - ".ts"
+      - ".json"
+      - ".yaml"
+      - ".yml"
+      - ".txt"
+      - ".md"
+      - ".csv"
+    denied_extensions:
+      - ".exe"
+      - ".dll"
+      - ".so"
+      - ".dylib"
+      - ".bin"
+    audit_enabled: true
+  network:
+    enabled: true
+    default_deny: true
+    allowed_domains:
+      - "api.github.com"
+      - "api.gitlab.com"
+    denied_domains: []
+    allowed_ports:
+      - 443
+    denied_ports:
+      - 22
+      - 23
+      - 25
+      - 53
+    rate_limit: 60
+    request_timeout: 30
+    verify_ssl: true
+    audit_enabled: true
+  injection:
+    enabled: true
+    patterns_file: "config/injection_patterns.yaml"
+    block_critical: true
+    block_high: true
+    flag_medium: true
+    allow_low: true
+    output_filtering: true
+    llm_judge_enabled: false
+    audit_enabled: true
+  metadata:
+    environment: "staging"
+    team: "ai-dev-squad"
+    created_by: "system"
+
+# Production Environment Policy
+production:
+  name: "production"
+  level: "strict"
+  description: "High security policy for production environment"
+  execution:
+    enabled: true
+    sandbox_type: "docker"
+    max_memory_mb: 512
+    max_cpu_percent: 60
+    timeout_seconds: 180
+    network_enabled: false
+    temp_dir_access: true
+    allowed_languages:
+      - "python"
+    denied_imports:
+      - "os"
+      - "subprocess"
+      - "sys"
+      - "importlib"
+      - "eval"
+      - "exec"
+    resource_monitoring: true
+  filesystem:
+    enabled: true
+    restrict_to_repo: true
+    temp_dir_access: true
+    system_access: false
+    max_file_size_mb: 50
+    max_files_created: 500
+    allowed_extensions:
+      - ".py"
+      - ".json"
+      - ".txt"
+      - ".md"
+    denied_extensions:
+      - ".exe"
+      - ".dll"
+      - ".so"
+      - ".dylib"
+      - ".bin"
+      - ".sh"
+      - ".bat"
+    audit_enabled: true
+  network:
+    enabled: true
+    default_deny: true
+    allowed_domains:
+      - "api.github.com"
+    denied_domains: []
+    allowed_ports:
+      - 443
+    denied_ports:
+      - 22
+      - 23
+      - 25
+      - 53
+      - 80
+    rate_limit: 30
+    request_timeout: 30
+    verify_ssl: true
+    audit_enabled: true
+  injection:
+    enabled: true
+    patterns_file: "config/injection_patterns.yaml"
+    block_critical: true
+    block_high: true
+    flag_medium: false  # Block medium threats too
+    allow_low: false    # Flag low threats
+    output_filtering: true
+    llm_judge_enabled: true
+    audit_enabled: true
+  metadata:
+    environment: "production"
+    team: "ai-dev-squad"
+    created_by: "system"
+    compliance: "SOC2"
+
+# High Security Environment Policy
+high_security:
+  name: "high-security"
+  level: "paranoid"
+  description: "Maximum security policy for high-risk environments"
+  execution:
+    enabled: true
+    sandbox_type: "docker"
+    max_memory_mb: 256
+    max_cpu_percent: 40
+    timeout_seconds: 120
+    network_enabled: false
+    temp_dir_access: false
+    allowed_languages:
+      - "python"
+    denied_imports:
+      - "os"
+      - "subprocess"
+      - "sys"
+      - "importlib"
+      - "eval"
+      - "exec"
+      - "__import__"
+      - "compile"
+    resource_monitoring: true
+  filesystem:
+    enabled: true
+    restrict_to_repo: true
+    temp_dir_access: false
+    system_access: false
+    max_file_size_mb: 10
+    max_files_created: 100
+    allowed_extensions:
+      - ".py"
+      - ".json"
+      - ".txt"
+    denied_extensions:
+      - ".exe"
+      - ".dll"
+      - ".so"
+      - ".dylib"
+      - ".bin"
+      - ".sh"
+      - ".bat"
+      - ".cmd"
+      - ".ps1"
+    audit_enabled: true
+  network:
+    enabled: false  # No network access at all
+    default_deny: true
+    allowed_domains: []
+    denied_domains: []
+    allowed_ports: []
+    denied_ports: []
+    rate_limit: 10
+    request_timeout: 10
+    verify_ssl: true
+    audit_enabled: true
+  injection:
+    enabled: true
+    patterns_file: "config/injection_patterns.yaml"
+    block_critical: true
+    block_high: true
+    flag_medium: false  # Block medium threats
+    allow_low: false    # Block low threats
+    output_filtering: true
+    llm_judge_enabled: true
+    audit_enabled: true
+  metadata:
+    environment: "high-security"
+    team: "ai-dev-squad"
+    created_by: "system"
+    compliance: "FedRAMP"
+    classification: "restricted"
+
+# API Testing Policy
+api_testing:
+  name: "api-testing"
+  level: "permissive"
+  description: "Policy optimized for API testing and integration"
+  execution:
+    enabled: true
+    sandbox_type: "subprocess"
+    max_memory_mb: 1024
+    max_cpu_percent: 70
+    timeout_seconds: 300
+    network_enabled: true
+    temp_dir_access: true
+    allowed_languages:
+      - "python"
+      - "javascript"
+    denied_imports:
+      - "os"
+      - "subprocess"
+    resource_monitoring: true
+  filesystem:
+    enabled: true
+    restrict_to_repo: true
+    temp_dir_access: true
+    system_access: false
+    max_file_size_mb: 100
+    max_files_created: 500
+    allowed_extensions:
+      - ".py"
+      - ".js"
+      - ".json"
+      - ".yaml"
+      - ".txt"
+      - ".md"
+    denied_extensions:
+      - ".exe"
+      - ".dll"
+      - ".so"
+    audit_enabled: true
+  network:
+    enabled: true
+    default_deny: false
+    allowed_domains:
+      - "httpbin.org"
+      - "jsonplaceholder.typicode.com"
+      - "api.github.com"
+      - "api.gitlab.com"
+      - "reqres.in"
+      - "postman-echo.com"
+    denied_domains: []
+    allowed_ports:
+      - 80
+      - 443
+      - 8080
+    denied_ports:
+      - 22
+      - 23
+      - 25
+    rate_limit: 120
+    request_timeout: 30
+    verify_ssl: false
+    audit_enabled: true
+  injection:
+    enabled: true
+    patterns_file: "config/injection_patterns.yaml"
+    block_critical: true
+    block_high: false
+    flag_medium: true
+    allow_low: true
+    output_filtering: false
+    llm_judge_enabled: false
+    audit_enabled: true
+  metadata:
+    environment: "testing"
+    purpose: "api-integration"
+    team: "ai-dev-squad"
+    created_by: "system"

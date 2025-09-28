@@ -1,0 +1,104 @@
+# Development Security Policy
+# Permissive policy for development environments with enhanced debugging capabilities
+
+name: "development"
+version: "1.0.0"
+level: "permissive"
+scope: "global"
+description: "Permissive security policy for development environments with debugging support"
+
+# Execution sandbox configuration
+execution:
+  enabled: true
+  sandbox_type: "subprocess"  # Faster for development
+  max_memory_mb: 2048
+  max_cpu_percent: 90
+  timeout_seconds: 600
+  network_enabled: true  # Allow network for development
+  allowed_languages:
+    - "python"
+    - "javascript"
+    - "bash"
+    - "shell"
+  denied_imports:
+    - "subprocess"  # Still block dangerous subprocess
+  resource_monitoring: true
+
+# Filesystem access policy
+filesystem:
+  restrict_to_repo: true
+  temp_dir_access: true
+  system_access: false
+  max_file_size: 52428800  # 50MB
+  max_files_created: 1000
+  allowed_extensions:
+    - ".py"
+    - ".js"
+    - ".ts"
+    - ".json"
+    - ".yaml"
+    - ".yml"
+    - ".txt"
+    - ".md"
+    - ".csv"
+    - ".log"
+    - ".html"
+    - ".css"
+  denied_extensions:
+    - ".exe"
+    - ".dll"
+    - ".so"
+  audit_enabled: true
+
+# Network access policy
+network:
+  default_deny: false  # Allow most network access in dev
+  allowed_domains:
+    - "*"  # Allow all domains in development
+  denied_domains:
+    - "*.malicious.com"
+    - "*.evil.org"
+  allowed_ports:
+    - 80
+    - 443
+    - 8080
+    - 8000
+    - 3000
+    - 5000
+  denied_ports:
+    - 22   # Still block SSH
+    - 23   # Still block Telnet
+  request_timeout: 60
+  max_response_size: 20971520  # 20MB
+  verify_ssl: false  # Allow self-signed certs in dev
+  rate_limit: 120
+  audit_enabled: true
+
+# Policy enforcement settings
+enforce_all: false  # More lenient in development
+fail_open: true     # Fail open for development convenience
+audit_enabled: true
+violation_threshold: 50
+
+# Policy metadata
+tags:
+  - "development"
+  - "permissive"
+  - "debugging"
+  - "local"
+
+# Development-specific injection patterns
+injection_patterns:
+  - name: "debug_mode_request"
+    pattern: "(debug|verbose|trace)\\s+(mode|level|output)"
+    injection_type: "output_manipulation"
+    threat_level: "low"
+    description: "Debug mode requests (allowed in development)"
+    action: "flag"
+    
+  - name: "development_secrets"
+    pattern: "(dev|development|test)\\s+(api\\s+key|secret|token)"
+    injection_type: "credential_extraction"
+    threat_level: "medium"
+    description: "Development credential requests"
+    action: "flag"

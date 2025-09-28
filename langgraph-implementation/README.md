@@ -1,76 +1,422 @@
-# LangGraph AI Development Squad Implementation
+# LangGraph Multi-Agent Squad Implementation
 
-This directory contains the implementation of an AI development squad using LangGraph, a framework for building stateful, multi-agent applications with LangChain.
+This directory contains the enhanced LangGraph-based implementation of the AI agent orchestrator, featuring a multi-agent development squad with integrated safety controls, VCS workflows, and comprehensive telemetry.
 
-## Overview
+## Architecture
 
-LangGraph enables the creation of graph-based workflows where agents can collaborate through a defined state machine. This implementation demonstrates how to create a development squad with specialized agents (architect, developer, tester) that work together to complete software development tasks.
+The LangGraph implementation uses a state-based workflow with specialized agents:
+
+- **Architect Agent**: Creates system design and architecture
+- **Developer Agent**: Implements code based on design
+- **Tester Agent**: Creates and runs comprehensive tests
+- **Reviewer Agent**: Performs automated code review with optional human-in-the-loop
+- **VCS Manager**: Handles version control operations (branches, commits, PRs)
 
 ## Features
 
-- Graph-based workflow with state management
-- Specialized agents with different roles and capabilities
-- Human-in-the-loop review process
-- Integration with GitHub for code operations
-- Local execution using Ollama models
+### Core Capabilities
+- ✅ Multi-agent collaboration using LangGraph state graphs
+- ✅ Comprehensive state management and persistence
+- ✅ Structured error handling with fallback edges
+- ✅ Parallel execution where appropriate
+- ✅ Human-in-the-loop review process
 
-## Setup Instructions
+### Safety & Security
+- ✅ Integrated execution sandbox (Docker/subprocess)
+- ✅ Filesystem access controls with path validation
+- ✅ Network access controls with domain allowlists
+- ✅ Prompt injection detection and prevention
+- ✅ Configurable security policies
 
-1. Create a virtual environment:
-   ```bash
-   python -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
-   ```
+### VCS Integration
+- ✅ GitHub and GitLab provider support
+- ✅ Automated branch creation and management
+- ✅ Intelligent commit message generation
+- ✅ Pull request/merge request automation
+- ✅ Professional workflow patterns
 
-2. Install dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-3. Download recommended Ollama models:
-   ```bash
-   ollama pull llama3.1:8b
-   ollama pull codellama:13b
-   ```
-
-4. Set up environment variables:
-   ```bash
-   cp .env.example .env
-   # Edit .env with your GitHub token and other settings
-   ```
+### Observability
+- ✅ Comprehensive telemetry and event emission
+- ✅ Agent execution tracking and metrics
+- ✅ Structured logging with JSON output
+- ✅ Performance monitoring and profiling
+- ✅ Error analysis and recovery tracking
 
 ## Directory Structure
 
-- `agents/`: Contains the implementation of specialized agents
-  - `architect.py`: Responsible for system design and architecture decisions
-  - `developer.py`: Handles code implementation based on specifications
-  - `tester.py`: Creates and runs tests for the implemented code
-  
-- `workflows/`: Contains the workflow definitions
-  - `development_workflow.py`: Defines the state graph and transitions
+```
+langgraph-implementation/
+├── adapter.py                 # Main LangGraph adapter implementation
+├── state/
+│   └── development_state.py   # State management and artifacts
+├── agents/                    # Individual agent implementations (future)
+├── workflows/                 # Workflow definitions (future)
+├── tools/                     # Safe tool implementations (future)
+├── tests/
+│   └── test_langgraph_adapter.py  # Comprehensive test suite
+├── simple_test.py            # Basic structure validation
+├── test_adapter.py           # Integration test (requires deps)
+├── requirements.txt          # Python dependencies
+└── README.md                 # This file
+```
+
+## Setup
+
+### 1. Install Dependencies
+
+```bash
+# Core LangGraph dependencies
+pip install langgraph langchain langchain-community
+
+# Optional: For enhanced model support
+pip install langchain-openai langchain-anthropic
+
+# Optional: For local model support
+pip install langchain-ollama
+
+# Development dependencies
+pip install pytest pytest-asyncio
+```
+
+### 2. Configure Environment Variables
+
+```bash
+# Required for LLM access
+export OPENAI_API_KEY="your-openai-key"
+
+# Optional: For VCS integration
+export GITHUB_TOKEN="your-github-token"
+export GITLAB_TOKEN="your-gitlab-token"
+
+# Optional: For local models
+export OLLAMA_BASE_URL="http://localhost:11434"
+```
+
+### 3. Configure Security Policies
+
+The adapter uses the central security policy system. Ensure you have a policy configured:
+
+```bash
+# Check available policies
+python -m common.safety.policy list
+
+# Set active policy
+python -m common.safety.policy set-active standard
+```
 
 ## Usage
 
+### Basic Usage
+
 ```python
-from workflows.development_workflow import development_workflow
+from langgraph_implementation.adapter import create_langgraph_adapter
+from common.agent_api import TaskSchema
 
-# Initialize the workflow
-workflow = development_workflow()
+# Create adapter
+adapter = create_langgraph_adapter()
 
-# Run the workflow with a task
-result = workflow.invoke({
-    "task": "Build a Python function to calculate Fibonacci numbers",
-    "requirements": ["Must handle negative numbers", "Should be optimized for performance"]
-})
+# Create task
+task = TaskSchema(
+    id="task-1",
+    description="Create a REST API for user management",
+    requirements=[
+        "Implement CRUD operations for users",
+        "Add input validation and error handling",
+        "Include comprehensive tests",
+        "Add API documentation"
+    ],
+    context={"language": "python", "framework": "fastapi"}
+)
 
-print(result)
+# Execute task
+async for event in adapter.run_task(task):
+    if event.type == "workflow_step":
+        print(f"Step: {event.data['node']} - Status: {event.data['status']}")
+    elif event.type == "task_complete":
+        print(f"Task completed: {event.data['success']}")
 ```
 
-## Performance Metrics
+### Advanced Configuration
 
-This implementation will be benchmarked against other frameworks using the standard test suite in the `comparison-results` directory.
+```python
+config = {
+    "language": "python",
+    "vcs": {
+        "enabled": True,
+        "provider": "github",
+        "repository": "myorg/myrepo",
+        "create_pr": True
+    },
+    "human_review": {
+        "enabled": True,
+        "required_for": ["critical", "security"]
+    },
+    "architect": {
+        "model": "gpt-4",
+        "temperature": 0.3
+    },
+    "developer": {
+        "model": "gpt-3.5-turbo",
+        "temperature": 0.1
+    },
+    "tester": {
+        "model": "gpt-3.5-turbo",
+        "coverage_threshold": 80
+    }
+}
 
-## References
+adapter = create_langgraph_adapter(config)
+```
 
-- [LangGraph Documentation](https://langchain-ai.github.io/langgraph/)
-- [LangChain Documentation](https://python.langchain.com/docs/get_started/introduction)
+### Health Monitoring
+
+```python
+# Check adapter health
+health = await adapter.health_check()
+print(f"Status: {health['status']}")
+print(f"Components: {health['components']}")
+
+# Get capabilities
+capabilities = await adapter.get_capabilities()
+print(f"Features: {capabilities['features']}")
+print(f"Safety: {capabilities['safety_features']}")
+```
+
+## Workflow States
+
+The LangGraph workflow progresses through these states:
+
+1. **INITIALIZING** → Task setup and validation
+2. **DESIGN_IN_PROGRESS** → Architect creates system design
+3. **DESIGN_COMPLETE** → Design approved, ready for implementation
+4. **IMPLEMENTATION_IN_PROGRESS** → Developer implements code
+5. **IMPLEMENTATION_COMPLETE** → Code ready for testing
+6. **TESTING_IN_PROGRESS** → Tester creates and runs tests
+7. **TESTING_COMPLETE** → Tests pass, ready for review
+8. **REVIEW_IN_PROGRESS** → Automated and optional human review
+9. **REVIEW_COMPLETE** → Review approved, ready for VCS
+10. **VCS_IN_PROGRESS** → Branch creation, commits, PR/MR
+11. **COMPLETE** → Task successfully completed
+
+Error states and recovery:
+- **ERROR** → Recoverable errors with retry logic
+- **CANCELLED** → User-cancelled tasks
+
+## State Artifacts
+
+Each workflow stage produces structured artifacts:
+
+### Design Artifact
+```python
+DesignArtifact(
+    architecture_type="microservices",
+    components=[...],
+    interfaces=[...],
+    data_models=[...],
+    design_decisions=[...],
+    trade_offs=[...],
+    estimated_complexity="medium"
+)
+```
+
+### Code Artifact
+```python
+CodeArtifact(
+    language="python",
+    main_code="...",
+    supporting_files={"utils.py": "...", "models.py": "..."},
+    dependencies=["fastapi", "pydantic"],
+    entry_point="main.py",
+    documentation="..."
+)
+```
+
+### Test Artifact
+```python
+TestArtifact(
+    test_framework="pytest",
+    test_code="...",
+    test_cases=[...],
+    coverage_report={"percent": 85, "lines": 120},
+    performance_benchmarks={...}
+)
+```
+
+### Review Artifact
+```python
+ReviewArtifact(
+    overall_score=87.5,
+    approved=True,
+    code_quality_score=85.0,
+    test_quality_score=90.0,
+    design_adherence_score=88.0,
+    issues=[],
+    suggestions=[...],
+    human_feedback="Looks good!"
+)
+```
+
+### VCS Artifact
+```python
+VCSArtifact(
+    provider="github",
+    repository="myorg/myrepo",
+    branch_name="feature/user-management-api",
+    commit_sha="abc123...",
+    commit_message="feat: implement user management API",
+    pull_request_number=42,
+    pull_request_url="https://github.com/myorg/myrepo/pull/42",
+    files_changed=["main.py", "test_main.py", "utils.py"]
+)
+```
+
+## Testing
+
+### Run Structure Tests
+```bash
+python simple_test.py
+```
+
+### Run Unit Tests
+```bash
+pytest tests/test_langgraph_adapter.py -v
+```
+
+### Run Integration Tests (requires dependencies)
+```bash
+python test_adapter.py
+```
+
+## Safety Controls
+
+The adapter integrates with the central safety system:
+
+### Execution Sandbox
+- Docker-based isolation (preferred)
+- Subprocess fallback for environments without Docker
+- Resource limits (CPU, memory, time)
+- Network isolation
+
+### Input Validation
+- Prompt injection detection
+- Input sanitization
+- Pattern-based filtering
+- Optional LLM-based validation
+
+### Filesystem Controls
+- Path allowlist validation
+- Temporary directory management
+- File operation logging
+- Size limits and quotas
+
+### Network Controls
+- Domain allowlist enforcement
+- Default-deny policy
+- Request logging and monitoring
+- Rate limiting
+
+## VCS Integration
+
+### GitHub Integration
+```python
+# Automatic workflow
+task = TaskSchema(
+    description="Add user authentication",
+    context={
+        "vcs": {
+            "provider": "github",
+            "owner": "myorg",
+            "repo": "myproject",
+            "create_pr": True
+        }
+    }
+)
+```
+
+### GitLab Integration
+```python
+# Similar to GitHub but with GitLab-specific features
+task = TaskSchema(
+    description="Add user authentication",
+    context={
+        "vcs": {
+            "provider": "gitlab",
+            "owner": "myorg",
+            "repo": "myproject",
+            "create_mr": True
+        }
+    }
+)
+```
+
+## Performance Considerations
+
+### Memory Usage
+- State persistence uses memory checkpoints
+- Large artifacts are streamed when possible
+- Configurable cleanup policies
+
+### Execution Time
+- Parallel agent execution where safe
+- Caching for repeated operations
+- Timeout controls for long-running tasks
+
+### Scalability
+- Stateless adapter design
+- External state storage support
+- Horizontal scaling capabilities
+
+## Troubleshooting
+
+### Common Issues
+
+1. **LangGraph not available**
+   ```bash
+   pip install langgraph langchain
+   ```
+
+2. **Safety policy not found**
+   ```bash
+   python -m common.safety.policy set-active standard
+   ```
+
+3. **VCS authentication failed**
+   ```bash
+   export GITHUB_TOKEN="your-token"
+   export GITLAB_TOKEN="your-token"
+   ```
+
+4. **Docker not available**
+   - Adapter will fall back to subprocess execution
+   - Some safety features may be limited
+
+### Debug Mode
+
+Enable debug logging:
+```python
+import logging
+logging.basicConfig(level=logging.DEBUG)
+
+adapter = create_langgraph_adapter()
+```
+
+### State Inspection
+
+```python
+# Get workflow state
+state = await adapter.workflow.aget_state(config)
+print(f"Current status: {state.values['status']}")
+print(f"Agent executions: {len(state.values['agent_executions'])}")
+```
+
+## Contributing
+
+1. Follow the existing code structure
+2. Add comprehensive tests for new features
+3. Update documentation for API changes
+4. Ensure safety controls are properly integrated
+5. Test with both Docker and subprocess execution modes
+
+## License
+
+This implementation is part of the AI Dev Squad Comparison project and follows the same license terms.

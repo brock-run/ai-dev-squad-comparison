@@ -1,0 +1,471 @@
+# Commit Message Generator Configuration
+# This file contains configuration for automatic commit message generation
+
+# Commit Message Generator Settings
+commit_messages:
+  # Message style: conventional, simple, detailed, gitmoji
+  style: "conventional"
+  
+  # Maximum subject line length
+  max_subject_length: 72
+  
+  # Maximum body line length
+  max_body_length: 100
+  
+  # Include statistics in detailed messages
+  include_stats: false
+  
+  # Include file list in detailed messages
+  include_files: false
+  
+  # Use emoji in messages (when style supports it)
+  use_emoji: false
+  
+  # Require scope in conventional commits
+  require_scope: false
+  
+  # Require issue reference in commit messages
+  require_issue_reference: false
+  
+  # Breaking change prefix for conventional commits
+  breaking_change_prefix: "!"
+  
+  # Enable caching for performance
+  enable_cache: true
+  
+  # Cache settings
+  cache:
+    # Cache directory (relative to user home if not absolute)
+    directory: ".cache/commit_msgs"
+    
+    # Maximum age of cached messages in days
+    max_age_days: 30
+    
+    # Automatically clean expired cache entries
+    auto_cleanup: true
+  
+  # Commit type detection keywords
+  type_keywords:
+    feat:
+      - "add"
+      - "new"
+      - "feature"
+      - "implement"
+      - "create"
+      - "introduce"
+    
+    fix:
+      - "fix"
+      - "bug"
+      - "issue"
+      - "error"
+      - "problem"
+      - "resolve"
+      - "correct"
+    
+    docs:
+      - "doc"
+      - "readme"
+      - "comment"
+      - "documentation"
+      - "guide"
+    
+    style:
+      - "format"
+      - "style"
+      - "lint"
+      - "prettier"
+      - "whitespace"
+    
+    refactor:
+      - "refactor"
+      - "restructure"
+      - "reorganize"
+      - "cleanup"
+      - "simplify"
+    
+    test:
+      - "test"
+      - "spec"
+      - "coverage"
+      - "mock"
+      - "unit"
+      - "integration"
+    
+    chore:
+      - "chore"
+      - "maintenance"
+      - "update"
+      - "upgrade"
+      - "dependency"
+    
+    perf:
+      - "performance"
+      - "optimize"
+      - "speed"
+      - "faster"
+      - "efficient"
+    
+    ci:
+      - "ci"
+      - "pipeline"
+      - "workflow"
+      - "action"
+      - "build"
+    
+    build:
+      - "build"
+      - "compile"
+      - "package"
+      - "bundle"
+      - "webpack"
+
+# Message Templates
+templates:
+  # Conventional commit templates
+  conventional:
+    feat: "{type}{scope}: {description}"
+    fix: "{type}{scope}: {description}"
+    docs: "{type}{scope}: {description}"
+    style: "{type}{scope}: {description}"
+    refactor: "{type}{scope}: {description}"
+    test: "{type}{scope}: {description}"
+    chore: "{type}{scope}: {description}"
+    perf: "{type}{scope}: {description}"
+    ci: "{type}{scope}: {description}"
+    build: "{type}{scope}: {description}"
+    revert: "revert: {description}"
+  
+  # Gitmoji templates
+  gitmoji:
+    feat: "✨ {description}"
+    fix: "🐛 {description}"
+    docs: "📚 {description}"
+    style: "💄 {description}"
+    refactor: "♻️ {description}"
+    test: "✅ {description}"
+    chore: "🔧 {description}"
+    perf: "⚡ {description}"
+    ci: "👷 {description}"
+    build: "📦 {description}"
+    revert: "⏪ {description}"
+  
+  # Simple templates
+  simple:
+    feat: "{description}"
+    fix: "{description}"
+    docs: "{description}"
+    style: "{description}"
+    refactor: "{description}"
+    test: "{description}"
+    chore: "{description}"
+    perf: "{description}"
+    ci: "{description}"
+    build: "{description}"
+    revert: "{description}"
+  
+  # Detailed templates (with body)
+  detailed:
+    feat: |
+      {type}{scope}: {description}
+      
+      {body}
+      
+      {footer}
+    fix: |
+      {type}{scope}: {description}
+      
+      {body}
+      
+      {footer}
+    docs: |
+      {type}{scope}: {description}
+      
+      {body}
+    style: |
+      {type}{scope}: {description}
+      
+      {body}
+    refactor: |
+      {type}{scope}: {description}
+      
+      {body}
+      
+      {footer}
+    test: |
+      {type}{scope}: {description}
+      
+      {body}
+    chore: |
+      {type}{scope}: {description}
+      
+      {body}
+    perf: |
+      {type}{scope}: {description}
+      
+      {body}
+      
+      {footer}
+    ci: |
+      {type}{scope}: {description}
+      
+      {body}
+    build: |
+      {type}{scope}: {description}
+      
+      {body}
+
+# File pattern mappings for commit type detection
+file_patterns:
+  docs:
+    - "*.md"
+    - "*.rst"
+    - "*.txt"
+    - "readme*"
+    - "doc/"
+    - "docs/"
+    - "documentation/"
+  
+  test:
+    - "test_*"
+    - "*_test.*"
+    - "spec_*"
+    - "*_spec.*"
+    - "tests/"
+    - "__tests__/"
+    - "spec/"
+  
+  ci:
+    - ".github/"
+    - ".gitlab-ci*"
+    - "Jenkinsfile"
+    - ".travis*"
+    - "azure-pipelines*"
+    - ".circleci/"
+    - "buildkite/"
+  
+  build:
+    - "package.json"
+    - "requirements.txt"
+    - "Dockerfile"
+    - "Makefile"
+    - "pom.xml"
+    - "build.gradle"
+    - "CMakeLists.txt"
+    - "setup.py"
+    - "pyproject.toml"
+
+# Language detection mappings
+language_extensions:
+  ".py": "Python"
+  ".js": "JavaScript"
+  ".ts": "TypeScript"
+  ".jsx": "React"
+  ".tsx": "React"
+  ".java": "Java"
+  ".go": "Go"
+  ".rs": "Rust"
+  ".cpp": "C++"
+  ".c": "C"
+  ".cs": "C#"
+  ".php": "PHP"
+  ".rb": "Ruby"
+  ".swift": "Swift"
+  ".kt": "Kotlin"
+  ".scala": "Scala"
+  ".html": "HTML"
+  ".css": "CSS"
+  ".scss": "SCSS"
+  ".less": "LESS"
+  ".sql": "SQL"
+  ".sh": "Shell"
+  ".bash": "Bash"
+  ".zsh": "Zsh"
+  ".fish": "Fish"
+  ".yml": "YAML"
+  ".yaml": "YAML"
+  ".json": "JSON"
+  ".xml": "XML"
+  ".md": "Markdown"
+  ".rst": "reStructuredText"
+  ".tex": "LaTeX"
+
+# Environment-specific configurations
+environments:
+  development:
+    commit_messages:
+      style: "simple"
+      require_scope: false
+      require_issue_reference: false
+      include_stats: true
+      enable_cache: true
+  
+  staging:
+    commit_messages:
+      style: "conventional"
+      require_scope: true
+      require_issue_reference: false
+      include_stats: false
+      enable_cache: true
+  
+  production:
+    commit_messages:
+      style: "conventional"
+      require_scope: true
+      require_issue_reference: true
+      include_stats: false
+      enable_cache: true
+      
+      # Stricter validation in production
+      max_subject_length: 50
+      breaking_change_prefix: "!"
+
+# Integration settings
+integrations:
+  # VCS provider integration
+  vcs:
+    # Automatically generate commit messages for VCS operations
+    auto_generate: true
+    
+    # Fallback to simple messages if generation fails
+    fallback_to_simple: true
+    
+    # Prefix for AI-generated commits
+    ai_prefix: "[AI]"
+    
+    # Prefix for automated commits
+    auto_prefix: "[AUTO]"
+  
+  # AI Dev Squad specific settings
+  ai_dev_squad:
+    # Default commit message style for AI agents
+    default_style: "conventional"
+    
+    # Include agent information in commit messages
+    include_agent_info: false
+    
+    # Agent-specific templates
+    agent_templates:
+      feat: "[AI] {type}{scope}: {description}"
+      fix: "[AI] {type}{scope}: {description}"
+      docs: "[AI] {type}{scope}: {description}"
+      refactor: "[AI] {type}{scope}: {description}"
+      test: "[AI] {type}{scope}: {description}"
+      chore: "[AI] {type}{scope}: {description}"
+    
+    # Confidence threshold for automatic commits
+    confidence_threshold: 0.8
+    
+    # Maximum number of suggestions to generate
+    max_suggestions: 5
+
+# Validation rules
+validation:
+  # Enable commit message validation
+  enabled: true
+  
+  # Validation rules by style
+  rules:
+    conventional:
+      # Require conventional commit format
+      require_format: true
+      
+      # Valid commit types
+      valid_types:
+        - "feat"
+        - "fix"
+        - "docs"
+        - "style"
+        - "refactor"
+        - "test"
+        - "chore"
+        - "perf"
+        - "ci"
+        - "build"
+        - "revert"
+      
+      # Scope validation
+      scope:
+        # Require scope
+        required: false
+        
+        # Valid scopes (empty = any scope allowed)
+        valid_scopes: []
+        
+        # Scope format regex
+        format: "^[a-z0-9-]+$"
+      
+      # Description validation
+      description:
+        # Minimum description length
+        min_length: 10
+        
+        # Maximum description length
+        max_length: 100
+        
+        # Require lowercase first letter
+        lowercase_first: true
+        
+        # Disallow period at end
+        no_period: true
+    
+    simple:
+      # Minimum message length
+      min_length: 10
+      
+      # Maximum message length
+      max_length: 72
+    
+    gitmoji:
+      # Require emoji at start
+      require_emoji: true
+      
+      # Valid emojis
+      valid_emojis:
+        - "✨"  # feat
+        - "🐛"  # fix
+        - "📚"  # docs
+        - "💄"  # style
+        - "♻️"  # refactor
+        - "✅"  # test
+        - "🔧"  # chore
+        - "⚡"  # perf
+        - "👷"  # ci
+        - "📦"  # build
+        - "⏪"  # revert
+
+# Performance settings
+performance:
+  # Enable parallel processing for large diffs
+  parallel_processing: true
+  
+  # Maximum number of worker threads
+  max_workers: 4
+  
+  # Cache optimization
+  cache_optimization:
+    # Preload frequently used patterns
+    preload_patterns: true
+    
+    # Compress cache files
+    compress_cache: false
+    
+    # Maximum cache size in MB
+    max_cache_size_mb: 100
+
+# Logging configuration
+logging:
+  # Log level: DEBUG, INFO, WARNING, ERROR
+  level: "INFO"
+  
+  # Log commit message generation
+  log_generation: true
+  
+  # Log cache operations
+  log_cache: false
+  
+  # Log validation results
+  log_validation: true
+  
+  # Log file path (optional)
+  log_file: "logs/commit_messages.log"

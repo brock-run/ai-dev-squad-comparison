@@ -1,0 +1,159 @@
+{
+  "timestamp": "2025-09-26T00:03:29.302080",
+  "summary": {
+    "total_tests": 21,
+    "passed": 20,
+    "failed": 1,
+    "success_rate": 95.23809523809523,
+    "production_ready": true
+  },
+  "results": [
+    {
+      "name": "File: adapter.py",
+      "passed": true,
+      "message": "File exists",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:29.293841"
+    },
+    {
+      "name": "File: README.md",
+      "passed": true,
+      "message": "File exists",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:29.294020"
+    },
+    {
+      "name": "File: requirements.txt",
+      "passed": true,
+      "message": "File exists",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:29.294029"
+    },
+    {
+      "name": "File: tests/test_crewai_adapter.py",
+      "passed": true,
+      "message": "File exists",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:29.294040"
+    },
+    {
+      "name": "Class: CrewAIAdapter",
+      "passed": true,
+      "message": "Class found",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:29.299275"
+    },
+    {
+      "name": "Class: SafeCodeExecutorTool",
+      "passed": true,
+      "message": "Class found",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:29.299293"
+    },
+    {
+      "name": "Class: SafeFileOperationsTool",
+      "passed": true,
+      "message": "Class found",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:29.299295"
+    },
+    {
+      "name": "Class: SafeVCSOperationsTool",
+      "passed": true,
+      "message": "Class found",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:29.299298"
+    },
+    {
+      "name": "Required Methods",
+      "passed": true,
+      "message": "All 9 methods found",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:29.300624"
+    },
+    {
+      "name": "Factory Function",
+      "passed": true,
+      "message": "create_crewai_adapter found",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:29.300626"
+    },
+    {
+      "name": "Implementation Size",
+      "passed": false,
+      "message": "779 lines (too small)",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:29.300678"
+    },
+    {
+      "name": "Required Packages",
+      "passed": true,
+      "message": "All 4 packages listed",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:29.301220"
+    },
+    {
+      "name": "Package Count",
+      "passed": true,
+      "message": "20 packages specified",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:29.301242"
+    },
+    {
+      "name": "README Sections",
+      "passed": true,
+      "message": "All 6 sections present",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:29.301593"
+    },
+    {
+      "name": "Documentation Quality",
+      "passed": true,
+      "message": "1237 words (comprehensive)",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:29.301649"
+    },
+    {
+      "name": "Code Examples",
+      "passed": true,
+      "message": "13 code blocks",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:29.301663"
+    },
+    {
+      "name": "Test Coverage",
+      "passed": true,
+      "message": "21 test methods",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:29.301923"
+    },
+    {
+      "name": "Test Organization",
+      "passed": true,
+      "message": "3 test classes",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:29.301940"
+    },
+    {
+      "name": "CrewAI Imports",
+      "passed": true,
+      "message": "All CrewAI imports present",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:29.301989"
+    },
+    {
+      "name": "Agent Roles",
+      "passed": true,
+      "message": "All 4 roles present",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:29.302067"
+    },
+    {
+      "name": "Safety Tools",
+      "passed": true,
+      "message": "All 3 tools present",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:29.302072"
+    }
+  ]
+}

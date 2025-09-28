@@ -1,0 +1,824 @@
+{
+  "timestamp": "2025-09-26T00:03:51.854457",
+  "summary": {
+    "total_tests": 54,
+    "passed": 38,
+    "failed": 16,
+    "success_rate": 70.37037037037037,
+    "implementations_tested": 9
+  },
+  "implementation_results": {
+    "langgraph-implementation": {
+      "passed": 6,
+      "total": 6,
+      "results": [
+        {
+          "name": "langgraph-implementation Structure",
+          "passed": true,
+          "message": "Structure validation passed",
+          "details": {},
+          "timestamp": "2025-09-26T00:03:27.431098"
+        },
+        {
+          "name": "langgraph-implementation Dependencies",
+          "passed": true,
+          "message": "21 packages, core packages present",
+          "details": {},
+          "timestamp": "2025-09-26T00:03:27.431583"
+        },
+        {
+          "name": "langgraph-implementation Documentation",
+          "passed": true,
+          "message": "1169 words, 22 code examples",
+          "details": {},
+          "timestamp": "2025-09-26T00:03:27.431785"
+        },
+        {
+          "name": "langgraph-implementation Adapter Compliance",
+          "passed": true,
+          "message": "All required methods present",
+          "details": {},
+          "timestamp": "2025-09-26T00:03:27.432038"
+        },
+        {
+          "name": "langgraph-implementation Unit Tests",
+          "passed": true,
+          "message": "Structure tests: Results: 8 passed, 0 failed",
+          "details": {},
+          "timestamp": "2025-09-26T00:03:28.354361"
+        },
+        {
+          "name": "langgraph-implementation Integration",
+          "passed": true,
+          "message": "Integration test completed",
+          "details": {},
+          "timestamp": "2025-09-26T00:03:29.267206"
+        }
+      ]
+    },
+    "crewai-implementation": {
+      "passed": 6,
+      "total": 6,
+      "results": [
+        {
+          "name": "crewai-implementation Structure",
+          "passed": true,
+          "message": "Structure validation passed",
+          "details": {},
+          "timestamp": "2025-09-26T00:03:29.306526"
+        },
+        {
+          "name": "crewai-implementation Dependencies",
+          "passed": true,
+          "message": "20 packages, core packages present",
+          "details": {},
+          "timestamp": "2025-09-26T00:03:29.307203"
+        },
+        {
+          "name": "crewai-implementation Documentation",
+          "passed": true,
+          "message": "1237 words, 13 code examples",
+          "details": {},
+          "timestamp": "2025-09-26T00:03:29.307595"
+        },
+        {
+          "name": "crewai-implementation Adapter Compliance",
+          "passed": true,
+          "message": "All required methods present",
+          "details": {},
+          "timestamp": "2025-09-26T00:03:29.307719"
+        },
+        {
+          "name": "crewai-implementation Unit Tests",
+          "passed": true,
+          "message": "Structure tests: Results: 10 passed, 0 failed",
+          "details": {},
+          "timestamp": "2025-09-26T00:03:30.143566"
+        },
+        {
+          "name": "crewai-implementation Integration",
+          "passed": true,
+          "message": "Integration test completed",
+          "details": {},
+          "timestamp": "2025-09-26T00:03:30.212295"
+        }
+      ]
+    },
+    "autogen-implementation": {
+      "passed": 6,
+      "total": 6,
+      "results": [
+        {
+          "name": "autogen-implementation Structure",
+          "passed": true,
+          "message": "Structure validation passed",
+          "details": {},
+          "timestamp": "2025-09-26T00:03:30.721837"
+        },
+        {
+          "name": "autogen-implementation Dependencies",
+          "passed": true,
+          "message": "7 packages, core packages present",
+          "details": {},
+          "timestamp": "2025-09-26T00:03:30.723009"
+        },
+        {
+          "name": "autogen-implementation Documentation",
+          "passed": true,
+          "message": "1428 words, 21 code examples",
+          "details": {},
+          "timestamp": "2025-09-26T00:03:30.723334"
+        },
+        {
+          "name": "autogen-implementation Adapter Compliance",
+          "passed": true,
+          "message": "All required methods present",
+          "details": {},
+          "timestamp": "2025-09-26T00:03:30.724153"
+        },
+        {
+          "name": "autogen-implementation Unit Tests",
+          "passed": true,
+          "message": "Structure tests: Results: 10 passed, 0 failed",
+          "details": {},
+          "timestamp": "2025-09-26T00:03:32.575429"
+        },
+        {
+          "name": "autogen-implementation Integration",
+          "passed": true,
+          "message": "Integration test completed",
+          "details": {},
+          "timestamp": "2025-09-26T00:03:33.090043"
+        }
+      ]
+    },
+    "n8n-implementation": {
+      "passed": 1,
+      "total": 6,
+      "results": [
+        {
+          "name": "n8n-implementation Validation Script",
+          "passed": false,
+          "message": "No validation script found",
+          "details": {},
+          "timestamp": "2025-09-26T00:03:33.090304"
+        },
+        {
+          "name": "n8n-implementation Requirements",
+          "passed": false,
+          "message": "requirements.txt not found",
+          "details": {},
+          "timestamp": "2025-09-26T00:03:33.090321"
+        },
+        {
+          "name": "n8n-implementation Documentation",
+          "passed": false,
+          "message": "Too brief: 326 words",
+          "details": {},
+          "timestamp": "2025-09-26T00:03:33.091445"
+        },
+        {
+          "name": "n8n-implementation Adapter Compliance",
+          "passed": true,
+          "message": "All required methods present",
+          "details": {},
+          "timestamp": "2025-09-26T00:03:33.091913"
+        },
+        {
+          "name": "n8n-implementation Unit Tests",
+          "passed": false,
+          "message": "No fallback tests available",
+          "details": {},
+          "timestamp": "2025-09-26T00:03:33.625315"
+        },
+        {
+          "name": "n8n-implementation Integration Test",
+          "passed": false,
+          "message": "No integration test found",
+          "details": {},
+          "timestamp": "2025-09-26T00:03:33.625375"
+        }
+      ]
+    },
+    "semantic-kernel-implementation": {
+      "passed": 1,
+      "total": 6,
+      "results": [
+        {
+          "name": "semantic-kernel-implementation Validation Script",
+          "passed": false,
+          "message": "No validation script found",
+          "details": {},
+          "timestamp": "2025-09-26T00:03:33.625437"
+        },
+        {
+          "name": "semantic-kernel-implementation Dependencies",
+          "passed": true,
+          "message": "6 packages, core packages present",
+          "details": {},
+          "timestamp": "2025-09-26T00:03:33.626498"
+        },
+        {
+          "name": "semantic-kernel-implementation Documentation",
+          "passed": false,
+          "message": "Too brief: 498 words",
+          "details": {},
+          "timestamp": "2025-09-26T00:03:33.626849"
+        },
+        {
+          "name": "semantic-kernel-implementation Factory Function",
+          "passed": false,
+          "message": "No factory function found",
+          "details": {},
+          "timestamp": "2025-09-26T00:03:33.627280"
+        },
+        {
+          "name": "semantic-kernel-implementation Test Directory",
+          "passed": false,
+          "message": "Tests directory not found",
+          "details": {},
+          "timestamp": "2025-09-26T00:03:33.627346"
+        },
+        {
+          "name": "semantic-kernel-implementation Integration Test",
+          "passed": false,
+          "message": "No integration test found",
+          "details": {},
+          "timestamp": "2025-09-26T00:03:33.627454"
+        }
+      ]
+    },
+    "claude-code-subagents": {
+      "passed": 0,
+      "total": 6,
+      "results": [
+        {
+          "name": "claude-code-subagents Validation Script",
+          "passed": false,
+          "message": "No validation script found",
+          "details": {},
+          "timestamp": "2025-09-26T00:03:33.627504"
+        },
+        {
+          "name": "claude-code-subagents Requirements",
+          "passed": false,
+          "message": "requirements.txt not found",
+          "details": {},
+          "timestamp": "2025-09-26T00:03:33.627516"
+        },
+        {
+          "name": "claude-code-subagents README",
+          "passed": false,
+          "message": "README.md not found",
+          "details": {},
+          "timestamp": "2025-09-26T00:03:33.627523"
+        },
+        {
+          "name": "claude-code-subagents Factory Function",
+          "passed": false,
+          "message": "No factory function found",
+          "details": {},
+          "timestamp": "2025-09-26T00:03:33.628004"
+        },
+        {
+          "name": "claude-code-subagents Test Directory",
+          "passed": false,
+          "message": "Tests directory not found",
+          "details": {},
+          "timestamp": "2025-09-26T00:03:33.628020"
+        },
+        {
+          "name": "claude-code-subagents Integration Test",
+          "passed": false,
+          "message": "No integration test found",
+          "details": {},
+          "timestamp": "2025-09-26T00:03:33.628034"
+        }
+      ]
+    },
+    "langroid-implementation": {
+      "passed": 6,
+      "total": 6,
+      "results": [
+        {
+          "name": "langroid-implementation Structure",
+          "passed": true,
+          "message": "Structure validation passed",
+          "details": {},
+          "timestamp": "2025-09-26T00:03:36.592568"
+        },
+        {
+          "name": "langroid-implementation Dependencies",
+          "passed": true,
+          "message": "5 packages, core packages present",
+          "details": {},
+          "timestamp": "2025-09-26T00:03:36.593206"
+        },
+        {
+          "name": "langroid-implementation Documentation",
+          "passed": true,
+          "message": "859 words, 13 code examples",
+          "details": {},
+          "timestamp": "2025-09-26T00:03:36.593456"
+        },
+        {
+          "name": "langroid-implementation Adapter Compliance",
+          "passed": true,
+          "message": "All required methods present",
+          "details": {},
+          "timestamp": "2025-09-26T00:03:36.593974"
+        },
+        {
+          "name": "langroid-implementation Unit Tests",
+          "passed": true,
+          "message": "Structure tests: Results: 10 passed, 0 failed",
+          "details": {},
+          "timestamp": "2025-09-26T00:03:41.956392"
+        },
+        {
+          "name": "langroid-implementation Integration",
+          "passed": true,
+          "message": "Integration test completed",
+          "details": {},
+          "timestamp": "2025-09-26T00:03:45.429797"
+        }
+      ]
+    },
+    "llamaindex-implementation": {
+      "passed": 6,
+      "total": 6,
+      "results": [
+        {
+          "name": "llamaindex-implementation Structure",
+          "passed": true,
+          "message": "Structure validation passed",
+          "details": {},
+          "timestamp": "2025-09-26T00:03:46.321846"
+        },
+        {
+          "name": "llamaindex-implementation Dependencies",
+          "passed": true,
+          "message": "8 packages, core packages present",
+          "details": {},
+          "timestamp": "2025-09-26T00:03:46.323496"
+        },
+        {
+          "name": "llamaindex-implementation Documentation",
+          "passed": true,
+          "message": "812 words, 16 code examples",
+          "details": {},
+          "timestamp": "2025-09-26T00:03:46.323656"
+        },
+        {
+          "name": "llamaindex-implementation Adapter Compliance",
+          "passed": true,
+          "message": "All required methods present",
+          "details": {},
+          "timestamp": "2025-09-26T00:03:46.324158"
+        },
+        {
+          "name": "llamaindex-implementation Unit Tests",
+          "passed": true,
+          "message": "Structure tests: Results: 10 passed, 0 failed",
+          "details": {},
+          "timestamp": "2025-09-26T00:03:49.009087"
+        },
+        {
+          "name": "llamaindex-implementation Integration",
+          "passed": true,
+          "message": "Integration test completed",
+          "details": {},
+          "timestamp": "2025-09-26T00:03:49.995523"
+        }
+      ]
+    },
+    "haystack-implementation": {
+      "passed": 6,
+      "total": 6,
+      "results": [
+        {
+          "name": "haystack-implementation Structure",
+          "passed": true,
+          "message": "Structure validation passed",
+          "details": {},
+          "timestamp": "2025-09-26T00:03:50.306681"
+        },
+        {
+          "name": "haystack-implementation Dependencies",
+          "passed": true,
+          "message": "19 packages, core packages present",
+          "details": {},
+          "timestamp": "2025-09-26T00:03:50.307342"
+        },
+        {
+          "name": "haystack-implementation Documentation",
+          "passed": true,
+          "message": "739 words, 9 code examples",
+          "details": {},
+          "timestamp": "2025-09-26T00:03:50.307468"
+        },
+        {
+          "name": "haystack-implementation Adapter Compliance",
+          "passed": true,
+          "message": "All required methods present",
+          "details": {},
+          "timestamp": "2025-09-26T00:03:50.308044"
+        },
+        {
+          "name": "haystack-implementation Unit Tests",
+          "passed": true,
+          "message": "Structure tests: Results: 7 passed, 0 failed",
+          "details": {},
+          "timestamp": "2025-09-26T00:03:51.492773"
+        },
+        {
+          "name": "haystack-implementation Integration",
+          "passed": true,
+          "message": "Integration test completed",
+          "details": {},
+          "timestamp": "2025-09-26T00:03:51.854355"
+        }
+      ]
+    }
+  },
+  "all_results": [
+    {
+      "name": "langgraph-implementation Structure",
+      "passed": true,
+      "message": "Structure validation passed",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:27.431098"
+    },
+    {
+      "name": "langgraph-implementation Dependencies",
+      "passed": true,
+      "message": "21 packages, core packages present",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:27.431583"
+    },
+    {
+      "name": "langgraph-implementation Documentation",
+      "passed": true,
+      "message": "1169 words, 22 code examples",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:27.431785"
+    },
+    {
+      "name": "langgraph-implementation Adapter Compliance",
+      "passed": true,
+      "message": "All required methods present",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:27.432038"
+    },
+    {
+      "name": "langgraph-implementation Unit Tests",
+      "passed": true,
+      "message": "Structure tests: Results: 8 passed, 0 failed",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:28.354361"
+    },
+    {
+      "name": "langgraph-implementation Integration",
+      "passed": true,
+      "message": "Integration test completed",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:29.267206"
+    },
+    {
+      "name": "crewai-implementation Structure",
+      "passed": true,
+      "message": "Structure validation passed",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:29.306526"
+    },
+    {
+      "name": "crewai-implementation Dependencies",
+      "passed": true,
+      "message": "20 packages, core packages present",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:29.307203"
+    },
+    {
+      "name": "crewai-implementation Documentation",
+      "passed": true,
+      "message": "1237 words, 13 code examples",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:29.307595"
+    },
+    {
+      "name": "crewai-implementation Adapter Compliance",
+      "passed": true,
+      "message": "All required methods present",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:29.307719"
+    },
+    {
+      "name": "crewai-implementation Unit Tests",
+      "passed": true,
+      "message": "Structure tests: Results: 10 passed, 0 failed",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:30.143566"
+    },
+    {
+      "name": "crewai-implementation Integration",
+      "passed": true,
+      "message": "Integration test completed",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:30.212295"
+    },
+    {
+      "name": "autogen-implementation Structure",
+      "passed": true,
+      "message": "Structure validation passed",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:30.721837"
+    },
+    {
+      "name": "autogen-implementation Dependencies",
+      "passed": true,
+      "message": "7 packages, core packages present",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:30.723009"
+    },
+    {
+      "name": "autogen-implementation Documentation",
+      "passed": true,
+      "message": "1428 words, 21 code examples",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:30.723334"
+    },
+    {
+      "name": "autogen-implementation Adapter Compliance",
+      "passed": true,
+      "message": "All required methods present",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:30.724153"
+    },
+    {
+      "name": "autogen-implementation Unit Tests",
+      "passed": true,
+      "message": "Structure tests: Results: 10 passed, 0 failed",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:32.575429"
+    },
+    {
+      "name": "autogen-implementation Integration",
+      "passed": true,
+      "message": "Integration test completed",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:33.090043"
+    },
+    {
+      "name": "n8n-implementation Validation Script",
+      "passed": false,
+      "message": "No validation script found",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:33.090304"
+    },
+    {
+      "name": "n8n-implementation Requirements",
+      "passed": false,
+      "message": "requirements.txt not found",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:33.090321"
+    },
+    {
+      "name": "n8n-implementation Documentation",
+      "passed": false,
+      "message": "Too brief: 326 words",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:33.091445"
+    },
+    {
+      "name": "n8n-implementation Adapter Compliance",
+      "passed": true,
+      "message": "All required methods present",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:33.091913"
+    },
+    {
+      "name": "n8n-implementation Unit Tests",
+      "passed": false,
+      "message": "No fallback tests available",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:33.625315"
+    },
+    {
+      "name": "n8n-implementation Integration Test",
+      "passed": false,
+      "message": "No integration test found",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:33.625375"
+    },
+    {
+      "name": "semantic-kernel-implementation Validation Script",
+      "passed": false,
+      "message": "No validation script found",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:33.625437"
+    },
+    {
+      "name": "semantic-kernel-implementation Dependencies",
+      "passed": true,
+      "message": "6 packages, core packages present",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:33.626498"
+    },
+    {
+      "name": "semantic-kernel-implementation Documentation",
+      "passed": false,
+      "message": "Too brief: 498 words",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:33.626849"
+    },
+    {
+      "name": "semantic-kernel-implementation Factory Function",
+      "passed": false,
+      "message": "No factory function found",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:33.627280"
+    },
+    {
+      "name": "semantic-kernel-implementation Test Directory",
+      "passed": false,
+      "message": "Tests directory not found",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:33.627346"
+    },
+    {
+      "name": "semantic-kernel-implementation Integration Test",
+      "passed": false,
+      "message": "No integration test found",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:33.627454"
+    },
+    {
+      "name": "claude-code-subagents Validation Script",
+      "passed": false,
+      "message": "No validation script found",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:33.627504"
+    },
+    {
+      "name": "claude-code-subagents Requirements",
+      "passed": false,
+      "message": "requirements.txt not found",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:33.627516"
+    },
+    {
+      "name": "claude-code-subagents README",
+      "passed": false,
+      "message": "README.md not found",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:33.627523"
+    },
+    {
+      "name": "claude-code-subagents Factory Function",
+      "passed": false,
+      "message": "No factory function found",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:33.628004"
+    },
+    {
+      "name": "claude-code-subagents Test Directory",
+      "passed": false,
+      "message": "Tests directory not found",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:33.628020"
+    },
+    {
+      "name": "claude-code-subagents Integration Test",
+      "passed": false,
+      "message": "No integration test found",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:33.628034"
+    },
+    {
+      "name": "langroid-implementation Structure",
+      "passed": true,
+      "message": "Structure validation passed",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:36.592568"
+    },
+    {
+      "name": "langroid-implementation Dependencies",
+      "passed": true,
+      "message": "5 packages, core packages present",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:36.593206"
+    },
+    {
+      "name": "langroid-implementation Documentation",
+      "passed": true,
+      "message": "859 words, 13 code examples",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:36.593456"
+    },
+    {
+      "name": "langroid-implementation Adapter Compliance",
+      "passed": true,
+      "message": "All required methods present",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:36.593974"
+    },
+    {
+      "name": "langroid-implementation Unit Tests",
+      "passed": true,
+      "message": "Structure tests: Results: 10 passed, 0 failed",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:41.956392"
+    },
+    {
+      "name": "langroid-implementation Integration",
+      "passed": true,
+      "message": "Integration test completed",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:45.429797"
+    },
+    {
+      "name": "llamaindex-implementation Structure",
+      "passed": true,
+      "message": "Structure validation passed",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:46.321846"
+    },
+    {
+      "name": "llamaindex-implementation Dependencies",
+      "passed": true,
+      "message": "8 packages, core packages present",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:46.323496"
+    },
+    {
+      "name": "llamaindex-implementation Documentation",
+      "passed": true,
+      "message": "812 words, 16 code examples",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:46.323656"
+    },
+    {
+      "name": "llamaindex-implementation Adapter Compliance",
+      "passed": true,
+      "message": "All required methods present",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:46.324158"
+    },
+    {
+      "name": "llamaindex-implementation Unit Tests",
+      "passed": true,
+      "message": "Structure tests: Results: 10 passed, 0 failed",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:49.009087"
+    },
+    {
+      "name": "llamaindex-implementation Integration",
+      "passed": true,
+      "message": "Integration test completed",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:49.995523"
+    },
+    {
+      "name": "haystack-implementation Structure",
+      "passed": true,
+      "message": "Structure validation passed",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:50.306681"
+    },
+    {
+      "name": "haystack-implementation Dependencies",
+      "passed": true,
+      "message": "19 packages, core packages present",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:50.307342"
+    },
+    {
+      "name": "haystack-implementation Documentation",
+      "passed": true,
+      "message": "739 words, 9 code examples",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:50.307468"
+    },
+    {
+      "name": "haystack-implementation Adapter Compliance",
+      "passed": true,
+      "message": "All required methods present",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:50.308044"
+    },
+    {
+      "name": "haystack-implementation Unit Tests",
+      "passed": true,
+      "message": "Structure tests: Results: 7 passed, 0 failed",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:51.492773"
+    },
+    {
+      "name": "haystack-implementation Integration",
+      "passed": true,
+      "message": "Integration test completed",
+      "details": {},
+      "timestamp": "2025-09-26T00:03:51.854355"
+    }
+  ]
+}
