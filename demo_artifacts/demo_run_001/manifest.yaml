@@ -1,0 +1,15 @@
+framework: demo
+io_edges:
+- input_fingerprint: abc123
+  lookup_key: llm_call:demo_agent:chat_model:0
+  output_data:
+    response: Hello! How can I help you today?
+    tokens: 12
+- input_fingerprint: def456
+  lookup_key: tool_call:demo_agent:file_writer:1
+  output_data:
+    bytes_written: 13
+    success: true
+run_id: demo_run_001
+task_type: demo
+timestamp: '2024-01-01T00:00:00Z'

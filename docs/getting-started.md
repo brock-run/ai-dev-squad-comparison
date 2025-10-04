@@ -320,20 +320,94 @@ from common.telemetry import configure_logging
 logger = configure_logging(enable_console=True)
 ```
 
+## 🧪 Benchmarking and Verification
+
+### Quick Benchmarking
+
+Compare frameworks across multiple dimensions:
+
+```python
+# quick_benchmark.py
+from common.benchmarking import run_quick_benchmark
+
+# Compare frameworks
+frameworks = ["langgraph", "crewai", "haystack"]
+results = run_quick_benchmark(frameworks, results_dir="my_benchmark_results")
+
+print(f"Benchmark completed for {len(results['results'])} frameworks")
+for framework, framework_results in results['results'].items():
+    success_rate = len([r for r in framework_results if r.status.value == 'completed']) / len(framework_results)
+    print(f"{framework}: {success_rate:.1%} success rate")
+```
+
+### Code Verification
+
+Verify generated code quality:
+
+```python
+# verify_code.py
+from benchmark.verifier import verify_function_complete
+
+# Test a factorial function
+code = '''
+def factorial(n):
+    if n < 0:
+        raise ValueError("Factorial not defined for negative numbers")
+    if n <= 1:
+        return 1
+    return n * factorial(n - 1)
+'''
+
+test_cases = [(0, 1), (1, 1), (5, 120), (3, 6)]
+result = verify_function_complete(code, "factorial", test_cases, "recursion")
+
+print(f"Overall Score: {result.overall_score:.2f}")
+print(f"Test Success Rate: {result.test_success_rate:.1%}")
+print(f"Issues Found: {result.total_issues}")
+
+if result.recommendations:
+    print("Recommendations:")
+    for rec in result.recommendations:
+        print(f"  - {rec}")
+```
+
+### Run Demos
+
+```bash
+# Comprehensive benchmarking demo
+python examples/benchmarking_demo.py
+
+# Verification system demo  
+python examples/verification_demo.py
+
+# Run all tests
+python -m pytest tests/test_benchmarking.py tests/test_verification_system.py -v
+```
+
 ## 📚 Next Steps
 
 Now that you have the basics working:
 
 1. **Explore Frameworks**: Try different implementations in each framework directory
-2. **Run Benchmarks**: Use `python benchmark/benchmark_suite.py` to compare frameworks
-3. **Customize Agents**: Modify the agent implementations for your use case
-4. **Monitor Costs**: Set up budget alerts and optimization recommendations
-5. **Scale Up**: Deploy to production with the deployment guides
+2. **Run Benchmarks**: Use the benchmarking system to compare frameworks objectively
+3. **Verify Code Quality**: Use the verification system to ensure high-quality outputs
+4. **Customize Agents**: Modify the agent implementations for your use case
+5. **Monitor Costs**: Set up budget alerts and optimization recommendations
+6. **Scale Up**: Deploy to production with the deployment guides
 
 ## 🔗 Additional Resources
 
+### Benchmarking and Verification
+- [Benchmarking User Guide](guides/benchmarking-user-guide.md) - Complete benchmarking guide
+- [Verification User Guide](guides/verification-user-guide.md) - Code verification guide
+- [Benchmarking Developer Guide](guides/benchmarking-developer-guide.md) - Advanced customization
+- [Verification Developer Guide](guides/verification-developer-guide.md) - Extending verification
+
+### Observability and Monitoring
 - [Observability User Guide](observability-user-guide.md) - Detailed observability setup
 - [Observability Developer Guide](observability-developer-guide.md) - Advanced integration
+
+### Framework and System Guides
 - [Framework Documentation](../README.md#framework-implementations) - Specific framework guides
 - [Configuration Guide](configuration.md) - System configuration options
 - [Safety Documentation](safety.md) - Security best practices

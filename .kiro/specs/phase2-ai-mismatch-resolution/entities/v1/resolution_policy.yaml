@@ -1,0 +1,124 @@
+# Phase 2 Default Resolution Policy v1
+id: policy.phase2.default
+version: 1
+matrix:
+  # JSON Ordering - Safe for all environments
+  - mismatch_type: json_ordering
+    environment: [dev, stage, prod]
+    allowed_actions: [canonicalize_json, reserialize]
+    safety_level: automatic
+    required_evidence: [diff.json, equivalence.json]
+    confidence_min: 0.95
+    dual_key_required: false
+
+  # Whitespace - Safe for dev/stage, advisory for prod
+  - mismatch_type: whitespace
+    environment: [dev, stage]
+    allowed_actions: [normalize_whitespace]
+    safety_level: automatic
+    required_evidence: [diff.text]
+    confidence_min: 0.98
+    dual_key_required: false
+
+  - mismatch_type: whitespace
+    environment: [prod]
+    allowed_actions: [normalize_whitespace]
+    safety_level: advisory
+    required_evidence: [diff.text, human_approval]
+    confidence_min: 0.98
+    dual_key_required: false
+
+  # Markdown Formatting - Conservative approach
+  - mismatch_type: markdown_formatting
+    environment: [dev, stage]
+    allowed_actions: [rewrite_formatting]
+    safety_level: advisory
+    required_evidence: [diff.markdown, format_preservation_check]
+    confidence_min: 0.90
+    dual_key_required: false
+
+  - mismatch_type: markdown_formatting
+    environment: [prod]
+    allowed_actions: [ignore_mismatch]  # No auto-fix in prod
+    safety_level: experimental
+    required_evidence: [diff.markdown, human_approval, dual_key]
+    confidence_min: 0.95
+    dual_key_required: true
+
+  # Semantic Text - Experimental only
+  - mismatch_type: semantics_text
+    environment: [dev, stage]
+    allowed_actions: [rewrite_formatting]
+    safety_level: experimental
+    required_evidence: [llm_rubric, cosine_sim, human_approval]
+    confidence_min: 0.85
+    dual_key_required: true
+
+  - mismatch_type: semantics_text
+    environment: [prod]
+    allowed_actions: [ignore_mismatch]  # Shadow mode only in prod
+    safety_level: experimental
+    required_evidence: [llm_rubric, cosine_sim, dual_key, human_approval]
+    confidence_min: 0.90
+    dual_key_required: true
+
+  # Semantic Code - Highly restricted
+  - mismatch_type: semantics_code
+    environment: [dev]
+    allowed_actions: [ignore_mismatch]  # Analysis only, no auto-fix
+    safety_level: experimental
+    required_evidence: [ast_diff, test_execution, human_approval, dual_key]
+    confidence_min: 0.95
+    dual_key_required: true
+
+  # Nondeterminism - Analysis only
+  - mismatch_type: nondeterminism
+    environment: [dev, stage, prod]
+    allowed_actions: [ignore_mismatch]  # Flag for investigation
+    safety_level: experimental
+    required_evidence: [pattern_analysis, human_approval]
+    confidence_min: 0.80
+    dual_key_required: false
+
+  # Policy Violations - No auto-resolution
+  - mismatch_type: policy_violation
+    environment: [dev, stage, prod]
+    allowed_actions: []  # Manual resolution only
+    safety_level: experimental
+    required_evidence: [security_review, human_approval, dual_key]
+    confidence_min: 1.0
+    dual_key_required: true
+
+  # Environment Drift - Investigation only
+  - mismatch_type: infra_env_drift
+    environment: [dev, stage, prod]
+    allowed_actions: [ignore_mismatch]  # Flag for ops team
+    safety_level: experimental
+    required_evidence: [env_analysis, human_approval]
+    confidence_min: 0.75
+    dual_key_required: false
+
+rollbacks:
+  trigger:
+    fp_rate_7d: ">=0.02"  # 2% false positive rate over 7 days
+    consecutive_failures: ">=5"  # 5 consecutive resolution failures
+    cost_spike_1d: ">=100.0"  # $100+ cost spike in 1 day
+    user_complaints: ">=3"  # 3+ user complaints about bad resolutions
+  action: disable_auto_resolve
+  shadow_mode_duration: "14d"  # 2 weeks shadow mode before re-enabling
+  notification:
+    channels: [slack, email, pagerduty]
+    escalation_delay: "1h"
+
+audit:
+  owner: platform-team
+  created_at: 2025-09-30T00:00:00Z
+  approved_by: 
+    - brock.butler
+    - security-team
+    - qa-lead
+  review_frequency: monthly
+  compliance_requirements:
+    - SOC2
+    - data_privacy
+    - change_management

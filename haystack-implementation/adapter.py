@@ -151,6 +151,8 @@ class HaystackAdapter(AgentAdapter):
     integrating with our common safety framework, VCS workflows, and comprehensive telemetry.
     """
     
+    name = "Haystack RAG Development Squad"
+    
     def __init__(self, config: Optional[Dict[str, Any]] = None):
         """Initialize the Haystack adapter."""
         if not HAYSTACK_AVAILABLE:

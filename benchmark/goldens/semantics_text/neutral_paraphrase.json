@@ -1,0 +1,22 @@
+{
+  "test_id": "sem_text_001",
+  "description": "Neutral paraphrase - should be equivalent",
+  "mismatch_type": "semantics_text",
+  "expected_resolution": "equivalent",
+  "golden": {
+    "content": "The system will process your request within 24 hours.",
+    "hash": "sha256:golden_sem_001"
+  },
+  "candidate": {
+    "content": "Your request will be processed by the system in 24 hours.",
+    "hash": "sha256:candidate_sem_001"
+  },
+  "semantic_similarity_threshold": 0.86,
+  "expected_confidence": 0.85,
+  "test_assertions": [
+    "semantic_similarity_above_threshold",
+    "preserves_core_meaning",
+    "no_factual_changes"
+  ],
+  "adversarial_note": "Tests passive vs active voice transformation"
+}

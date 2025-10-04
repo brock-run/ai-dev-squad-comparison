@@ -1,0 +1,84 @@
+name: CI
+on:
+  pull_request:
+  push:
+    branches: [ main ]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    outputs:
+      pycache: ${{ steps.python-cache.outputs.cache-hit }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '7.0.x'
+      - name: Install Python deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt || true
+      - name: Cache pip
+        id: python-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: pip-${{ hashFiles('**/requirements*.txt') }}
+
+  lint_and_test:
+    runs-on: ubuntu-latest
+    needs: setup
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install tools
+        run: |
+          pip install -r requirements.txt || true
+          pip install pytest pytest-cov ruff mypy
+      - name: Ruff (Python lint)
+        run: ruff .
+      - name: Mypy (type check)
+        run: mypy --hide-error-context --pretty . || true
+      - name: Contract tests (pytest)
+        run: pytest -q tests/contract --maxfail=1 --disable-warnings -q
+      - name: Unit tests (if present)
+        run: pytest -q || true
+
+  docs_and_env_checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Docs check
+        run: bash scripts/docs_check.sh
+      - name: Env examples check
+        run: python scripts/check_env_examples.py
+
+  smoke_compose:
+    runs-on: ubuntu-latest
+    needs: [lint_and_test, docs_and_env_checks]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Docker Compose
+        run: |
+          docker --version
+          docker compose version
+      - name: Smoke via compose (runner uses scripts/smoke.sh)
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN || '' }}
+          GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN || '' }}
+        run: |
+          make up
+          make smoke
+          make down

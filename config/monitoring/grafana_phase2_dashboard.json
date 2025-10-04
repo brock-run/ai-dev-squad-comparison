@@ -1,0 +1,34 @@
+{
+    "title": "Phase 2 Resolution Quality",
+    "panels": [
+        {
+            "type": "stat",
+            "title": "Fleiss' κ (overall)",
+            "targets": [
+                {
+                    "expr": "phase2:kappa_overall"
+                }
+            ]
+        },
+        {
+            "type": "graph",
+            "title": "FP rate (7d)",
+            "targets": [
+                {
+                    "expr": "phase2:fp_rate"
+                }
+            ]
+        },
+        {
+            "type": "table",
+            "title": "Label distribution (24h)",
+            "targets": [
+                {
+                    "expr": "phase2:labels_total"
+                }
+            ]
+        }
+    ],
+    "timezone": "utc",
+    "version": 1
+}

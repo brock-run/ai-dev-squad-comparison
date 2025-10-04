@@ -1,0 +1,178 @@
+# Phase 2 Test Configuration
+# Optimized for CI/testing with mock clients and fast execution
+
+# Use mock clients for testing
+use_mock_clients: true
+
+# LLM Configuration (mock)
+llm:
+  provider: "mock"
+  model: "mock-llm"
+  max_tps: 100.0  # No rate limiting for mocks
+  timeout_s: 5
+  redact: false  # Disable for testing
+
+# Embedding Configuration (mock)
+embedding:
+  provider: "mock"
+  model: "mock-embed"
+  dimension: 384
+
+# Equivalence Criteria Configuration
+equivalence_criteria:
+  text:
+    v1:
+      cosine_threshold: 0.85  # Slightly lower for mock consistency
+      llm_confidence_threshold: 0.7
+      exact_match_weight: 0.3
+      cosine_weight: 0.4
+      llm_weight: 0.3
+  
+  json:
+    v1:
+      exact_match_weight: 0.6
+      canonical_weight: 0.4
+      structure_similarity_threshold: 0.9
+  
+  code:
+    v1:
+      exact_match_weight: 0.2
+      ast_weight: 0.5
+      semantic_weight: 0.3
+      ast_similarity_threshold: 0.85
+
+# Judge Configuration
+judge:
+  max_retries: 1  # Reduced for testing
+  timeout_s: 10   # Shorter timeout
+  batch_size: 10  # Smaller batches
+  
+  # Method-specific settings
+  methods:
+    exact:
+      enabled: true
+    
+    cosine_similarity:
+      enabled: true
+      cache_ttl: 300  # 5 minutes for testing
+    
+    canonical_json:
+      enabled: true
+      normalize_whitespace: true
+      sort_keys: true
+    
+    ast_normalized:
+      enabled: true
+      ignore_comments: true
+      ignore_docstrings: false
+    
+    llm_rubric_judge:
+      enabled: true
+      max_tokens: 200  # Reduced for testing
+      temperature: 0.0
+      seed: 42
+      shadow_only: true  # Keep in shadow mode for CI
+
+# Telemetry Configuration
+telemetry:
+  enabled: true
+  log_level: "INFO"
+  
+  # Reduced retention for testing
+  retention:
+    events_days: 1
+    artifacts_days: 1
+    max_size_mb: 100
+
+# Safety Configuration (relaxed for testing)
+safety:
+  policy: "development"
+  
+  # Network controls (disabled for mocks)
+  network:
+    enabled: false
+  
+  # Filesystem controls (minimal for testing)
+  filesystem:
+    enabled: true
+    allowed_paths:
+      - "/tmp"
+      - "./reports"
+      - "./benchmark"
+
+# Performance Configuration
+performance:
+  # Aggressive caching for testing
+  cache:
+    enabled: true
+    ttl_seconds: 300
+    max_size_mb: 50
+  
+  # Parallel processing
+  concurrency:
+    max_workers: 4
+    batch_timeout_s: 30
+
+# Monitoring Configuration
+monitoring:
+  metrics:
+    enabled: true
+    export_interval_s: 10
+  
+  alerts:
+    enabled: false  # Disable for testing
+  
+  # Budget limits (generous for testing)
+  budget:
+    max_cost_usd: 1.0
+    max_latency_ms: 5000
+    max_tokens_per_hour: 10000
+
+# Development/Debug Settings
+debug:
+  enabled: true
+  log_requests: false  # Avoid noise in CI
+  log_responses: false
+  save_intermediate_results: true
+  
+# Dataset Configuration
+dataset:
+  # Use smaller test split for CI
+  default_split: "test"
+  min_samples_per_type: 2
+  
+  # Validation settings
+  validation:
+    require_ground_truth: true
+    allow_missing_metadata: true
+    max_missing_rate: 0.1
+
+# CI-specific settings
+ci:
+  # Kappa requirements (relaxed for small datasets)
+  kappa:
+    min_overall: 0.60  # Lower for small test datasets
+    min_per_type: 0.50
+    confidence_level: 0.90
+  
+  # FP rate requirements
+  false_positive:
+    max_rate: 0.05  # 5% for testing
+    
+  # Performance requirements
+  performance:
+    max_avg_latency_ms: 2000
+    max_p95_latency_ms: 5000
+    max_total_cost_usd: 0.50
+
+# Shadow soak configuration
+shadow_soak:
+  enabled: true
+  duration_hours: 0.1  # 6 minutes for testing
+  sample_rate: 1.0     # 100% sampling for testing
+  
+  # Monitoring thresholds
+  thresholds:
+    error_rate: 0.01
+    latency_p95_ms: 3000
+    cost_per_hour_usd: 10.0

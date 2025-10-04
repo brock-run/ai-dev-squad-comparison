@@ -1,0 +1,14 @@
+
+# Interactive Resolution Configuration
+resolution:
+  auto_approve_safe: true
+  safety_threshold: 0.9
+  
+ai:
+  llm:
+    provider: mock
+    model: mock-llm
+  
+telemetry:
+  enabled: true
+  log_level: INFO

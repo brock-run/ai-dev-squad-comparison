@@ -1,0 +1,27 @@
+id: eqc.text.v1
+version: 1
+artifact_type: text
+methods: [exact, cosine_similarity, llm_rubric_judge]
+thresholds:
+  cosine_similarity: 0.86
+  llm_confidence_min: 0.70
+calibration:
+  version: 1
+  source: benchmark/datasets/phase2_mismatch_labels.jsonl
+  cosine_similarity_function: piecewise_linear
+  confidence_mapping:
+    - [0.95, 1.00, 0.95]  # [similarity_min, similarity_max, confidence]
+    - [0.86, 0.95, 0.70]
+    - [0.70, 0.86, 0.30]
+    - [0.00, 0.70, 0.10]
+budgets:
+  usd_per_1k_tokens_max: 0.02
+  latency_ms_p95: 1200
+  max_tokens_per_request: 8000
+providers:
+  llm:
+    primary: openai
+    fallback: ollama
+  embedding:
+    primary: openai
+    fallback: local

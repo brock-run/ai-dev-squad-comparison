@@ -62,6 +62,19 @@ help:
 	@echo "  make dashboard            Start the comparison dashboard"
 	@echo "  make run-example F=<framework>  Run an example for a specific framework"
 	@echo ""
+	@echo "Docker & CI:"
+	@echo "  make up                   Start Docker Compose services (Ollama, Jaeger)"
+	@echo "  make down                 Stop Docker Compose services"
+	@echo "  make smoke                Run smoke tests (up + e2e + down)"
+	@echo "  make e2e                  Run end-to-end tests in Docker"
+	@echo "  make lint                 Run linting tools (ruff, mypy)"
+	@echo "  make format               Format code with ruff"
+	@echo "  make contract             Run contract tests"
+	@echo "  make replay-smoke         Run replay smoke tests for CI"
+	@echo "  make replay-hardening     Run replay hardening tests"
+	@echo "  make consistency-smoke    Run consistency evaluation smoke tests"
+	@echo "  make consistency F=<framework> T=<task>  Run consistency evaluation"
+	@echo ""
 	@echo "Utilities:"
 	@echo "  make setup-ollama         Setup Ollama with required models"
 	@echo "  make clean                Clean up temporary files"
@@ -253,6 +266,54 @@ run-example:
 	fi
 
 # =============================================================================
+# Docker Compose and CI Targets
+# =============================================================================
+# These targets handle Docker Compose operations and CI/CD workflows.
+.PHONY: up down smoke e2e lint format contract
+
+# Start Docker Compose services (Ollama and Jaeger)
+up:
+	docker compose up -d jaeger ollama
+	docker compose ps
+
+# Run end-to-end tests in Docker
+e2e:
+	docker compose --profile smoke up --build runner --abort-on-container-exit
+	docker compose rm -fsv runner
+
+# Run smoke tests (up + e2e + down)
+smoke: up e2e down
+
+# Stop and clean up Docker Compose services
+down:
+	docker compose down -v
+
+# Run linting tools
+lint:
+	ruff . || true
+	mypy --hide-error-context --pretty . || true
+
+# Run contract tests
+contract:
+	pytest -q tests/contract --maxfail=1 --disable-warnings
+
+# Run replay smoke tests for CI
+replay-smoke:
+	@echo "Running replay smoke tests..."
+	pytest -q tests/test_replay_smoke.py --maxfail=1 --disable-warnings
+	@echo "Replay smoke tests completed successfully"
+
+# Run replay hardening tests
+replay-hardening:
+	@echo "Running replay hardening tests..."
+	pytest -q tests/test_replay_hardening.py --maxfail=1 --disable-warnings
+	@echo "Replay hardening tests completed successfully"
+
+# Format code
+format:
+	ruff format .
+
+# =============================================================================
 # Utility Targets
 # =============================================================================
 # These targets provide utility functions such as setting up Ollama models,
@@ -298,3 +359,114 @@ venv:
 	@$(PYTHON) -m venv venv
 	@echo "Virtual environment created at ./venv"
 	@echo "Activate it with: source venv/bin/activate (Linux/Mac) or venv\\Scripts\\activate (Windows)"
+
+# =============================================================================
+# Phase 2 AI Mismatch Resolution Targets
+# =============================================================================
+# These targets support Phase 2 dataset creation, validation, and monitoring.
+.PHONY: phase2-assign phase2-validate phase2-kappa phase2-dashboard
+
+# Assign labelers to mismatch items for Phase 2 dataset
+phase2-assign:
+	@echo "Assigning labelers to Phase 2 mismatch items..."
+	@$(PYTHON) scripts/assign_labelers.py benchmark/datasets/phase2_items.csv benchmark/datasets/phase2_assignments.csv
+	@echo "Labeler assignments created"
+
+# Validate Phase 2 labeled dataset against schema
+phase2-validate:
+	@echo "Validating Phase 2 labeled dataset..."
+	@$(PYTHON) scripts/validate_labels.py benchmark/datasets/phase2_mismatch_labels.jsonl benchmark/datasets/phase2_mismatch_labels.schema.json
+	@echo "Dataset validation completed"
+
+# Compute and report Fleiss' kappa for Phase 2 dataset
+phase2-kappa: phase2-validate
+	@echo "Phase 2 dataset kappa validation completed"
+
+# Import Phase 2 Grafana dashboard
+phase2-dashboard:
+	@echo "Import config/monitoring/grafana_phase2_dashboard.json into Grafana"
+	@echo "Dashboard available at: /dashboard/ai-resolution"
+
+# =============================================================================
+# Consistency Evaluation Targets (Week 2, Day 3)
+# =============================================================================
+# These targets provide consistency evaluation functionality for multi-run
+# benchmarking and reliability assessment.
+.PHONY: consistency-smoke consistency
+
+# Run consistency evaluation smoke tests for CI
+consistency-smoke:
+	@echo "Running consistency evaluation smoke tests..."
+	@$(PYTHON) -m pytest tests/test_consistency_smoke.py -v
+	@echo "Consistency smoke tests completed"
+
+# Run consistency evaluation for a specific framework and task
+# Usage: make consistency F=langgraph T=simple_code_generation
+# Optional parameters:
+#   RUNS=5 (number of runs)
+#   STRATEGY=majority (consensus strategy)
+#   PARALLEL=true (parallel execution)
+consistency:
+	@if [ -z "$(F)" ]; then \
+		echo "Error: Framework not specified. Use F=<framework>"; \
+		echo "Available frameworks: autogen, crewai, langgraph, n8n, semantic-kernel"; \
+		exit 1; \
+	fi
+	@if [ -z "$(T)" ]; then \
+		echo "Error: Task not specified. Use T=<task>"; \
+		echo "Example tasks: simple_code_generation, bug_fixing, refactoring"; \
+		exit 1; \
+	fi
+	@echo "Running consistency evaluation for $(F) on task $(T)..."
+	@RUNS=$${RUNS:-5}; \
+	STRATEGY=$${STRATEGY:-majority}; \
+	PARALLEL=$${PARALLEL:-true}; \
+	if [ "$$PARALLEL" = "true" ]; then \
+		PARALLEL_FLAG="--consistency-parallel"; \
+	else \
+		PARALLEL_FLAG="--consistency-no-parallel"; \
+	fi; \
+	$(PYTHON) benchmark/benchmark_suite.py $(F) $(F)-implementation \
+		--consistency \
+		--consistency-runs $$RUNS \
+		--consistency-strategy $$STRATEGY \
+		$$PARALLEL_FLAG \
+		--task $(T) \
+		--output-dir comparison-results/consistency
+	@echo "Consistency evaluation completed for $(F) on task $(T)"
+
+# Run consistency evaluation with custom parameters
+# Usage: make consistency-custom F=langgraph T=simple_code_generation RUNS=10 STRATEGY=weighted SEEDS=42,123,456
+consistency-custom:
+	@if [ -z "$(F)" ]; then \
+		echo "Error: Framework not specified. Use F=<framework>"; \
+		exit 1; \
+	fi
+	@if [ -z "$(T)" ]; then \
+		echo "Error: Task not specified. Use T=<task>"; \
+		exit 1; \
+	fi
+	@echo "Running custom consistency evaluation for $(F) on task $(T)..."
+	@RUNS=$${RUNS:-5}; \
+	STRATEGY=$${STRATEGY:-majority}; \
+	THRESHOLD=$${THRESHOLD:-0.6}; \
+	PARALLEL=$${PARALLEL:-true}; \
+	SEEDS_FLAG=""; \
+	if [ -n "$(SEEDS)" ]; then \
+		SEEDS_FLAG="--consistency-seeds $(SEEDS)"; \
+	fi; \
+	if [ "$$PARALLEL" = "true" ]; then \
+		PARALLEL_FLAG="--consistency-parallel"; \
+	else \
+		PARALLEL_FLAG="--consistency-no-parallel"; \
+	fi; \
+	$(PYTHON) benchmark/benchmark_suite.py $(F) $(F)-implementation \
+		--consistency \
+		--consistency-runs $$RUNS \
+		--consistency-strategy $$STRATEGY \
+		--consistency-threshold $$THRESHOLD \
+		$$PARALLEL_FLAG \
+		$$SEEDS_FLAG \
+		--task $(T) \
+		--output-dir comparison-results/consistency
+	@echo "Custom consistency evaluation completed"

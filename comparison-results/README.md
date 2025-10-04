@@ -60,7 +60,7 @@ To run the benchmarks yourself:
 1. Ensure all framework implementations are set up according to their respective README files
 2. Run the benchmark script:
    ```bash
-   python ../benchmark/run_benchmarks.py
+   python ../benchmark/benchmark_suite.py --all
    ```
 3. View the results in this directory
 

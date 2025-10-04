@@ -1,0 +1,448 @@
+{
+  "summary": {
+    "total_items": 8,
+    "successful_evaluations": 8,
+    "failed_evaluations": 0,
+    "method_stats": {
+      "exact": {
+        "total_evaluations": 8,
+        "equivalent_rate": 0.25,
+        "avg_confidence": 0.25,
+        "avg_cost_usd": 0.0,
+        "avg_latency_ms": 0.0
+      },
+      "cosine_similarity": {
+        "total_evaluations": 8,
+        "equivalent_rate": 0.625,
+        "avg_confidence": 0.7105156575132789,
+        "avg_cost_usd": 0.001,
+        "avg_latency_ms": 0.75
+      },
+      "canonical_json": {
+        "total_evaluations": 8,
+        "equivalent_rate": 0.125,
+        "avg_confidence": 0.13125,
+        "avg_cost_usd": 0.0,
+        "avg_latency_ms": 0.0
+      }
+    },
+    "agreement_stats": {
+      "pairwise_agreement_rate": 0.5833333333333334
+    },
+    "total_cost_usd": 0.008,
+    "total_latency_ms": 6.0,
+    "avg_latency_ms": 0.75,
+    "timestamp": "2025-10-03T03:27:37.924569+00:00",
+    "config": {
+      "llm": {},
+      "embedding": {},
+      "budgets": {
+        "max_cost_usd": 0.1,
+        "max_latency_ms": 5000,
+        "max_tokens_per_request": 8000
+      }
+    }
+  },
+  "results": [
+    {
+      "id": "test_1",
+      "artifact_type": "text",
+      "ground_truth": true,
+      "evaluation": {
+        "status": "completed",
+        "error_message": null,
+        "metadata": {
+          "budget_stats": {
+            "total_cost_usd": 0.0,
+            "total_latency_ms": 0.0,
+            "request_count": 0,
+            "avg_latency_ms": 0.0,
+            "budget_exceeded": false
+          }
+        },
+        "results": [
+          {
+            "method": "exact",
+            "equivalent": true,
+            "confidence": 1.0,
+            "similarity_score": 1.0,
+            "reasoning": "Exact string match",
+            "cost": 0.0,
+            "latency_ms": 0,
+            "metadata": {}
+          },
+          {
+            "method": "cosine_similarity",
+            "equivalent": true,
+            "confidence": 0.95,
+            "similarity_score": 0.9999999999999999,
+            "reasoning": "Cosine similarity: 1.000 (threshold: 0.86)",
+            "cost": 0.001,
+            "latency_ms": 1,
+            "metadata": {}
+          },
+          {
+            "method": "canonical_json",
+            "equivalent": false,
+            "confidence": 0.0,
+            "similarity_score": 0.0,
+            "reasoning": "Method failed: Unsupported method EquivalenceMethod.CANONICAL_JSON for artifact type ArtifactType.TEXT",
+            "cost": 0.0,
+            "latency_ms": 0,
+            "metadata": {}
+          }
+        ]
+      }
+    },
+    {
+      "id": "test_2",
+      "artifact_type": "text",
+      "ground_truth": false,
+      "evaluation": {
+        "status": "completed",
+        "error_message": null,
+        "metadata": {
+          "budget_stats": {
+            "total_cost_usd": 0.0,
+            "total_latency_ms": 0.0,
+            "request_count": 0,
+            "avg_latency_ms": 0.0,
+            "budget_exceeded": false
+          }
+        },
+        "results": [
+          {
+            "method": "exact",
+            "equivalent": false,
+            "confidence": 0.0,
+            "similarity_score": 0.0,
+            "reasoning": "Strings differ",
+            "cost": 0.0,
+            "latency_ms": 0,
+            "metadata": {}
+          },
+          {
+            "method": "cosine_similarity",
+            "equivalent": false,
+            "confidence": 0.2712478849723603,
+            "similarity_score": 0.5424957699447206,
+            "reasoning": "Cosine similarity: 0.542 (threshold: 0.86)",
+            "cost": 0.001,
+            "latency_ms": 0,
+            "metadata": {}
+          },
+          {
+            "method": "canonical_json",
+            "equivalent": false,
+            "confidence": 0.0,
+            "similarity_score": 0.0,
+            "reasoning": "Method failed: Unsupported method EquivalenceMethod.CANONICAL_JSON for artifact type ArtifactType.TEXT",
+            "cost": 0.0,
+            "latency_ms": 0,
+            "metadata": {}
+          }
+        ]
+      }
+    },
+    {
+      "id": "test_3",
+      "artifact_type": "json",
+      "ground_truth": true,
+      "evaluation": {
+        "status": "completed",
+        "error_message": null,
+        "metadata": {
+          "budget_stats": {
+            "total_cost_usd": 0.0,
+            "total_latency_ms": 0.0,
+            "request_count": 0,
+            "avg_latency_ms": 0.0,
+            "budget_exceeded": false
+          }
+        },
+        "results": [
+          {
+            "method": "exact",
+            "equivalent": false,
+            "confidence": 0.0,
+            "similarity_score": 0.0,
+            "reasoning": "Strings differ",
+            "cost": 0.0,
+            "latency_ms": 0,
+            "metadata": {}
+          },
+          {
+            "method": "cosine_similarity",
+            "equivalent": true,
+            "confidence": 0.95,
+            "similarity_score": 0.9557135969472966,
+            "reasoning": "Cosine similarity: 0.956 (threshold: 0.86)",
+            "cost": 0.001,
+            "latency_ms": 2,
+            "metadata": {}
+          },
+          {
+            "method": "canonical_json",
+            "equivalent": true,
+            "confidence": 0.95,
+            "similarity_score": 1.0,
+            "reasoning": "JSON canonically equivalent",
+            "cost": 0.0,
+            "latency_ms": 0,
+            "metadata": {}
+          }
+        ]
+      }
+    },
+    {
+      "id": "test_4",
+      "artifact_type": "json",
+      "ground_truth": false,
+      "evaluation": {
+        "status": "completed",
+        "error_message": null,
+        "metadata": {
+          "budget_stats": {
+            "total_cost_usd": 0.0,
+            "total_latency_ms": 0.0,
+            "request_count": 0,
+            "avg_latency_ms": 0.0,
+            "budget_exceeded": false
+          }
+        },
+        "results": [
+          {
+            "method": "exact",
+            "equivalent": false,
+            "confidence": 0.0,
+            "similarity_score": 0.0,
+            "reasoning": "Strings differ",
+            "cost": 0.0,
+            "latency_ms": 0,
+            "metadata": {}
+          },
+          {
+            "method": "cosine_similarity",
+            "equivalent": true,
+            "confidence": 0.7434343975166399,
+            "similarity_score": 0.8756363831059903,
+            "reasoning": "Cosine similarity: 0.876 (threshold: 0.86)",
+            "cost": 0.001,
+            "latency_ms": 1,
+            "metadata": {}
+          },
+          {
+            "method": "canonical_json",
+            "equivalent": false,
+            "confidence": 0.1,
+            "similarity_score": 0.0,
+            "reasoning": "JSON structures differ",
+            "cost": 0.0,
+            "latency_ms": 0,
+            "metadata": {}
+          }
+        ]
+      }
+    },
+    {
+      "id": "test_5",
+      "artifact_type": "code",
+      "ground_truth": true,
+      "evaluation": {
+        "status": "completed",
+        "error_message": null,
+        "metadata": {
+          "budget_stats": {
+            "total_cost_usd": 0.0,
+            "total_latency_ms": 0.0,
+            "request_count": 0,
+            "avg_latency_ms": 0.0,
+            "budget_exceeded": false
+          }
+        },
+        "results": [
+          {
+            "method": "exact",
+            "equivalent": false,
+            "confidence": 0.0,
+            "similarity_score": 0.0,
+            "reasoning": "Strings differ",
+            "cost": 0.0,
+            "latency_ms": 0,
+            "metadata": {}
+          },
+          {
+            "method": "cosine_similarity",
+            "equivalent": true,
+            "confidence": 0.95,
+            "similarity_score": 0.9930984388265414,
+            "reasoning": "Cosine similarity: 0.993 (threshold: 0.86)",
+            "cost": 0.001,
+            "latency_ms": 2,
+            "metadata": {}
+          },
+          {
+            "method": "canonical_json",
+            "equivalent": false,
+            "confidence": 0.0,
+            "similarity_score": 0.0,
+            "reasoning": "Method failed: Unsupported method EquivalenceMethod.CANONICAL_JSON for artifact type ArtifactType.CODE",
+            "cost": 0.0,
+            "latency_ms": 0,
+            "metadata": {}
+          }
+        ]
+      }
+    },
+    {
+      "id": "test_6",
+      "artifact_type": "code",
+      "ground_truth": false,
+      "evaluation": {
+        "status": "completed",
+        "error_message": null,
+        "metadata": {
+          "budget_stats": {
+            "total_cost_usd": 0.0,
+            "total_latency_ms": 0.0,
+            "request_count": 0,
+            "avg_latency_ms": 0.0,
+            "budget_exceeded": false
+          }
+        },
+        "results": [
+          {
+            "method": "exact",
+            "equivalent": false,
+            "confidence": 0.0,
+            "similarity_score": 0.0,
+            "reasoning": "Strings differ",
+            "cost": 0.0,
+            "latency_ms": 0,
+            "metadata": {}
+          },
+          {
+            "method": "cosine_similarity",
+            "equivalent": false,
+            "confidence": 0.6207641981728287,
+            "similarity_score": 0.8283056792691315,
+            "reasoning": "Cosine similarity: 0.828 (threshold: 0.86)",
+            "cost": 0.001,
+            "latency_ms": 0,
+            "metadata": {}
+          },
+          {
+            "method": "canonical_json",
+            "equivalent": false,
+            "confidence": 0.0,
+            "similarity_score": 0.0,
+            "reasoning": "Method failed: Unsupported method EquivalenceMethod.CANONICAL_JSON for artifact type ArtifactType.CODE",
+            "cost": 0.0,
+            "latency_ms": 0,
+            "metadata": {}
+          }
+        ]
+      }
+    },
+    {
+      "id": "train_1",
+      "artifact_type": "text",
+      "ground_truth": true,
+      "evaluation": {
+        "status": "completed",
+        "error_message": null,
+        "metadata": {
+          "budget_stats": {
+            "total_cost_usd": 0.0,
+            "total_latency_ms": 0.0,
+            "request_count": 0,
+            "avg_latency_ms": 0.0,
+            "budget_exceeded": false
+          }
+        },
+        "results": [
+          {
+            "method": "exact",
+            "equivalent": true,
+            "confidence": 1.0,
+            "similarity_score": 1.0,
+            "reasoning": "Exact string match",
+            "cost": 0.0,
+            "latency_ms": 0,
+            "metadata": {}
+          },
+          {
+            "method": "cosine_similarity",
+            "equivalent": true,
+            "confidence": 0.95,
+            "similarity_score": 0.9999999999999999,
+            "reasoning": "Cosine similarity: 1.000 (threshold: 0.86)",
+            "cost": 0.001,
+            "latency_ms": 0,
+            "metadata": {}
+          },
+          {
+            "method": "canonical_json",
+            "equivalent": false,
+            "confidence": 0.0,
+            "similarity_score": 0.0,
+            "reasoning": "Method failed: Unsupported method EquivalenceMethod.CANONICAL_JSON for artifact type ArtifactType.TEXT",
+            "cost": 0.0,
+            "latency_ms": 0,
+            "metadata": {}
+          }
+        ]
+      }
+    },
+    {
+      "id": "train_2",
+      "artifact_type": "text",
+      "ground_truth": false,
+      "evaluation": {
+        "status": "completed",
+        "error_message": null,
+        "metadata": {
+          "budget_stats": {
+            "total_cost_usd": 0.0,
+            "total_latency_ms": 0.0,
+            "request_count": 0,
+            "avg_latency_ms": 0.0,
+            "budget_exceeded": false
+          }
+        },
+        "results": [
+          {
+            "method": "exact",
+            "equivalent": false,
+            "confidence": 0.0,
+            "similarity_score": 0.0,
+            "reasoning": "Strings differ",
+            "cost": 0.0,
+            "latency_ms": 0,
+            "metadata": {}
+          },
+          {
+            "method": "cosine_similarity",
+            "equivalent": false,
+            "confidence": 0.24867877944440206,
+            "similarity_score": 0.4973575588888041,
+            "reasoning": "Cosine similarity: 0.497 (threshold: 0.86)",
+            "cost": 0.001,
+            "latency_ms": 0,
+            "metadata": {}
+          },
+          {
+            "method": "canonical_json",
+            "equivalent": false,
+            "confidence": 0.0,
+            "similarity_score": 0.0,
+            "reasoning": "Method failed: Unsupported method EquivalenceMethod.CANONICAL_JSON for artifact type ArtifactType.TEXT",
+            "cost": 0.0,
+            "latency_ms": 0,
+            "metadata": {}
+          }
+        ]
+      }
+    }
+  ]
+}

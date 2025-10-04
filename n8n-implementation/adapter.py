@@ -68,6 +68,8 @@ if N8N_AVAILABLE:
         integrating with our common safety framework, VCS workflows, and comprehensive telemetry.
         """
         
+        name = "n8n Visual Workflow Orchestrator"
+        
         def __init__(self, config: Optional[Dict[str, Any]] = None):
             """Initialize the n8n adapter."""
             if not N8N_AVAILABLE:
@@ -822,6 +824,8 @@ else:
     # Fallback class when n8n dependencies are not available
     class N8nAdapter(AgentAdapter):
         """Fallback n8n adapter when dependencies are not available."""
+        
+        name = "n8n Visual Workflow Orchestrator"
         
         def __init__(self, config: Optional[Dict[str, Any]] = None):
             raise ImportError("n8n dependencies not available. Install with: pip install requests aiohttp")

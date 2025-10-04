@@ -1,0 +1,62 @@
+{
+  "mismatches": [
+    {
+      "id": "mismatch_001",
+      "run_id": "run_12345",
+      "artifact_ids": [
+        "artifact_001",
+        "artifact_002"
+      ],
+      "mismatch_type": "whitespace",
+      "detectors": [
+        "whitespace_detector"
+      ],
+      "evidence": {
+        "diff_summary": "Extra whitespace in line 42",
+        "diff_content": "- def hello():\n+ def hello(): \n",
+        "cost_estimate": 0.001,
+        "latency_ms": 50
+      },
+      "confidence_score": 0.95,
+      "created_at": "2025-10-03T03:48:19.300088+00:00"
+    },
+    {
+      "id": "mismatch_002",
+      "run_id": "run_12345",
+      "artifact_ids": [
+        "artifact_003"
+      ],
+      "mismatch_type": "json_ordering",
+      "detectors": [
+        "json_structure_detector"
+      ],
+      "evidence": {
+        "diff_summary": "JSON key ordering difference",
+        "diff_content": "- {\"a\": 1, \"b\": 2}\n+ {\"b\": 2, \"a\": 1}",
+        "cost_estimate": 0.002,
+        "latency_ms": 75
+      },
+      "confidence_score": 0.88,
+      "created_at": "2025-10-03T03:48:19.300329+00:00"
+    },
+    {
+      "id": "mismatch_003",
+      "run_id": "run_12345",
+      "artifact_ids": [
+        "artifact_004"
+      ],
+      "mismatch_type": "semantics_text",
+      "detectors": [
+        "semantic_detector"
+      ],
+      "evidence": {
+        "diff_summary": "Potential semantic difference in text",
+        "diff_content": "- Hello world\n+ Hello there",
+        "cost_estimate": 0.05,
+        "latency_ms": 2000
+      },
+      "confidence_score": 0.65,
+      "created_at": "2025-10-03T03:48:19.300332+00:00"
+    }
+  ]
+}

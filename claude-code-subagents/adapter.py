@@ -112,6 +112,8 @@ class ClaudeSubagentsAdapter(AgentAdapter):
     integrating with our common safety framework, VCS workflows, and comprehensive telemetry.
     """
     
+    name = "Claude Code Subagents Orchestrator"
+    
     def __init__(self, config: Optional[Dict[str, Any]] = None):
         """Initialize the Claude subagents adapter."""
         if not CLAUDE_AVAILABLE:

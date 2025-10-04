@@ -1,0 +1,361 @@
+{
+  "summary": {
+    "total_items": 8,
+    "successful_evaluations": 8,
+    "failed_evaluations": 0,
+    "method_stats": {
+      "exact": {
+        "total_evaluations": 8,
+        "equivalent_rate": 0.0,
+        "avg_confidence": 0.0,
+        "avg_cost_usd": 0.0,
+        "avg_latency_ms": 0.0
+      },
+      "canonical_json": {
+        "total_evaluations": 8,
+        "equivalent_rate": 0.125,
+        "avg_confidence": 0.11875,
+        "avg_cost_usd": 0.0,
+        "avg_latency_ms": 0.0
+      }
+    },
+    "agreement_stats": {
+      "pairwise_agreement_rate": 0.875
+    },
+    "total_cost_usd": 0.0,
+    "total_latency_ms": 0.0,
+    "avg_latency_ms": 0.0,
+    "timestamp": "2025-10-03T02:09:41.457459+00:00",
+    "config": {
+      "llm": {},
+      "embedding": {},
+      "budgets": {
+        "max_cost_usd": 0.1,
+        "max_latency_ms": 5000,
+        "max_tokens_per_request": 8000
+      }
+    }
+  },
+  "results": [
+    {
+      "id": "mis_a1b2c3d4",
+      "artifact_type": "json",
+      "ground_truth": true,
+      "evaluation": {
+        "status": "completed",
+        "error_message": null,
+        "metadata": {
+          "budget_stats": {
+            "total_cost_usd": 0.0,
+            "total_latency_ms": 0.0,
+            "request_count": 0,
+            "avg_latency_ms": 0.0,
+            "budget_exceeded": false
+          }
+        },
+        "results": [
+          {
+            "method": "exact",
+            "equivalent": false,
+            "confidence": 0.0,
+            "similarity_score": 0.0,
+            "reasoning": "Strings differ",
+            "cost": 0.0,
+            "latency_ms": 0,
+            "metadata": {}
+          },
+          {
+            "method": "canonical_json",
+            "equivalent": true,
+            "confidence": 0.95,
+            "similarity_score": 1.0,
+            "reasoning": "JSON canonically equivalent",
+            "cost": 0.0,
+            "latency_ms": 0,
+            "metadata": {}
+          }
+        ]
+      }
+    },
+    {
+      "id": "mis_d4c3b2a1",
+      "artifact_type": "text",
+      "ground_truth": false,
+      "evaluation": {
+        "status": "completed",
+        "error_message": null,
+        "metadata": {
+          "budget_stats": {
+            "total_cost_usd": 0.0,
+            "total_latency_ms": 0.0,
+            "request_count": 0,
+            "avg_latency_ms": 0.0,
+            "budget_exceeded": false
+          }
+        },
+        "results": [
+          {
+            "method": "exact",
+            "equivalent": false,
+            "confidence": 0.0,
+            "similarity_score": 0.0,
+            "reasoning": "Strings differ",
+            "cost": 0.0,
+            "latency_ms": 0,
+            "metadata": {}
+          },
+          {
+            "method": "canonical_json",
+            "equivalent": false,
+            "confidence": 0.0,
+            "similarity_score": 0.0,
+            "reasoning": "Method failed: Unsupported method EquivalenceMethod.CANONICAL_JSON for artifact type ArtifactType.TEXT",
+            "cost": 0.0,
+            "latency_ms": 0,
+            "metadata": {}
+          }
+        ]
+      }
+    },
+    {
+      "id": "mis_e5f6g7h8",
+      "artifact_type": "text",
+      "ground_truth": true,
+      "evaluation": {
+        "status": "completed",
+        "error_message": null,
+        "metadata": {
+          "budget_stats": {
+            "total_cost_usd": 0.0,
+            "total_latency_ms": 0.0,
+            "request_count": 0,
+            "avg_latency_ms": 0.0,
+            "budget_exceeded": false
+          }
+        },
+        "results": [
+          {
+            "method": "exact",
+            "equivalent": false,
+            "confidence": 0.0,
+            "similarity_score": 0.0,
+            "reasoning": "Strings differ",
+            "cost": 0.0,
+            "latency_ms": 0,
+            "metadata": {}
+          },
+          {
+            "method": "canonical_json",
+            "equivalent": false,
+            "confidence": 0.0,
+            "similarity_score": 0.0,
+            "reasoning": "Method failed: Unsupported method EquivalenceMethod.CANONICAL_JSON for artifact type ArtifactType.TEXT",
+            "cost": 0.0,
+            "latency_ms": 0,
+            "metadata": {}
+          }
+        ]
+      }
+    },
+    {
+      "id": "mis_i9j0k1l2",
+      "artifact_type": "code",
+      "ground_truth": true,
+      "evaluation": {
+        "status": "completed",
+        "error_message": null,
+        "metadata": {
+          "budget_stats": {
+            "total_cost_usd": 0.0,
+            "total_latency_ms": 0.0,
+            "request_count": 0,
+            "avg_latency_ms": 0.0,
+            "budget_exceeded": false
+          }
+        },
+        "results": [
+          {
+            "method": "exact",
+            "equivalent": false,
+            "confidence": 0.0,
+            "similarity_score": 0.0,
+            "reasoning": "Strings differ",
+            "cost": 0.0,
+            "latency_ms": 0,
+            "metadata": {}
+          },
+          {
+            "method": "canonical_json",
+            "equivalent": false,
+            "confidence": 0.0,
+            "similarity_score": 0.0,
+            "reasoning": "Method failed: Unsupported method EquivalenceMethod.CANONICAL_JSON for artifact type ArtifactType.CODE",
+            "cost": 0.0,
+            "latency_ms": 0,
+            "metadata": {}
+          }
+        ]
+      }
+    },
+    {
+      "id": "mis_m3n4o5p6",
+      "artifact_type": "text",
+      "ground_truth": true,
+      "evaluation": {
+        "status": "completed",
+        "error_message": null,
+        "metadata": {
+          "budget_stats": {
+            "total_cost_usd": 0.0,
+            "total_latency_ms": 0.0,
+            "request_count": 0,
+            "avg_latency_ms": 0.0,
+            "budget_exceeded": false
+          }
+        },
+        "results": [
+          {
+            "method": "exact",
+            "equivalent": false,
+            "confidence": 0.0,
+            "similarity_score": 0.0,
+            "reasoning": "Strings differ",
+            "cost": 0.0,
+            "latency_ms": 0,
+            "metadata": {}
+          },
+          {
+            "method": "canonical_json",
+            "equivalent": false,
+            "confidence": 0.0,
+            "similarity_score": 0.0,
+            "reasoning": "Method failed: Unsupported method EquivalenceMethod.CANONICAL_JSON for artifact type ArtifactType.TEXT",
+            "cost": 0.0,
+            "latency_ms": 0,
+            "metadata": {}
+          }
+        ]
+      }
+    },
+    {
+      "id": "mis_q7r8s9t0",
+      "artifact_type": "text",
+      "ground_truth": false,
+      "evaluation": {
+        "status": "completed",
+        "error_message": null,
+        "metadata": {
+          "budget_stats": {
+            "total_cost_usd": 0.0,
+            "total_latency_ms": 0.0,
+            "request_count": 0,
+            "avg_latency_ms": 0.0,
+            "budget_exceeded": false
+          }
+        },
+        "results": [
+          {
+            "method": "exact",
+            "equivalent": false,
+            "confidence": 0.0,
+            "similarity_score": 0.0,
+            "reasoning": "Strings differ",
+            "cost": 0.0,
+            "latency_ms": 0,
+            "metadata": {}
+          },
+          {
+            "method": "canonical_json",
+            "equivalent": false,
+            "confidence": 0.0,
+            "similarity_score": 0.0,
+            "reasoning": "Method failed: Unsupported method EquivalenceMethod.CANONICAL_JSON for artifact type ArtifactType.TEXT",
+            "cost": 0.0,
+            "latency_ms": 0,
+            "metadata": {}
+          }
+        ]
+      }
+    },
+    {
+      "id": "mis_u1v2w3x4",
+      "artifact_type": "text",
+      "ground_truth": false,
+      "evaluation": {
+        "status": "completed",
+        "error_message": null,
+        "metadata": {
+          "budget_stats": {
+            "total_cost_usd": 0.0,
+            "total_latency_ms": 0.0,
+            "request_count": 0,
+            "avg_latency_ms": 0.0,
+            "budget_exceeded": false
+          }
+        },
+        "results": [
+          {
+            "method": "exact",
+            "equivalent": false,
+            "confidence": 0.0,
+            "similarity_score": 0.0,
+            "reasoning": "Strings differ",
+            "cost": 0.0,
+            "latency_ms": 0,
+            "metadata": {}
+          },
+          {
+            "method": "canonical_json",
+            "equivalent": false,
+            "confidence": 0.0,
+            "similarity_score": 0.0,
+            "reasoning": "Method failed: Unsupported method EquivalenceMethod.CANONICAL_JSON for artifact type ArtifactType.TEXT",
+            "cost": 0.0,
+            "latency_ms": 0,
+            "metadata": {}
+          }
+        ]
+      }
+    },
+    {
+      "id": "mis_y5z6a7b8",
+      "artifact_type": "text",
+      "ground_truth": false,
+      "evaluation": {
+        "status": "completed",
+        "error_message": null,
+        "metadata": {
+          "budget_stats": {
+            "total_cost_usd": 0.0,
+            "total_latency_ms": 0.0,
+            "request_count": 0,
+            "avg_latency_ms": 0.0,
+            "budget_exceeded": false
+          }
+        },
+        "results": [
+          {
+            "method": "exact",
+            "equivalent": false,
+            "confidence": 0.0,
+            "similarity_score": 0.0,
+            "reasoning": "Strings differ",
+            "cost": 0.0,
+            "latency_ms": 0,
+            "metadata": {}
+          },
+          {
+            "method": "canonical_json",
+            "equivalent": false,
+            "confidence": 0.0,
+            "similarity_score": 0.0,
+            "reasoning": "Method failed: Unsupported method EquivalenceMethod.CANONICAL_JSON for artifact type ArtifactType.TEXT",
+            "cost": 0.0,
+            "latency_ms": 0,
+            "metadata": {}
+          }
+        ]
+      }
+    }
+  ]
+}

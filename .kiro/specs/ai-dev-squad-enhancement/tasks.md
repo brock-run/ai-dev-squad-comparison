@@ -249,7 +249,7 @@ Each task is designed to be executed by a coding agent and includes specific imp
   - Create record-replay functionality for deterministic testing
   - _Requirements: 5.1, 5.2, 5.3, 5.4, 5.5, 5.6, 5.7_
 
-- [ ] 6.1 Create Benchmark Task Definitions
+- [x] 6.1 Create Benchmark Task Definitions
   - Implement `benchmark/tasks/bugfix/` with single-file bug fix scenarios
   - Create `benchmark/tasks/feature_add/` with multi-step feature addition tasks
   - Add `benchmark/tasks/qa/` with codebase and log analysis questions
@@ -259,7 +259,7 @@ Each task is designed to be executed by a coding agent and includes specific imp
   - Write task validation tests to ensure consistency
   - _Requirements: 5.1_
 
-- [ ] 6.2 Implement Verification System
+- [x] 6.2 Implement Verification System
   - Create `benchmark/verifier/code_tests.py` for automated test execution
   - Implement `benchmark/verifier/lint_type.py` for static analysis
   - Add `benchmark/verifier/semantic.py` for semantic correctness checking
@@ -277,7 +277,7 @@ Each task is designed to be executed by a coding agent and includes specific imp
   - Write tests for consistency evaluation accuracy
   - _Requirements: 5.2_
 
-- [ ] 6.4 Create Record-Replay System
+- [x] 6.4 Create Record-Replay System
   - Implement `benchmark/replay/recorder.py` for capturing execution traces
   - Create `benchmark/replay/player.py` for deterministic replay
   - Add prompt and tool I/O capture with complete context preservation
@@ -449,7 +449,7 @@ Each task is designed to be executed by a coding agent and includes specific imp
   - Write test documentation and execution guidelines
   - _Requirements: 10.1, 10.2, 10.3, 10.4, 10.5, 10.6, 10.7_
 
-- [ ] 10.4 Create Quality Assurance Framework
+- [x] 10.4 Create Quality Assurance Framework
   - Implement automated code quality checks with pre-commit hooks
   - Add continuous integration pipeline with comprehensive testing
   - Create performance regression detection and alerting

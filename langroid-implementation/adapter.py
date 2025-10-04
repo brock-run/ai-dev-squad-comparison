@@ -147,6 +147,8 @@ class LangroidAdapter(AgentAdapter):
     integrating with our common safety framework, VCS workflows, and comprehensive telemetry.
     """
     
+    name = "Langroid Conversation Orchestrator"
+    
     def __init__(self, config: Optional[Dict[str, Any]] = None):
         """Initialize the Langroid adapter."""
         if not LANGROID_AVAILABLE:

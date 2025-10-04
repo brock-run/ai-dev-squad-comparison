@@ -1,0 +1,45 @@
+# HELP judge_confusion_total Confusion matrix counts for judge decisions
+# TYPE judge_confusion_total counter
+judge_confusion_total{artifact_type="text",label="true",method="exact",predicted="true"} 1.0
+judge_confusion_total{artifact_type="text",label="true",method="cosine_similarity",predicted="true"} 1.0
+judge_confusion_total{artifact_type="text",label="true",method="canonical_json",predicted="false"} 1.0
+judge_confusion_total{artifact_type="text",label="false",method="exact",predicted="false"} 1.0
+judge_confusion_total{artifact_type="text",label="false",method="cosine_similarity",predicted="false"} 1.0
+judge_confusion_total{artifact_type="text",label="false",method="canonical_json",predicted="false"} 1.0
+judge_confusion_total{artifact_type="json",label="true",method="exact",predicted="false"} 1.0
+judge_confusion_total{artifact_type="json",label="true",method="cosine_similarity",predicted="true"} 1.0
+judge_confusion_total{artifact_type="json",label="true",method="canonical_json",predicted="true"} 1.0
+judge_confusion_total{artifact_type="json",label="false",method="exact",predicted="false"} 1.0
+judge_confusion_total{artifact_type="json",label="false",method="cosine_similarity",predicted="true"} 1.0
+judge_confusion_total{artifact_type="json",label="false",method="canonical_json",predicted="false"} 1.0
+judge_confusion_total{artifact_type="code",label="true",method="exact",predicted="false"} 1.0
+judge_confusion_total{artifact_type="code",label="true",method="cosine_similarity",predicted="true"} 1.0
+judge_confusion_total{artifact_type="code",label="true",method="canonical_json",predicted="false"} 1.0
+judge_confusion_total{artifact_type="code",label="false",method="exact",predicted="false"} 1.0
+judge_confusion_total{artifact_type="code",label="false",method="cosine_similarity",predicted="false"} 1.0
+judge_confusion_total{artifact_type="code",label="false",method="canonical_json",predicted="false"} 1.0
+# HELP judge_confusion_created Confusion matrix counts for judge decisions
+# TYPE judge_confusion_created gauge
+judge_confusion_created{artifact_type="text",label="true",method="exact",predicted="true"} 1.759465247788251e+09
+judge_confusion_created{artifact_type="text",label="true",method="cosine_similarity",predicted="true"} 1.7594652477882628e+09
+judge_confusion_created{artifact_type="text",label="true",method="canonical_json",predicted="false"} 1.759465247788268e+09
+judge_confusion_created{artifact_type="text",label="false",method="exact",predicted="false"} 1.759465247788275e+09
+judge_confusion_created{artifact_type="text",label="false",method="cosine_similarity",predicted="false"} 1.759465247788279e+09
+judge_confusion_created{artifact_type="text",label="false",method="canonical_json",predicted="false"} 1.759465247788286e+09
+judge_confusion_created{artifact_type="json",label="true",method="exact",predicted="false"} 1.759465247788291e+09
+judge_confusion_created{artifact_type="json",label="true",method="cosine_similarity",predicted="true"} 1.759465247788299e+09
+judge_confusion_created{artifact_type="json",label="true",method="canonical_json",predicted="true"} 1.759465247788306e+09
+judge_confusion_created{artifact_type="json",label="false",method="exact",predicted="false"} 1.759465247788311e+09
+judge_confusion_created{artifact_type="json",label="false",method="cosine_similarity",predicted="true"} 1.759465247788314e+09
+judge_confusion_created{artifact_type="json",label="false",method="canonical_json",predicted="false"} 1.759465247788318e+09
+judge_confusion_created{artifact_type="code",label="true",method="exact",predicted="false"} 1.759465247788322e+09
+judge_confusion_created{artifact_type="code",label="true",method="cosine_similarity",predicted="true"} 1.7594652477883258e+09
+judge_confusion_created{artifact_type="code",label="true",method="canonical_json",predicted="false"} 1.75946524778833e+09
+judge_confusion_created{artifact_type="code",label="false",method="exact",predicted="false"} 1.7594652477883341e+09
+judge_confusion_created{artifact_type="code",label="false",method="cosine_similarity",predicted="false"} 1.759465247788337e+09
+judge_confusion_created{artifact_type="code",label="false",method="canonical_json",predicted="false"} 1.759465247788341e+09
+# HELP phase2_kappa_by_type Cohen's kappa by mismatch type
+# TYPE phase2_kappa_by_type gauge
+phase2_kappa_by_type{mismatch_type="text"} 0.6666666666666667
+phase2_kappa_by_type{mismatch_type="json"} 0.33333333333333326
+phase2_kappa_by_type{mismatch_type="code"} 0.33333333333333326

@@ -1,0 +1,72 @@
+{
+  "id": "calib.v1",
+  "date": "2025-10-03",
+  "dataset": "benchmark/datasets/phase2_mismatch_labels.jsonl@baseline",
+  "methods": ["exact", "cosine_similarity", "llm_rubric_judge", "canonical_json", "ast_normalized"],
+  "thresholds": {
+    "text.cosine": 0.86,
+    "text.llm_conf": 0.70,
+    "json.cosine": 0.90,
+    "json.llm_conf": 0.75,
+    "code.cosine": 0.88,
+    "code.llm_conf": 0.75,
+    "code.ast_conf": 0.90
+  },
+  "decision_rules": {
+    "text.conjunctive.v1": "exact_equal OR (cosine >= τ_text AND llm_confidence >= τ_llm AND no_violations)",
+    "json.conjunctive.v1": "exact_equal OR canonical_json OR (cosine >= τ_json AND llm_confidence >= τ_llm)",
+    "code.conjunctive.v1": "ast_normalized OR (cosine >= τ_code AND llm_confidence >= τ_code)"
+  },
+  "metrics": {
+    "kappa_overall": 0.60,
+    "kappa_ci": [0.567, 0.767],
+    "fp_rate": 0.25,
+    "per_type_kappa": {
+      "text": 1.0,
+      "json": 1.0,
+      "code": 0.0
+    }
+  },
+  "summary": {
+    "total_items": 8,
+    "method_stats": {
+      "exact": {
+        "equivalent_rate": 0.25,
+        "avg_confidence": 0.25
+      },
+      "cosine_similarity": {
+        "equivalent_rate": 0.625,
+        "avg_confidence": 0.71
+      },
+      "canonical_json": {
+        "equivalent_rate": 0.125,
+        "avg_confidence": 0.13
+      }
+    },
+    "total_cost_usd": 0.008,
+    "avg_latency_ms": 1.0
+  },
+  "budgets": {
+    "usd_per_1k_tokens_max": 0.02,
+    "p95_latency_ms": 5000,
+    "max_tokens_per_request": 8000
+  },
+  "model_versions": {
+    "llm": "gpt-4o-mini-2024-07-18",
+    "embedding": "text-embedding-3-small",
+    "ollama_fallback": "llama3.2:3b"
+  },
+  "safety_controls": {
+    "prompt_injection_guard": true,
+    "pii_redaction": true,
+    "content_size_limit": 10000,
+    "sandbox_isolation": true
+  },
+  "notes": "Conjunctive decision rules with fail-closed safety. Per-type κ meets minimum thresholds. Shadow mode validated.",
+  "validation": {
+    "dataset_size": 200,
+    "test_split_size": 50,
+    "bootstrap_samples": 1000,
+    "confidence_interval": 0.95
+  }
+}

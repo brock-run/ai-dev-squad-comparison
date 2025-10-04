@@ -1,0 +1,88 @@
+# Text Equivalence Criterion v1
+id: eqc.text.v1
+version: 1
+selector:
+  artifact_type: text
+method:
+  - name: cosine_similarity
+    params:
+      embedding: "text-embedding-3-large"
+      threshold: 0.86
+  - name: llm_rubric_judge
+    params:
+      prompt_id: judge.text.v3
+      pass_threshold: 0.7
+      max_tokens: 512
+      timeout_ms: 10000
+validators:
+  - name: small_diff_bias_guard
+    params:
+      max_chars: 40  # auto-pass tiny diffs without LLM
+  - name: content_loss_detector
+    params:
+      loss_threshold: 0.1
+calibration:
+  threshold_source: learned
+  update_frequency: weekly
+  rollback_conditions:
+    fp_rate_3d: ">=0.05"
+    precision_drop: ">=0.1"
+audit:
+  owner: qa
+  created_at: 2025-09-30
+
+---
+# Code Equivalence Criterion v1
+id: eqc.code.v1
+version: 1
+selector:
+  artifact_type: code
+method:
+  - name: ast_normalized
+    params:
+      language: auto_detect
+      normalize_whitespace: true
+      normalize_comments: false
+  - name: test_execution
+    params:
+      timeout_ms: 30000
+      sandbox_required: true
+      test_runner: pytest
+validators:
+  - name: format_preservation_check
+    params:
+      preserve_comments: true
+      preserve_docstrings: true
+calibration:
+  threshold_source: static
+  update_frequency: monthly
+  rollback_conditions:
+    test_failure_rate: ">=0.02"
+audit:
+  owner: engineering
+  created_at: 2025-09-30
+
+---
+# JSON Equivalence Criterion v1
+id: eqc.json.v1
+version: 1
+selector:
+  artifact_type: json
+method:
+  - name: canonical_json
+    params:
+      sort_keys: true
+      indent: null
+      separators: [",", ":"]
+      numeric_epsilon: 1e-10
+validators:
+  - name: schema_preservation_check
+    params:
+      strict_schema: false
+calibration:
+  threshold_source: static
+  update_frequency: never
+  rollback_conditions: {}
+audit:
+  owner: platform
+  created_at: 2025-09-30

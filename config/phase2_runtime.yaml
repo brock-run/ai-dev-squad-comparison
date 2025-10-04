@@ -1,0 +1,258 @@
+# Phase 2 AI Mismatch Resolution - Runtime Configuration
+# This file controls all Phase 2 behavior in production
+# Version: 1.0
+# Last Updated: 2025-10-01
+
+# Auto-resolution control (CRITICAL SAFETY)
+auto_resolve:
+  enabled: false                      # SHADOW MODE BY DEFAULT
+  environments:
+    dev: true                         # Auto-resolve enabled in dev
+    stage: shadow                     # Shadow mode in stage  
+    prod: shadow                      # Shadow mode in prod (NO AUTO-APPLY)
+  
+  # Kill switch - can be set via environment variable
+  kill_switch_env: PHASE2_DISABLE_AUTORESOLVE
+  
+  # Tier-based rollout control
+  enabled_tiers:
+    tier1: [whitespace, json_ordering]           # Safe for auto-resolve
+    tier2: [markdown_formatting]                 # Advisory only
+    tier3: [semantics_text, semantics_code]      # Experimental only
+    tier4: [nondeterminism, policy_violation, infra_env_drift]  # Analysis only
+
+# Budget controls (HARD LIMITS)
+budgets:
+  # Analysis budgets
+  analyze_ms_per_100kb: 5000          # 5 seconds max per 100KB
+  analyze_usd_per_100kb: 0.10         # $0.10 max per 100KB
+  
+  # AI service budgets  
+  judge_usd_per_1k_tokens: 0.02       # $0.02 max per 1K tokens
+  embedding_usd_per_1k_tokens: 0.001  # $0.001 per 1K tokens
+  
+  # Resolution budgets
+  resolve_ms: 2000                    # 2 seconds max per resolution
+  resolve_usd: 0.05                   # $0.05 max per resolution
+  
+  # Daily limits
+  daily_total_usd: 100.0              # $100 total per day
+  daily_llm_calls: 10000              # 10K LLM calls per day
+  daily_resolutions: 1000             # 1K resolutions per day
+  
+  # Alert thresholds (% of budget)
+  alert_threshold: 0.8                # Alert at 80% of budget
+
+# Circuit breakers (AUTO-DISABLE TRIGGERS)
+circuit_breakers:
+  # False positive rate triggers
+  fp_rate_7d: ">=0.02"                # Disable if FP rate ≥2% over 7 days
+  fp_rate_24h: ">=0.05"               # Disable if FP rate ≥5% over 24 hours
+  consecutive_failures: ">=5"          # Disable after 5 consecutive failures
+  
+  # Quality triggers
+  kappa_overall: "<0.8"               # Disable if overall kappa drops below 0.8
+  kappa_ci_lower: "<0.75"             # Disable if 95% CI lower bound <0.75
+  confidence_drop: ">=0.1"            # Disable if confidence drops by 10%
+  
+  # Cost triggers
+  cost_spike_1h: ">=50.0"             # Disable if costs spike >$50 in 1 hour
+  cost_spike_1d: ">=100.0"            # Disable if costs spike >$100 in 1 day
+  budget_exceeded: ">=1.0"            # Disable if any budget 100% exceeded
+  
+  # User feedback triggers
+  user_complaints: ">=3"              # Disable after 3+ user complaints
+  satisfaction_drop: "<=3.0"          # Disable if satisfaction drops to ≤3.0/5.0
+  
+  # Actions when triggered
+  action: disable_auto_resolve         # disable_auto_resolve | shadow_mode | alert_only
+  shadow_mode_duration: "14d"         # 2 weeks shadow before re-enabling
+  cooldown_period: "24h"              # 24 hour cooldown before re-evaluation
+  
+  # Notification settings
+  notification:
+    channels: [slack, email, pagerduty]
+    escalation_delay: "1h"            # Escalate if not acknowledged in 1 hour
+    webhook_url: "${PHASE2_ALERT_WEBHOOK}"
+
+# AI service configuration
+ai_services:
+  primary_provider: openai
+  fallback_provider: ollama
+  
+  # Model configuration (VERSION PINNED)
+  models:
+    llm: "gpt-4-turbo-2024-04-09"     # Pinned version
+    embedding: "text-embedding-3-large"
+    fallback_llm: "llama3.1:8b"
+    fallback_embedding: "nomic-embed-text"
+  
+  # Service settings
+  openai:
+    api_key: "${OPENAI_API_KEY}"
+    timeout_ms: 30000                 # 30 second timeout
+    max_retries: 3
+    retry_delay_ms: 1000
+    rate_limit_rpm: 3500              # Requests per minute
+    
+  ollama:
+    endpoint: "${OLLAMA_BASE_URL:-http://localhost:11434}"
+    timeout_ms: 60000                 # 60 second timeout for local models
+    max_retries: 2
+    
+  # Request configuration
+  request_defaults:
+    temperature: 0.1                  # Low temperature for consistency
+    max_tokens: 2000
+    top_p: 0.9
+
+# Confidence thresholds by mismatch type
+confidence_thresholds:
+  whitespace: 0.95                    # Very high confidence required
+  json_ordering: 0.95                 # Very high confidence required
+  markdown_formatting: 0.90          # High confidence required
+  semantics_text: 0.85               # Moderate confidence required
+  semantics_code: 0.90               # High confidence required
+  nondeterminism: 0.80               # Lower confidence (analysis only)
+  policy_violation: 1.0              # Perfect confidence required
+  infra_env_drift: 0.75              # Lower confidence (analysis only)
+
+# Safety controls
+safety:
+  # Dual-key approval requirements
+  dual_key_required:
+    - semantics_text                  # Requires dual approval
+    - semantics_code                  # Requires dual approval
+    - policy_violation                # Requires dual approval
+    
+  # Approval timeouts
+  approval_timeout_hours: 24          # Auto-reject after 24 hours
+  
+  # Rollback settings
+  rollback:
+    auto_rollback_on_failure: true
+    rollback_timeout_minutes: 5       # 5 minute rollback SLO
+    preserve_rollback_data_days: 30   # Keep rollback data for 30 days
+    
+  # Validation requirements
+  validation:
+    require_preview: true             # Always show preview before apply
+    require_diff: true                # Always generate diff
+    require_impact_analysis: true     # Analyze downstream impact
+
+# Learning system configuration
+learning:
+  enabled: true                       # Enable pattern learning
+  
+  # Pattern storage
+  pattern_retention_days: 90          # Keep patterns for 90 days
+  min_pattern_confidence: 0.7         # Minimum confidence to store pattern
+  max_patterns_per_type: 1000         # Limit patterns per mismatch type
+  
+  # Learning parameters
+  learning_rate: 0.01                 # Conservative learning rate
+  update_frequency: "weekly"          # Update models weekly
+  
+  # Quality controls
+  min_examples_for_learning: 10       # Need 10+ examples before learning
+  cross_validation_folds: 5           # 5-fold cross-validation
+  
+  # Drift detection
+  drift_detection:
+    enabled: true
+    check_frequency: "daily"          # Check for drift daily
+    drift_threshold: 0.1              # Alert if performance drops >10%
+    
+# Monitoring and observability
+monitoring:
+  # Metrics collection
+  metrics:
+    enabled: true
+    collection_interval_seconds: 30
+    retention_days: 30
+    
+  # Telemetry
+  telemetry:
+    endpoint: "${OTEL_EXPORTER_OTLP_ENDPOINT}"
+    service_name: "phase2-ai-mismatch-resolution"
+    sample_rate: 1.0                  # 100% sampling initially
+    
+  # Logging
+  logging:
+    level: INFO                       # INFO level by default
+    structured: true                  # Use structured JSON logging
+    include_request_ids: true         # Include request IDs for tracing
+    
+  # Health checks
+  health_checks:
+    enabled: true
+    interval_seconds: 60
+    timeout_seconds: 10
+    
+# Performance optimization
+performance:
+  # Caching
+  cache:
+    enabled: true
+    ttl_seconds: 3600                 # 1 hour TTL
+    max_size_mb: 1024                 # 1GB max cache size
+    
+  # Concurrency
+  concurrency:
+    max_concurrent_analyses: 10       # Max 10 concurrent analyses
+    max_concurrent_resolutions: 5     # Max 5 concurrent resolutions
+    queue_timeout_seconds: 300        # 5 minute queue timeout
+    
+  # Batch processing
+  batch:
+    enabled: true
+    max_batch_size: 5                 # Process up to 5 mismatches together
+    batch_timeout_seconds: 10        # Wait max 10 seconds to form batch
+
+# Environment-specific overrides
+environment_overrides:
+  development:
+    auto_resolve.enabled: true
+    budgets.daily_total_usd: 10.0     # Lower budget for dev
+    circuit_breakers.fp_rate_7d: ">=0.10"  # More lenient in dev
+    logging.level: DEBUG
+    
+  staging:
+    auto_resolve.enabled: false       # Shadow mode in staging
+    budgets.daily_total_usd: 50.0     # Medium budget for staging
+    monitoring.telemetry.sample_rate: 0.5  # 50% sampling
+    
+  production:
+    auto_resolve.enabled: false       # Shadow mode in production
+    budgets.daily_total_usd: 100.0    # Full budget for production
+    circuit_breakers.action: disable_auto_resolve  # Strict safety
+    monitoring.telemetry.sample_rate: 0.1  # 10% sampling for performance
+
+# Feature flags
+feature_flags:
+  semantic_analysis: true             # Enable semantic analysis
+  learning_system: true              # Enable learning system
+  interactive_resolution: true       # Enable interactive resolution
+  batch_processing: true             # Enable batch processing
+  cost_optimization: true            # Enable cost optimization
+  
+# Compliance and audit
+compliance:
+  audit_all_decisions: true          # Audit every AI decision
+  retain_audit_logs_days: 365        # Keep audit logs for 1 year
+  encrypt_sensitive_data: true       # Encrypt PII and secrets
+  redaction_enabled: true            # Enable data redaction
+  
+  # Data retention
+  data_retention:
+    mismatch_data_days: 90            # Keep mismatch data for 90 days
+    resolution_data_days: 180         # Keep resolution data for 180 days
+    pattern_data_days: 365            # Keep pattern data for 1 year
+    
+# Version and metadata
+metadata:
+  config_version: "1.0"
+  schema_version: "20251001"
+  last_updated: "2025-10-01T00:00:00Z"
+  owner: "platform-team"
+  contact: "platform-team@company.com"

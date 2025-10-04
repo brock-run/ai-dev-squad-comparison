@@ -1,0 +1,44 @@
+{
+  "generated_at": "2025-10-02T23:45:16.003586",
+  "baseline_file": "reports/calibration_manifest.json",
+  "alert_threshold": 1.0,
+  "results": [
+    {
+      "status": "critical",
+      "alerts": [
+        {
+          "type": "kappa_regression",
+          "severity": "high",
+          "message": "Kappa dropped from 0.800 to 0.667",
+          "current": 0.667,
+          "baseline": 0.8
+        }
+      ],
+      "summary": {
+        "total_alerts": 1,
+        "high_severity": 1,
+        "medium_severity": 0,
+        "current_kappa": 0.667,
+        "baseline_kappa": 0.8,
+        "current_cost": 0.001,
+        "baseline_cost": 0.001
+      },
+      "file": "reports/shadow-output.json"
+    }
+  ],
+  "aggregate": {
+    "total_files": 1,
+    "status_distribution": {
+      "healthy": 0,
+      "degraded": 0,
+      "warning": 0,
+      "critical": 1
+    },
+    "total_alerts": 1,
+    "alert_types": {
+      "kappa_regression": 1
+    }
+  },
+  "overall_status": "critical",
+  "recommendation": "STOP: Critical regressions detected. Investigate immediately."
+}

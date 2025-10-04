@@ -56,6 +56,8 @@ class LlamaIndexAdapter(AgentAdapter):
     integrated safety controls, VCS workflows, and comprehensive telemetry.
     """
     
+    name = "LlamaIndex Retrieval-Augmented Agent"
+    
     def __init__(self, config: Optional[Dict[str, Any]] = None):
         """Initialize the LlamaIndex adapter."""
         self.config = config or get_config_manager().config

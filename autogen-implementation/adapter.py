@@ -71,6 +71,8 @@ if AUTOGEN_AVAILABLE:
         and comprehensive telemetry.
         """
         
+        name = "AutoGen v2 Multi-Agent GroupChat"
+        
         def __init__(self, config: Optional[Dict[str, Any]] = None):
             """Initialize the AutoGen v2 adapter."""
             if not AUTOGEN_AVAILABLE:
@@ -949,6 +951,8 @@ else:
     # Fallback class when AutoGen v2 is not available
     class AutoGenV2Adapter(AgentAdapter):
         """Fallback AutoGen v2 adapter when AutoGen v2 is not available."""
+        
+        name = "AutoGen v2 Multi-Agent GroupChat"
         
         def __init__(self, config: Optional[Dict[str, Any]] = None):
             raise ImportError("AutoGen v2 is not available. Install with: pip install autogen-agentchat")

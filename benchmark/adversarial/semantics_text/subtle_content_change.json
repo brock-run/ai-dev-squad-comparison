@@ -1,0 +1,24 @@
+{
+  "test_id": "adv_sem_001",
+  "description": "Subtle content change - should NOT be equivalent",
+  "mismatch_type": "semantics_text", 
+  "expected_resolution": "not_equivalent",
+  "golden": {
+    "content": "The service is available 24/7 with 99.9% uptime guarantee.",
+    "hash": "sha256:golden_adv_001"
+  },
+  "candidate": {
+    "content": "The service is available 24/7 with 99.5% uptime guarantee.",
+    "hash": "sha256:candidate_adv_001"
+  },
+  "semantic_similarity_score": 0.95,
+  "expected_confidence": 0.80,
+  "adversarial_type": "numeric_precision_change",
+  "test_assertions": [
+    "high_similarity_but_not_equivalent",
+    "factual_difference_detected",
+    "numeric_value_change"
+  ],
+  "false_positive_risk": "high",
+  "notes": "Tests ability to detect meaningful numeric differences despite high similarity"
+}

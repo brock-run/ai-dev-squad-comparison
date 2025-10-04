@@ -1,0 +1,617 @@
+{% extends "base.html" %}
+
+{% block title %}AI Dev Squad Dashboard - Consistency Evaluation{% endblock %}
+
+{% block extra_head %}
+<style>
+    .consistency-card {
+        transition: transform 0.2s;
+        border-left: 4px solid #007bff;
+    }
+    .consistency-card:hover {
+        transform: translateY(-2px);
+    }
+    .reliability-high {
+        border-left-color: #28a745;
+    }
+    .reliability-medium {
+        border-left-color: #ffc107;
+    }
+    .reliability-low {
+        border-left-color: #dc3545;
+    }
+    .consensus-pass {
+        color: #28a745;
+        font-weight: bold;
+    }
+    .consensus-fail {
+        color: #dc3545;
+        font-weight: bold;
+    }
+    .variance-indicator {
+        display: inline-block;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        margin-right: 8px;
+    }
+    .variance-low {
+        background-color: #28a745;
+    }
+    .variance-medium {
+        background-color: #ffc107;
+    }
+    .variance-high {
+        background-color: #dc3545;
+    }
+    .chart-container-small {
+        position: relative;
+        height: 300px;
+        margin: 15px 0;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="col-12">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center py-3">
+        <h1>Consistency Evaluation</h1>
+        <div class="text-muted">
+            <small>Self-consistency analysis across multiple runs</small>
+        </div>
+    </div>
+    
+    <!-- Summary Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card metric-card h-100">
+                <div class="card-body text-center">
+                    <h5 class="card-title text-muted">Total Evaluations</h5>
+                    <h2 class="card-text text-primary" id="total-evaluations">-</h2>
+                    <small class="text-muted">Across all frameworks</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card metric-card h-100">
+                <div class="card-body text-center">
+                    <h5 class="card-title text-muted">High Reliability</h5>
+                    <h2 class="card-text text-success" id="high-reliability-count">-</h2>
+                    <small class="text-muted">Score ≥ 0.8</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card metric-card h-100">
+                <div class="card-body text-center">
+                    <h5 class="card-title text-muted">Avg Consensus</h5>
+                    <h2 class="card-text text-info" id="avg-consensus">-</h2>
+                    <small class="text-muted">Confidence level</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card metric-card h-100">
+                <div class="card-body text-center">
+                    <h5 class="card-title text-muted">Avg Variance</h5>
+                    <h2 class="card-text text-warning" id="avg-variance">-</h2>
+                    <small class="text-muted">Coefficient of variation</small>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Framework Reliability Overview -->
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Framework Reliability Scores</h5>
+                </div>
+                <div class="card-body">
+                    <div class="chart-container-small">
+                        <canvas id="reliability-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Reliability Distribution</h5>
+                </div>
+                <div class="card-body">
+                    <div class="chart-container-small">
+                        <canvas id="reliability-distribution-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Consistency Reports List -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="card-title mb-0">Recent Consistency Evaluations</h5>
+                    <button class="btn btn-sm btn-outline-primary" onclick="refreshConsistencyData()">
+                        <i class="fas fa-sync-alt"></i> Refresh
+                    </button>
+                </div>
+                <div class="card-body">
+                    <div id="consistency-reports-container">
+                        <div class="text-center py-4">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <p class="mt-2 text-muted">Loading consistency reports...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Variance Analysis -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Duration Variance by Framework</h5>
+                </div>
+                <div class="card-body">
+                    <div class="chart-container-small">
+                        <canvas id="duration-variance-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Success Rate Confidence Intervals</h5>
+                </div>
+                <div class="card-body">
+                    <div class="chart-container-small">
+                        <canvas id="success-rate-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Consistency Report Modal -->
+<div class="modal fade" id="consistencyReportModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Consistency Report Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="consistency-report-details">
+                <!-- Report details will be loaded here -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="downloadReport()">Download JSON</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Global variables for charts
+let reliabilityChart, reliabilityDistributionChart, durationVarianceChart, successRateChart;
+let currentReportData = null;
+
+// Initialize dashboard
+document.addEventListener('DOMContentLoaded', function() {
+    initializeConsistencyDashboard();
+    loadConsistencyData();
+    
+    // Set up real-time updates
+    setInterval(loadConsistencyData, 30000); // Refresh every 30 seconds
+});
+
+function initializeConsistencyDashboard() {
+    // Initialize charts
+    initializeReliabilityChart();
+    initializeReliabilityDistributionChart();
+    initializeDurationVarianceChart();
+    initializeSuccessRateChart();
+}
+
+function initializeReliabilityChart() {
+    const ctx = document.getElementById('reliability-chart').getContext('2d');
+    reliabilityChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: [],
+            datasets: [{
+                label: 'Reliability Score',
+                data: [],
+                backgroundColor: 'rgba(54, 162, 235, 0.8)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 1.0,
+                    title: {
+                        display: true,
+                        text: 'Reliability Score'
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
+                }
+            }
+        }
+    });
+}
+
+function initializeReliabilityDistributionChart() {
+    const ctx = document.getElementById('reliability-distribution-chart').getContext('2d');
+    reliabilityDistributionChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ['High', 'Medium', 'Low'],
+            datasets: [{
+                data: [0, 0, 0],
+                backgroundColor: [
+                    'rgba(40, 167, 69, 0.8)',
+                    'rgba(255, 193, 7, 0.8)',
+                    'rgba(220, 53, 69, 0.8)'
+                ],
+                borderColor: [
+                    'rgba(40, 167, 69, 1)',
+                    'rgba(255, 193, 7, 1)',
+                    'rgba(220, 53, 69, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }
+    });
+}
+
+function initializeDurationVarianceChart() {
+    const ctx = document.getElementById('duration-variance-chart').getContext('2d');
+    durationVarianceChart = new Chart(ctx, {
+        type: 'scatter',
+        data: {
+            datasets: [{
+                label: 'Duration Variance',
+                data: [],
+                backgroundColor: 'rgba(255, 99, 132, 0.6)',
+                borderColor: 'rgba(255, 99, 132, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Mean Duration (s)'
+                    }
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: 'Coefficient of Variation'
+                    }
+                }
+            }
+        }
+    });
+}
+
+function initializeSuccessRateChart() {
+    const ctx = document.getElementById('success-rate-chart').getContext('2d');
+    successRateChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: [],
+            datasets: [{
+                label: 'Success Rate',
+                data: [],
+                backgroundColor: 'rgba(75, 192, 192, 0.8)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 1.0,
+                    title: {
+                        display: true,
+                        text: 'Success Rate'
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
+                }
+            }
+        }
+    });
+}
+
+function loadConsistencyData() {
+    fetch('/api/consistency/dashboard-data')
+        .then(response => response.json())
+        .then(data => {
+            updateConsistencyMetrics(data);
+            updateConsistencyCharts(data);
+            updateConsistencyReports(data.reports || []);
+        })
+        .catch(error => {
+            console.error('Error loading consistency data:', error);
+            showErrorMessage('Failed to load consistency data');
+        });
+}
+
+function updateConsistencyMetrics(data) {
+    const overview = data.consistency_overview || {};
+    
+    document.getElementById('total-evaluations').textContent = overview.total_evaluations || 0;
+    
+    // Calculate high reliability count
+    const frameworkReliability = data.framework_reliability || {};
+    const highReliabilityCount = Object.values(frameworkReliability)
+        .reduce((count, fw) => count + (fw.high_reliability_tasks || 0), 0);
+    document.getElementById('high-reliability-count').textContent = highReliabilityCount;
+    
+    // Calculate average consensus confidence
+    const reports = data.reports || [];
+    const avgConsensus = reports.length > 0 
+        ? reports.reduce((sum, r) => sum + (r.consensus?.confidence || 0), 0) / reports.length
+        : 0;
+    document.getElementById('avg-consensus').textContent = (avgConsensus * 100).toFixed(1) + '%';
+    
+    // Calculate average variance
+    const avgVariance = reports.length > 0
+        ? reports.reduce((sum, r) => sum + (r.variance?.duration?.coefficient_of_variation || 0), 0) / reports.length
+        : 0;
+    document.getElementById('avg-variance').textContent = avgVariance.toFixed(3);
+}
+
+function updateConsistencyCharts(data) {
+    // Update reliability chart
+    const frameworkReliability = data.framework_reliability || {};
+    const frameworks = Object.keys(frameworkReliability);
+    const reliabilityScores = frameworks.map(fw => frameworkReliability[fw].mean_reliability || 0);
+    
+    reliabilityChart.data.labels = frameworks;
+    reliabilityChart.data.datasets[0].data = reliabilityScores;
+    reliabilityChart.update();
+    
+    // Update reliability distribution chart
+    const totalHigh = Object.values(frameworkReliability).reduce((sum, fw) => sum + (fw.high_reliability_tasks || 0), 0);
+    const totalMedium = Object.values(frameworkReliability).reduce((sum, fw) => sum + (fw.medium_reliability_tasks || 0), 0);
+    const totalLow = Object.values(frameworkReliability).reduce((sum, fw) => sum + (fw.low_reliability_tasks || 0), 0);
+    
+    reliabilityDistributionChart.data.datasets[0].data = [totalHigh, totalMedium, totalLow];
+    reliabilityDistributionChart.update();
+    
+    // Update duration variance chart
+    const violinData = data.violin_plot_data || [];
+    const scatterData = violinData.map(item => ({
+        x: item.mean || 0,
+        y: item.std / item.mean || 0 // Coefficient of variation
+    }));
+    
+    durationVarianceChart.data.datasets[0].data = scatterData;
+    durationVarianceChart.update();
+    
+    // Update success rate chart
+    const confidenceBars = data.confidence_bars || [];
+    const successRateLabels = confidenceBars.map(item => `${item.framework}-${item.task}`);
+    const successRateData = confidenceBars.map(item => item.success_rate || 0);
+    
+    successRateChart.data.labels = successRateLabels;
+    successRateChart.data.datasets[0].data = successRateData;
+    successRateChart.update();
+}
+
+function updateConsistencyReports(reports) {
+    const container = document.getElementById('consistency-reports-container');
+    
+    if (reports.length === 0) {
+        container.innerHTML = `
+            <div class="text-center py-4">
+                <p class="text-muted">No consistency reports available</p>
+                <small class="text-muted">Run consistency evaluations to see reports here</small>
+            </div>
+        `;
+        return;
+    }
+    
+    const reportsHtml = reports.map(report => {
+        const reliabilityClass = getReliabilityClass(report.reliability?.label);
+        const consensusClass = report.consensus?.decision ? 'consensus-pass' : 'consensus-fail';
+        const consensusText = report.consensus?.decision ? 'PASS' : 'FAIL';
+        
+        return `
+            <div class="card consistency-card ${reliabilityClass} mb-3" onclick="showReportDetails('${report.framework}', '${report.task}')">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-md-3">
+                            <h6 class="mb-1">${report.framework}</h6>
+                            <small class="text-muted">${report.task}</small>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="text-center">
+                                <div class="fw-bold ${consensusClass}">${consensusText}</div>
+                                <small class="text-muted">${(report.consensus?.confidence * 100 || 0).toFixed(1)}%</small>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="text-center">
+                                <div class="fw-bold">${report.reliability?.score?.toFixed(3) || 'N/A'}</div>
+                                <small class="text-muted">${report.reliability?.label || 'Unknown'}</small>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="text-center">
+                                <div class="fw-bold">${report.run_summary?.successful_runs || 0}/${report.run_summary?.total_runs || 0}</div>
+                                <small class="text-muted">Success Rate</small>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="text-center">
+                                <div class="fw-bold">${(report.variance?.duration?.coefficient_of_variation || 0).toFixed(3)}</div>
+                                <small class="text-muted">Duration CV</small>
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <small class="text-muted">${formatTimestamp(report.generated_at)}</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+    }).join('');
+    
+    container.innerHTML = reportsHtml;
+}
+
+function getReliabilityClass(label) {
+    switch (label?.toLowerCase()) {
+        case 'high': return 'reliability-high';
+        case 'medium': return 'reliability-medium';
+        case 'low': return 'reliability-low';
+        default: return '';
+    }
+}
+
+function formatTimestamp(timestamp) {
+    if (!timestamp) return 'Unknown';
+    const date = new Date(timestamp);
+    return date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+}
+
+function showReportDetails(framework, task) {
+    // This would fetch and display detailed report information
+    fetch(`/api/consistency/report/${framework}/${task}`)
+        .then(response => response.json())
+        .then(data => {
+            currentReportData = data;
+            displayReportDetails(data);
+            new bootstrap.Modal(document.getElementById('consistencyReportModal')).show();
+        })
+        .catch(error => {
+            console.error('Error loading report details:', error);
+            showErrorMessage('Failed to load report details');
+        });
+}
+
+function displayReportDetails(report) {
+    const detailsContainer = document.getElementById('consistency-report-details');
+    
+    const html = `
+        <div class="row">
+            <div class="col-md-6">
+                <h6>Consensus Analysis</h6>
+                <ul class="list-unstyled">
+                    <li><strong>Decision:</strong> ${report.consensus?.decision ? 'PASS' : 'FAIL'}</li>
+                    <li><strong>Confidence:</strong> ${(report.consensus?.confidence * 100 || 0).toFixed(1)}%</li>
+                    <li><strong>Strategy:</strong> ${report.consensus?.strategy || 'Unknown'}</li>
+                    <li><strong>Pass Votes:</strong> ${report.consensus?.vote_breakdown?.pass_votes || 0}</li>
+                    <li><strong>Fail Votes:</strong> ${report.consensus?.vote_breakdown?.fail_votes || 0}</li>
+                </ul>
+            </div>
+            <div class="col-md-6">
+                <h6>Reliability Assessment</h6>
+                <ul class="list-unstyled">
+                    <li><strong>Score:</strong> ${report.reliability?.score?.toFixed(3) || 'N/A'}</li>
+                    <li><strong>Label:</strong> ${report.reliability?.label || 'Unknown'}</li>
+                    <li><strong>Success Rate:</strong> ${(report.variance?.success_rate?.value * 100 || 0).toFixed(1)}%</li>
+                    <li><strong>Duration CV:</strong> ${(report.variance?.duration?.coefficient_of_variation || 0).toFixed(3)}</li>
+                </ul>
+            </div>
+        </div>
+        <hr>
+        <h6>Individual Runs</h6>
+        <div class="table-responsive">
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th>Run</th>
+                        <th>Success</th>
+                        <th>Verified</th>
+                        <th>Duration</th>
+                        <th>Quality Score</th>
+                        <th>Seed</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${(report.individual_runs || []).map(run => `
+                        <tr>
+                            <td>${run.run_index + 1}</td>
+                            <td><span class="badge ${run.success ? 'bg-success' : 'bg-danger'}">${run.success ? 'Yes' : 'No'}</span></td>
+                            <td><span class="badge ${run.verified_pass ? 'bg-success' : 'bg-danger'}">${run.verified_pass ? 'Pass' : 'Fail'}</span></td>
+                            <td>${run.duration?.toFixed(3) || 'N/A'}s</td>
+                            <td>${run.quality_score?.toFixed(3) || 'N/A'}</td>
+                            <td>${run.seed || 'N/A'}</td>
+                        </tr>
+                    `).join('')}
+                </tbody>
+            </table>
+        </div>
+    `;
+    
+    detailsContainer.innerHTML = html;
+}
+
+function downloadReport() {
+    if (!currentReportData) return;
+    
+    const dataStr = JSON.stringify(currentReportData, null, 2);
+    const dataBlob = new Blob([dataStr], {type: 'application/json'});
+    const url = URL.createObjectURL(dataBlob);
+    
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `consistency_report_${currentReportData.framework}_${currentReportData.task}.json`;
+    link.click();
+    
+    URL.revokeObjectURL(url);
+}
+
+function refreshConsistencyData() {
+    loadConsistencyData();
+}
+
+function showErrorMessage(message) {
+    // Simple error display - could be enhanced with toast notifications
+    console.error(message);
+}
+</script>
+{% endblock %}

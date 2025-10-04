@@ -1,0 +1,154 @@
+groups:
+- name: phase2-judge
+  rules:
+  - alert: Phase2JudgeKappaLow
+    expr: phase2_judge_kappa_overall < 0.8
+    for: 2h
+    labels:
+      severity: warning
+      component: phase2-judge
+    annotations:
+      summary: "Phase 2 Judge Cohen's kappa dropped below threshold"
+      description: "Judge overall kappa is {{ $value | humanize }}, below minimum 0.8"
+      runbook_url: "https://docs.company.com/runbooks/phase2-judge-kappa"
+
+  - alert: Phase2JudgeFPHigh
+    expr: |
+      (
+        increase(phase2_judge_evaluations_total{status="completed"}[24h]) > 0
+      ) and (
+        (
+          increase(phase2_resolution_apply_total{status="error"}[24h]) /
+          increase(phase2_resolution_apply_total[24h])
+        ) > 0.02
+      )
+    for: 2h
+    labels:
+      severity: critical
+      component: phase2-judge
+    annotations:
+      summary: "Phase 2 Judge false positive rate too high"
+      description: "Judge FP rate is {{ $value | humanizePercentage }}, above maximum 2%"
+      runbook_url: "https://docs.company.com/runbooks/phase2-judge-fp"
+
+  - alert: Phase2JudgeCostSpike
+    expr: increase(phase2_judge_cost_usd_sum[1h]) > 10
+    for: 30m
+    labels:
+      severity: warning
+      component: phase2-judge
+    annotations:
+      summary: "Phase 2 Judge cost spike detected"
+      description: "Judge costs increased by ${{ $value | humanize }} in the last hour"
+      runbook_url: "https://docs.company.com/runbooks/phase2-judge-cost"
+
+  - alert: Phase2JudgeLatencyHigh
+    expr: histogram_quantile(0.95, rate(phase2_judge_latency_ms_bucket[5m])) > 8000
+    for: 15m
+    labels:
+      severity: warning
+      component: phase2-judge
+    annotations:
+      summary: "Phase 2 Judge latency P95 high"
+      description: "Judge P95 latency is {{ $value | humanize }}ms, above 8s threshold"
+
+  - alert: Phase2JudgeBudgetDowngrade
+    expr: increase(phase2_judge_budget_downgrade_total[1h]) > 5
+    for: 10m
+    labels:
+      severity: warning
+      component: phase2-judge
+    annotations:
+      summary: "Phase 2 Judge budget downgrades increasing"
+      description: "{{ $value }} budget downgrades in the last hour"
+
+  - alert: Phase2JudgeCacheHitLow
+    expr: phase2_judge_cache_hit_rate{cache_type="memory"} < 0.8
+    for: 24h
+    labels:
+      severity: warning
+      component: phase2-judge
+    annotations:
+      summary: "Phase 2 Judge cache hit rate low"
+      description: "Judge cache hit rate is {{ $value | humanizePercentage }}, below 80%"
+
+  - alert: Phase2JudgeProviderDown
+    expr: |
+      (
+        increase(phase2_judge_evaluations_total{status="failed"}[5m]) > 3
+      ) and (
+        rate(phase2_judge_evaluations_total{status="completed"}[5m]) == 0
+      )
+    for: 5m
+    labels:
+      severity: critical
+      component: phase2-judge
+    annotations:
+      summary: "Phase 2 Judge provider appears down"
+      description: "Multiple judge failures with no successes in 5 minutes"
+      runbook_url: "https://docs.company.com/runbooks/phase2-judge-provider"
+
+- name: phase2-resolution
+  rules:
+  - alert: Phase2ResolutionApplyFailed
+    expr: increase(phase2_resolution_apply_total{status="error"}[1h]) > 10
+    for: 15m
+    labels:
+      severity: critical
+      component: phase2-resolution
+    annotations:
+      summary: "Phase 2 Resolution apply failures increasing"
+      description: "{{ $value }} resolution apply failures in the last hour"
+
+  - alert: Phase2ResolutionRollbackSpike
+    expr: increase(phase2_resolution_rollback_total[1h]) > 5
+    for: 30m
+    labels:
+      severity: warning
+      component: phase2-resolution
+    annotations:
+      summary: "Phase 2 Resolution rollback spike"
+      description: "{{ $value }} rollbacks in the last hour, investigate quality"
+
+  - alert: Phase2ResolutionChecksumFailed
+    expr: increase(phase2_resolution_checksum_validation_total{status="failure"}[1h]) > 2
+    for: 10m
+    labels:
+      severity: critical
+      component: phase2-resolution
+    annotations:
+      summary: "Phase 2 Resolution checksum validation failures"
+      description: "{{ $value }} checksum failures indicate data corruption"
+
+- name: phase2-system
+  rules:
+  - alert: Phase2DatabaseConnectionFailed
+    expr: increase(phase2_db_connection_errors_total[5m]) > 3
+    for: 2m
+    labels:
+      severity: critical
+      component: phase2-database
+    annotations:
+      summary: "Phase 2 Database connection failures"
+      description: "Multiple database connection failures detected"
+
+  - alert: Phase2MismatchQueueBacklog
+    expr: phase2_mismatch_queue_size > 1000
+    for: 30m
+    labels:
+      severity: warning
+      component: phase2-analyzer
+    annotations:
+      summary: "Phase 2 Mismatch queue backlog growing"
+      description: "{{ $value }} items in mismatch processing queue"
+
+  - alert: Phase2PolicyViolation
+    expr: increase(phase2_policy_violations_total[1h]) > 0
+    for: 1m
+    labels:
+      severity: critical
+      component: phase2-safety
+    annotations:
+      summary: "Phase 2 Policy violations detected"
+      description: "{{ $value }} policy violations in the last hour"
+      runbook_url: "https://docs.company.com/runbooks/phase2-policy-violation"

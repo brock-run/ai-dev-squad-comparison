@@ -1,0 +1,105 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/schemas/phase2_mismatch_labels.schema.json",
+  "title": "Phase 2 Mismatch Labels",
+  "type": "object",
+  "required": ["id","artifact_type","mismatch_type","golden","candidate","diff","labels","consensus","provenance","split","created_at_utc"],
+  "properties": {
+    "id": {"type":"string","pattern":"^mis_[a-z0-9]{8}$"},
+    "artifact_type": {"type":"string","enum":["text","json","code"]},
+    "mismatch_type": {
+      "type":"string",
+      "enum": [
+        "whitespace","markdown_formatting","json_ordering","numeric_epsilon",
+        "nondeterminism","semantics_text","semantics_code","policy_violation","infra_env_drift"
+      ]
+    },
+    "golden": {
+      "type":"object",
+      "required":["artifact_id","content_hash","excerpt"],
+      "properties":{
+        "artifact_id":{"type":"string"},
+        "content_hash":{"type":"string"},
+        "excerpt":{"type":"string","maxLength":800}
+      }
+    },
+    "candidate": {
+      "type":"object",
+      "required":["artifact_id","content_hash","excerpt"],
+      "properties":{
+        "artifact_id":{"type":"string"},
+        "content_hash":{"type":"string"},
+        "excerpt":{"type":"string","maxLength":800}
+      }
+    },
+    "phase1_run": {
+      "type":"object",
+      "required":["run_id"],
+      "properties":{
+        "run_id":{"type":"string"},
+        "task_id":{"type":"string"},
+        "seed":{"type":["integer","null"]}
+      }
+    },
+    "diff": {
+      "type":"object",
+      "required":["summary","stats"],
+      "properties":{
+        "summary":{"type":"string","maxLength":2000},
+        "stats":{
+          "type":"object",
+          "required":["chars_added","chars_removed","lines_changed"],
+          "properties":{
+            "chars_added":{"type":"integer","minimum":0},
+            "chars_removed":{"type":"integer","minimum":0},
+            "lines_changed":{"type":"integer","minimum":0}
+          }
+        }
+      }
+    },
+    "labels": {
+      "type":"array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items":{
+        "type":"object",
+        "required":["rater_id","label","confidence","rationale"],
+        "properties":{
+          "rater_id":{"type":"string","pattern":"^r[0-9]{2}$"},
+          "label":{"type":"string","enum":["equivalent","not_equivalent","uncertain"]},
+          "confidence":{"type":"number","minimum":0.0,"maximum":1.0},
+          "rationale":{"type":"string","maxLength":1000},
+          "flags":{
+            "type":"array",
+            "items":{"type":"string","enum":["pii","needs_more_context","invalid_task","tool_error"]},
+            "uniqueItems": true
+          }
+        }
+      }
+    },
+    "consensus": {
+      "type":"object",
+      "required":["label","method","agreement","kappa"],
+      "properties":{
+        "label":{"type":"string","enum":["equivalent","not_equivalent","uncertain","no_consensus"]},
+        "method":{"type":"string","enum":["majority","tie_break_senior","llm_adjudication_disabled"]},
+        "agreement":{"type":"number","minimum":0.0,"maximum":1.0},
+        "kappa":{"type":"number","minimum":-1.0,"maximum":1.0}
+      }
+    },
+    "provenance": {
+      "type":"object",
+      "required":["source","policy_id","eqc_id","version"],
+      "properties":{
+        "source":{"type":"string","enum":["real_world","regression_suite","synthetic_wrap","user_report"]},
+        "policy_id":{"type":"string"},
+        "eqc_id":{"type":"string"},
+        "version":{"type":"string"}
+      }
+    },
+    "split": {"type":"string","enum":["train","dev","test"]},
+    "created_at_utc":{"type":"string","format":"date-time"},
+    "notes":{"type":"string","maxLength":1000}
+  },
+  "additionalProperties": false
+}

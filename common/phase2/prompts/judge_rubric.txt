@@ -1,0 +1,18 @@
+You are an equivalence judge. Decide if TARGET is semantically equivalent to SOURCE.
+
+Rules:
+- Ignore formatting, ordering, markdown cosmetics.
+- Preserve facts, units, and constraints. If any fact changes, it's NOT equivalent.
+- For code: equivalence means same behavior; ignore whitespace/comment changes.
+
+Return ONLY this JSON:
+{"equivalent": <true|false>, "confidence": <0..1>, "reasoning": "<<=180 chars>", "violations": ["<short keywords>"]}
+
+SOURCE:
+<<<
+{SOURCE_TEXT}
+>>>
+TARGET:
+<<<
+{TARGET_TEXT}
+>>>

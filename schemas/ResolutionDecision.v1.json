@@ -1,0 +1,120 @@
+{
+  "type": "object",
+  "required": [
+    "id",
+    "ts",
+    "run_id",
+    "mismatch_id",
+    "plan_id",
+    "action",
+    "user",
+    "decision",
+    "env",
+    "config_fingerprint",
+    "transform",
+    "hashes"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique decision event ID"
+    },
+    "ts": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Decision timestamp"
+    },
+    "run_id": {
+      "type": "string",
+      "description": "Replay run ID"
+    },
+    "env": {
+      "type": "string",
+      "enum": ["development", "staging", "production"],
+      "description": "Environment where decision was made"
+    },
+    "mismatch_id": {
+      "type": "string",
+      "description": "ID of the mismatch being resolved"
+    },
+    "plan_id": {
+      "type": "string",
+      "description": "ID of the resolution plan"
+    },
+    "action": {
+      "type": "string",
+      "description": "Type of resolution action"
+    },
+    "decision": {
+      "type": "string",
+      "enum": ["approve", "modify", "reject", "skip", "auto-approve"],
+      "description": "User's decision on the resolution"
+    },
+    "reason": {
+      "type": "string",
+      "description": "User's reasoning for the decision"
+    },
+    "user": {
+      "type": "object",
+      "required": ["id"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "User identifier"
+        },
+        "role": {
+          "type": "string",
+          "description": "User role (optional)"
+        }
+      },
+      "description": "User who made the decision"
+    },
+    "ui": {
+      "type": "object",
+      "properties": {
+        "rich": {
+          "type": "boolean",
+          "description": "Whether rich terminal UI was used"
+        },
+        "version": {
+          "type": "string",
+          "description": "CLI version"
+        }
+      },
+      "description": "UI context information"
+    },
+    "config_fingerprint": {
+      "type": "string",
+      "description": "Hash of configuration used"
+    },
+    "transform": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Transform identifier"
+        },
+        "idempotent": {
+          "type": "boolean",
+          "description": "Whether transform is idempotent"
+        }
+      },
+      "description": "Transform information"
+    },
+    "hashes": {
+      "type": "object",
+      "properties": {
+        "before": {
+          "type": "string",
+          "description": "Hash of content before transformation"
+        },
+        "after": {
+          "type": "string",
+          "description": "Hash of content after transformation"
+        }
+      },
+      "description": "Content hashes for rollback verification"
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

@@ -636,6 +636,98 @@ class EnhancedDashboard:
         def cost_analysis_page():
             """Cost analysis page."""
             return render_template('cost_analysis.html')
+        
+        @self.app.route('/consistency')
+        def consistency_page():
+            """Consistency evaluation page."""
+            return render_template('consistency.html')
+        
+        @self.app.route('/api/consistency/dashboard-data')
+        def get_consistency_dashboard_data():
+            """Get consistency dashboard data API endpoint."""
+            try:
+                # Import consistency modules
+                from benchmark.consistency.consistency_reporter import ConsistencyReporter
+                
+                # Load consistency reports from the comparison-results directory
+                consistency_dir = Path("comparison-results/consistency")
+                if not consistency_dir.exists():
+                    return jsonify({
+                        "consistency_overview": {
+                            "total_evaluations": 0,
+                            "frameworks": [],
+                            "tasks": []
+                        },
+                        "framework_reliability": {},
+                        "reports": []
+                    })
+                
+                # Find all consistency report files
+                report_files = list(consistency_dir.glob("consistency_*.json"))
+                reports = []
+                
+                for report_file in report_files:
+                    try:
+                        with open(report_file) as f:
+                            report_data = json.load(f)
+                            reports.append(report_data)
+                    except Exception as e:
+                        logger.warning(f"Failed to load consistency report {report_file}: {e}")
+                
+                # Generate dashboard data
+                reporter = ConsistencyReporter()
+                dashboard_data = reporter.generate_dashboard_data(reports)
+                dashboard_data["reports"] = reports  # Include raw reports for detailed view
+                
+                return jsonify(dashboard_data)
+                
+            except ImportError:
+                return jsonify({
+                    "error": "Consistency evaluation modules not available",
+                    "consistency_overview": {"total_evaluations": 0},
+                    "framework_reliability": {},
+                    "reports": []
+                })
+            except Exception as e:
+                logger.error(f"Error generating consistency dashboard data: {e}")
+                return jsonify({
+                    "error": str(e),
+                    "consistency_overview": {"total_evaluations": 0},
+                    "framework_reliability": {},
+                    "reports": []
+                })
+        
+        @self.app.route('/api/consistency/report/<framework>/<task>')
+        def get_consistency_report_details(framework, task):
+            """Get detailed consistency report for a specific framework and task."""
+            try:
+                # Find the most recent report for this framework/task combination
+                consistency_dir = Path("comparison-results/consistency")
+                if not consistency_dir.exists():
+                    return jsonify({"error": "No consistency reports found"})
+                
+                # Look for reports matching the framework and task
+                matching_reports = []
+                for report_file in consistency_dir.glob("consistency_*.json"):
+                    try:
+                        with open(report_file) as f:
+                            report_data = json.load(f)
+                            if (report_data.get("framework") == framework and 
+                                report_data.get("task") == task):
+                                matching_reports.append((report_file, report_data))
+                    except Exception as e:
+                        logger.warning(f"Failed to load report {report_file}: {e}")
+                
+                if not matching_reports:
+                    return jsonify({"error": f"No reports found for {framework}/{task}"})
+                
+                # Return the most recent report (sort by filename which includes timestamp)
+                matching_reports.sort(key=lambda x: x[0].name, reverse=True)
+                return jsonify(matching_reports[0][1])
+                
+            except Exception as e:
+                logger.error(f"Error loading consistency report details: {e}")
+                return jsonify({"error": str(e)})
     
     def _setup_socketio_events(self):
         """Setup SocketIO events for real-time updates."""

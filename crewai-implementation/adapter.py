@@ -214,6 +214,8 @@ class CrewAIAdapter(AgentAdapter):
     safety controls, VCS workflows, and comprehensive telemetry.
     """
     
+    name = "CrewAI Multi-Agent Squad"
+    
     def __init__(self, config: Optional[Dict[str, Any]] = None):
         """Initialize the CrewAI adapter."""
         if not CREWAI_AVAILABLE:

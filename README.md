@@ -82,6 +82,17 @@ For a complete setup guide including observability configuration, see the [Getti
    # Visit http://localhost:8080 for the dashboard
    ```
 
+4. **Run Consistency Evaluation** (assess reliability):
+   ```bash
+   # Quick consistency check
+   make consistency F=langgraph T=simple_code_generation
+   
+   # View results in dashboard
+   make dashboard  # Navigate to /consistency tab
+   
+   # See quick reference for more options
+   ```
+
 ### Prerequisites
 
 - Python 3.8+ for Python-based implementations
@@ -180,35 +191,82 @@ messages = [
 response = architect.chat(messages)
 ```
 
-## Benchmarking
+## Benchmarking and Verification
 
-The project includes a comprehensive benchmarking suite to compare the performance of different implementations.
+The project includes comprehensive benchmarking and verification systems for evaluating AI agent frameworks across multiple dimensions.
 
-### Running Benchmarks
+### Benchmarking System
+
+The benchmarking system provides framework-agnostic evaluation across performance, quality, cost, and reliability metrics:
+
+```python
+from common.benchmarking import run_quick_benchmark, create_comprehensive_benchmark_suite
+
+# Quick benchmark comparison
+frameworks = ["langgraph", "crewai", "haystack"]
+results = run_quick_benchmark(frameworks)
+
+# Comprehensive evaluation
+suite = create_comprehensive_benchmark_suite(frameworks)
+# Includes coding, architecture, testing, and debugging tasks
+```
+
+**Key Features:**
+- **Multi-dimensional evaluation**: Performance, quality, cost, reliability
+- **Flexible task definitions**: Coding, architecture, testing, debugging, documentation
+- **Comprehensive reporting**: Rankings, recommendations, outlier detection
+- **Integration with observability**: Cost tracking, telemetry, caching
+
+### Code Verification System
+
+The verification system ensures code quality through multi-layered analysis:
+
+```python
+from benchmark.verifier import verify_function_complete, verify_code_strict
+
+# Function verification with test cases
+result = verify_function_complete(code, "factorial", test_cases, "recursion")
+
+# Comprehensive verification (functional, static, semantic)
+result = verify_code_strict(code, test_code=test_code, expected_functions=["main"])
+```
+
+**Verification Layers:**
+- **Functional Testing**: Automated test execution with multiple frameworks
+- **Static Analysis**: Linting, type checking, security scanning
+- **Semantic Verification**: Logic correctness, algorithm verification, behavioral testing
+
+### Running Benchmarks and Verification
 
 ```bash
-# Install benchmark dependencies
-cd benchmark
+# Install dependencies
 pip install -r requirements.txt
 
-# Run benchmarks for a specific framework
-python benchmark_suite.py langgraph langgraph-implementation
+# Run benchmarking demo
+python examples/benchmarking_demo.py
 
-# Run benchmarks for all frameworks
-python benchmark_suite.py --all
+# Run verification demo
+python examples/verification_demo.py
+
+# Run comprehensive tests
+python -m pytest tests/test_benchmarking.py tests/test_verification_system.py -v
 ```
 
 ### Viewing Results
 
-The benchmark results are stored in the `comparison-results` directory. You can view them using the dashboard:
+Access results through the enhanced dashboard:
 
 ```bash
 cd comparison-results
-pip install -r requirements.txt
 python dashboard.py
+# Open http://localhost:8050 for benchmarking results
+# Open http://localhost:8080 for observability dashboard
 ```
 
-Then open your browser to http://localhost:8050 to view the dashboard.
+For detailed guides, see:
+- [Benchmarking User Guide](docs/guides/benchmarking-user-guide.md)
+- [Verification User Guide](docs/guides/verification-user-guide.md)
+- [Developer Guides](docs/guides/) for customization and extension
 
 ## Testing
 
@@ -249,6 +307,19 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 This repository provides a practical, apples-to-apples comparison of multiple AI agent orchestration frameworks for software development squads. Here is what is implemented today and what is planned next.
 
 ### Implemented Capabilities (current state)
+- **Comprehensive Benchmarking and Verification System**:
+  - Multi-dimensional framework benchmarking (performance, quality, cost, reliability)
+  - Advanced code verification with functional testing, static analysis, and semantic verification
+  - Flexible task definitions for coding, architecture, testing, and debugging scenarios
+  - Comprehensive reporting with rankings, recommendations, and outlier detection
+  - See [Benchmarking User Guide](docs/guides/benchmarking-user-guide.md) and [Verification User Guide](docs/guides/verification-user-guide.md)
+- **Self-Consistency Evaluation System**:
+  - Multi-run reliability assessment with parallel execution
+  - Multiple consensus strategies (majority, weighted, unanimous, threshold, best-of-n)
+  - Comprehensive variance analysis (duration, tokens, quality scores)
+  - Production readiness scoring with reliability labels (High/Medium/Low)
+  - Dashboard integration with interactive visualizations and CI/CD support
+  - See [Consistency User Guide](docs/guides/consistency-user-guide.md) and [Quick Reference](docs/consistency-quick-reference.md)
 - **Comprehensive Observability System**:
   - Structured logging with JSON Lines format and event filtering
   - OpenTelemetry distributed tracing for agent operations

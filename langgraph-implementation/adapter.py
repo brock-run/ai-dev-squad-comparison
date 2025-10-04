@@ -68,6 +68,8 @@ class LangGraphAdapter(AgentAdapter):
     through a state graph workflow with integrated safety controls and VCS operations.
     """
     
+    name = "LangGraph Multi-Agent Squad"
+    
     def __init__(self, config: Optional[Dict[str, Any]] = None):
         """Initialize the LangGraph adapter."""
         if not LANGGRAPH_AVAILABLE:

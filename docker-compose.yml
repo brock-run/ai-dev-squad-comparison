@@ -1,0 +1,50 @@
+version: "3.9"
+
+volumes:
+  ollama: {}
+
+services:
+  ollama:
+    image: ollama/ollama:latest
+    restart: unless-stopped
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama:/root/.ollama
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:11434/api/tags"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+
+  jaeger:
+    image: jaegertracing/all-in-one:1.57
+    restart: unless-stopped
+    ports:
+      - "16686:16686"   # UI
+      - "4317:4317"     # OTel gRPC
+
+  runner:
+    image: python:3.11-slim
+    profiles: ["smoke"]
+    working_dir: /app
+    environment:
+      AI_DEV_SQUAD_OLLAMA_BASE_URL: http://ollama:11434
+      AI_DEV_SQUAD_OTEL_EXPORTER_ENDPOINT: http://jaeger:4317
+    volumes:
+      - ./:/app
+    depends_on:
+      ollama:
+        condition: service_healthy
+    command: bash scripts/smoke.sh
+
+  n8n:
+    image: n8nio/n8n:latest
+    profiles: ["n8n"]
+    environment:
+      - N8N_HOST=localhost
+      - N8N_PORT=5678
+    ports:
+      - "5678:5678"
+    volumes:
+      - ./.n8n_data:/home/node/.n8n

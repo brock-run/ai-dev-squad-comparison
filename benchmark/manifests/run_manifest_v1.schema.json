@@ -1,0 +1,251 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ai-dev-squad.com/schemas/run_manifest_v1.schema.json",
+  "title": "Phase 2 Run Manifest v1",
+  "description": "Provenance and traceability contract for Phase 2 AI operations",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "run_id", 
+    "environment",
+    "budgets",
+    "artifacts",
+    "costs",
+    "created_at"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "1"
+    },
+    "run_id": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$"
+    },
+    "environment": {
+      "type": "object",
+      "required": ["git_sha", "python_version", "platform"],
+      "properties": {
+        "git_sha": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{40}$"
+        },
+        "python_version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$"
+        },
+        "platform": {
+          "type": "string",
+          "enum": ["linux", "darwin", "windows"]
+        },
+        "hostname": {
+          "type": "string"
+        },
+        "user": {
+          "type": "string"
+        }
+      }
+    },
+    "budgets": {
+      "type": "object",
+      "required": ["analyze_usd_per_100kb", "judge_usd_per_1k_tokens", "resolve_ms"],
+      "properties": {
+        "analyze_usd_per_100kb": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1.0
+        },
+        "judge_usd_per_1k_tokens": {
+          "type": "number", 
+          "minimum": 0,
+          "maximum": 0.1
+        },
+        "resolve_ms": {
+          "type": "integer",
+          "minimum": 100,
+          "maximum": 30000
+        },
+        "daily_total_usd": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1000.0
+        }
+      }
+    },
+    "artifacts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "type", "hash"],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["text", "json", "code", "binary"]
+          },
+          "hash": {
+            "type": "string",
+            "pattern": "^sha256:[a-f0-9]{64}$"
+          },
+          "size_bytes": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "encoding": {
+            "type": "string",
+            "default": "utf-8"
+          }
+        }
+      }
+    },
+    "costs": {
+      "type": "object",
+      "required": ["prompt_tokens", "completion_tokens", "usd_total"],
+      "properties": {
+        "prompt_tokens": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "completion_tokens": {
+          "type": "integer", 
+          "minimum": 0
+        },
+        "embedding_tokens": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "usd_total": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1000.0
+        },
+        "usd_breakdown": {
+          "type": "object",
+          "properties": {
+            "llm_calls": {"type": "number", "minimum": 0},
+            "embeddings": {"type": "number", "minimum": 0},
+            "analysis": {"type": "number", "minimum": 0},
+            "resolution": {"type": "number", "minimum": 0}
+          }
+        }
+      }
+    },
+    "models": {
+      "type": "object",
+      "properties": {
+        "llm": {
+          "type": "string"
+        },
+        "embedding": {
+          "type": "string"
+        },
+        "versions": {
+          "type": "object",
+          "additionalProperties": {"type": "string"}
+        }
+      }
+    },
+    "seeds": {
+      "type": "object",
+      "properties": {
+        "primary": {
+          "type": "integer"
+        },
+        "analysis": {
+          "type": "integer"
+        },
+        "resolution": {
+          "type": "integer"
+        }
+      }
+    },
+    "timing": {
+      "type": "object",
+      "properties": {
+        "started_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "completed_at": {
+          "type": "string", 
+          "format": "date-time"
+        },
+        "duration_ms": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "phase_durations": {
+          "type": "object",
+          "properties": {
+            "analysis_ms": {"type": "integer", "minimum": 0},
+            "resolution_ms": {"type": "integer", "minimum": 0},
+            "validation_ms": {"type": "integer", "minimum": 0}
+          }
+        }
+      }
+    },
+    "policy": {
+      "type": "object",
+      "properties": {
+        "policy_id": {
+          "type": "string"
+        },
+        "policy_version": {
+          "type": "string"
+        },
+        "safety_level": {
+          "type": "string",
+          "enum": ["experimental", "advisory", "automatic"]
+        },
+        "auto_resolve_enabled": {
+          "type": "boolean"
+        }
+      }
+    },
+    "results": {
+      "type": "object",
+      "properties": {
+        "mismatches_detected": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "mismatches_resolved": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "auto_resolution_rate": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "average_confidence": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        }
+      }
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "operator": {
+          "type": "string"
+        },
+        "purpose": {
+          "type": "string"
+        },
+        "tags": {
+          "type": "array",
+          "items": {"type": "string"}
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}

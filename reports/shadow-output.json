@@ -1,0 +1,81 @@
+{
+  "summary": {
+    "total_items": 8,
+    "successful_evaluations": 8,
+    "failed_evaluations": 0,
+    "kappa_overall": 0.667,
+    "method_stats": {
+      "exact": {
+        "total_evaluations": 8,
+        "equivalent_rate": 0.25,
+        "avg_confidence": 0.25,
+        "avg_cost_usd": 0.0,
+        "avg_latency_ms": 0.0
+      },
+      "cosine_similarity": {
+        "total_evaluations": 8,
+        "equivalent_rate": 0.625,
+        "avg_confidence": 0.71,
+        "avg_cost_usd": 0.001,
+        "avg_latency_ms": 1.0
+      },
+      "canonical_json": {
+        "total_evaluations": 8,
+        "equivalent_rate": 0.125,
+        "avg_confidence": 0.13,
+        "avg_cost_usd": 0.0,
+        "avg_latency_ms": 0.0
+      }
+    },
+    "agreement_stats": {
+      "pairwise_agreement_rate": 0.583
+    },
+    "total_cost_usd": 0.008,
+    "total_latency_ms": 8.0,
+    "avg_latency_ms": 1.0,
+    "timestamp": "2025-10-03T03:30:00.000000+00:00",
+    "shadow_soak_duration_hours": 0.5,
+    "config": {
+      "llm": {"provider": "mock"},
+      "embedding": {"provider": "mock"},
+      "budgets": {
+        "max_cost_usd": 0.1,
+        "max_latency_ms": 5000,
+        "max_tokens_per_request": 8000
+      }
+    }
+  },
+  "results": [
+    {
+      "id": "shadow_test_1",
+      "artifact_type": "text",
+      "ground_truth": true,
+      "evaluation": {
+        "status": "completed",
+        "results": [
+          {
+            "method": "exact",
+            "equivalent": true,
+            "confidence": 1.0,
+            "cost": 0.0,
+            "latency_ms": 0
+          },
+          {
+            "method": "cosine_similarity", 
+            "equivalent": true,
+            "confidence": 0.95,
+            "cost": 0.001,
+            "latency_ms": 1
+          }
+        ]
+      }
+    }
+  ],
+  "monitoring": {
+    "start_time": "2025-10-03T03:00:00.000000+00:00",
+    "last_update": "2025-10-03T03:30:00.000000+00:00",
+    "total_evaluations": 8,
+    "error_rate": 0.0,
+    "performance_stable": true
+  }
+}

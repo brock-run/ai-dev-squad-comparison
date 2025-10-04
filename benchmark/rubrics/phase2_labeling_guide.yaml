@@ -1,0 +1,50 @@
+version: 1
+artifact_types:
+  text:
+    decision_labels: [equivalent, not_equivalent, uncertain]
+    primary_tests:
+      - name: cosine_similarity
+        threshold: 0.86
+      - name: rubric_checklist
+        rubric:
+          - preserves_facts: true
+          - preserves_instructions: true
+          - formatting_differences_only: allowed
+    notes: |
+      Prefer "equivalent" if differences are purely formatting/ordering and do not change meaning.
+  code:
+    decision_labels: [equivalent, not_equivalent, uncertain]
+    primary_tests:
+      - name: ast_normalized_diff_empty
+      - name: tests_pass
+    disallow:
+      - behavioral_change_without_justification
+    notes: |
+      If tests unavailable, rely on AST + strong rationale. Use "uncertain" instead of guessing.
+  json:
+    decision_labels: [equivalent, not_equivalent, uncertain]
+    primary_tests:
+      - name: canonical_equality
+      - name: numeric_tolerance
+        epsilon: 1e-6
+mismatch_types:
+  whitespace: {auto_equivalent_hint: true}
+  markdown_formatting: {auto_equivalent_hint: true}
+  json_ordering: {canonicalizable: true}
+  numeric_epsilon: {epsilon: 1e-6}
+  nondeterminism: {examples: ["timestamps", "uuids", "unordered_sets"]}
+  semantics_text: {requires_rationale: true}
+  semantics_code: {requires_tests_if_available: true}
+  policy_violation: {route_to_security: true}
+  infra_env_drift: {route_to_ops: true}
+labeling_protocol:
+  raters: 3
+  blinding: "Raters cannot see others' labels."
+  timebox_minutes: 5
+  conflict_resolution: "Majority wins; on 1-1-1 or 1-2-0 with low confidence -> senior adjudication outside dataset (do not overwrite labels)."
+  quality_controls:
+    gold_checks_per_rater: 10
+    min_confidence_mean: 0.6
+    allowed_uncertain_rate: 0.15
+privacy:
+  pii_redaction: "Mask emails, names, secrets before labeling."

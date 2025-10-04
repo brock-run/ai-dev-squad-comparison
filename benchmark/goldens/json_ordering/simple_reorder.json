@@ -1,0 +1,21 @@
+{
+  "test_id": "json_001",
+  "description": "Simple key reordering",
+  "mismatch_type": "json_ordering",
+  "expected_resolution": "equivalent",
+  "golden": {
+    "content": "{\"name\": \"Alice\", \"age\": 30, \"city\": \"NYC\"}",
+    "hash": "sha256:golden_001"
+  },
+  "candidate": {
+    "content": "{\"age\": 30, \"city\": \"NYC\", \"name\": \"Alice\"}",
+    "hash": "sha256:candidate_001"
+  },
+  "canonical_form": "{\"age\":30,\"city\":\"NYC\",\"name\":\"Alice\"}",
+  "expected_confidence": 0.98,
+  "test_assertions": [
+    "canonical_json_equal",
+    "no_value_changes",
+    "key_order_only_difference"
+  ]
+}

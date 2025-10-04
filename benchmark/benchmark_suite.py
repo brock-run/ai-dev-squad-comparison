@@ -20,6 +20,17 @@ from typing import Dict, List, Any, Optional, Callable
 from datetime import datetime
 from pathlib import Path
 
+# Consistency evaluation imports (Week 2, Day 3)
+try:
+    from .consistency.multi_run_executor import MultiRunExecutor, ConsistencyRunConfig
+    from .consistency.consensus_analyzer import ConsensusAnalyzer, ConsensusStrategy
+    from .consistency.variance_calculator import VarianceCalculator
+    from .consistency.consistency_reporter import ConsistencyReporter
+    CONSISTENCY_AVAILABLE = True
+except ImportError as e:
+    logger.warning(f"Consistency evaluation modules not available: {e}")
+    CONSISTENCY_AVAILABLE = False
+
 # Configure logging
 logging.basicConfig(
     level=logging.INFO,
@@ -665,6 +676,128 @@ class BenchmarkSuite:
         logger.info(f"Visualizations saved to {os.path.join(self.output_dir, 'visualizations')}")
 
 
+async def run_consistency_evaluation(args, task_config: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+    """
+    Run consistency evaluation for a given task configuration.
+    
+    Args:
+        args: Parsed command line arguments
+        task_config: Task configuration dictionary
+        
+    Returns:
+        Consistency evaluation results or None if disabled/failed
+    """
+    if not args.consistency:
+        return None
+    
+    if not CONSISTENCY_AVAILABLE:
+        logger.error("Consistency evaluation requested but modules not available")
+        return None
+    
+    logger.info(f"Starting consistency evaluation with {args.consistency_runs} runs")
+    
+    # Parse seeds if provided
+    seeds = None
+    if args.consistency_seeds:
+        try:
+            seeds = [int(s.strip()) for s in args.consistency_seeds.split(',')]
+            if len(seeds) != args.consistency_runs:
+                logger.warning(f"Number of seeds ({len(seeds)}) doesn't match runs ({args.consistency_runs})")
+                seeds = None
+        except ValueError as e:
+            logger.error(f"Invalid seeds format: {e}")
+            seeds = None
+    
+    # Create consistency run configuration
+    from common.config import SeedConfig
+    seed_config = SeedConfig(base_seed=42, deterministic=True) if not seeds else None
+    
+    consistency_config = ConsistencyRunConfig(
+        task_config=task_config,
+        adapter_name=args.framework,
+        num_runs=args.consistency_runs,
+        seed_config=seed_config,
+        parallel=args.consistency_parallel,
+        output_dir=Path(args.output_dir) / "consistency"
+    )
+    
+    if seeds:
+        consistency_config.seeds = seeds
+    
+    # Execute multiple runs
+    executor = MultiRunExecutor(consistency_config)
+    try:
+        run_results = await executor.execute_runs()
+        logger.info(f"Completed {len(run_results)} consistency runs")
+        
+        # Convert run results to format expected by analyzers
+        formatted_results = []
+        for run_result in run_results:
+            if run_result.benchmark_result:
+                formatted_results.append(run_result.to_dict())
+        
+        if not formatted_results:
+            logger.error("No successful runs for consistency analysis")
+            return None
+        
+        # Perform consensus analysis
+        consensus_strategy = ConsensusStrategy(args.consistency_strategy)
+        consensus_analyzer = ConsensusAnalyzer(
+            strategy=consensus_strategy,
+            threshold=args.consistency_threshold
+        )
+        consensus_result = consensus_analyzer.analyze_consensus(formatted_results)
+        
+        # Calculate variance metrics
+        variance_calculator = VarianceCalculator()
+        # Convert to BenchmarkResult objects for variance calculator
+        benchmark_results = [r.benchmark_result for r in run_results if r.benchmark_result]
+        variance_metrics = variance_calculator.calculate_variance_metrics(benchmark_results)
+        
+        # Calculate reliability score
+        reliability_data = consensus_analyzer.calculate_reliability_score(formatted_results)
+        
+        # Generate consistency report
+        if args.consistency_report:
+            reporter = ConsistencyReporter(output_dir=Path(args.output_dir))
+            report = reporter.generate_consistency_report(
+                framework=args.framework,
+                task=task_config.get('name', 'unknown'),
+                results=benchmark_results,
+                consensus_result=consensus_result,
+                variance_metrics=variance_metrics,
+                reliability_data=reliability_data,
+                configuration={
+                    'runs': args.consistency_runs,
+                    'strategy': args.consistency_strategy,
+                    'threshold': args.consistency_threshold,
+                    'parallel': args.consistency_parallel,
+                    'seeds': consistency_config.seeds
+                }
+            )
+            
+            # Write report to file
+            report_file = reporter.write_consistency_report(
+                framework=args.framework,
+                task=task_config.get('name', 'unknown'),
+                report=report
+            )
+            logger.info(f"Consistency report written to {report_file}")
+            
+            return report
+        
+        return {
+            'consensus': consensus_result.to_dict(),
+            'variance': variance_metrics.__dict__,
+            'reliability': reliability_data,
+            'run_summary': executor.get_execution_summary()
+        }
+        
+    except Exception as e:
+        logger.error(f"Consistency evaluation failed: {e}")
+        return None
+
+
 def main():
     """Main function to run the benchmark suite from the command line."""
     parser = argparse.ArgumentParser(description="AI Dev Squad Benchmark Suite")
@@ -675,6 +808,26 @@ def main():
     parser.add_argument("--format", choices=["markdown", "json", "html"], default="markdown", help="Output format for the report")
     parser.add_argument("--visualize", action="store_true", help="Generate visualizations")
     
+    # Consistency evaluation flags (Week 2, Day 3)
+    parser.add_argument("--consistency", action="store_true", 
+                       help="Enable self-consistency evaluation with multiple runs")
+    parser.add_argument("--consistency-runs", type=int, default=5, metavar="N",
+                       help="Number of runs for consistency evaluation (default: 5)")
+    parser.add_argument("--consistency-strategy", choices=["majority", "weighted", "unanimous", "threshold", "best_of_n"], 
+                       default="majority", help="Consensus strategy for consistency evaluation (default: majority)")
+    parser.add_argument("--consistency-threshold", type=float, default=0.6, metavar="FLOAT",
+                       help="Threshold for consensus when using threshold strategy (default: 0.6)")
+    parser.add_argument("--consistency-parallel", action="store_true", default=True,
+                       help="Run consistency evaluation in parallel (default: True)")
+    parser.add_argument("--consistency-no-parallel", dest="consistency_parallel", action="store_false",
+                       help="Disable parallel execution for consistency evaluation")
+    parser.add_argument("--consistency-seeds", type=str, metavar="SEEDS",
+                       help="Comma-separated list of seeds for deterministic runs (e.g., '42,123,456')")
+    parser.add_argument("--consistency-report", action="store_true", default=True,
+                       help="Generate consistency report (default: True)")
+    parser.add_argument("--consistency-no-report", dest="consistency_report", action="store_false",
+                       help="Skip consistency report generation")
+    
     args = parser.parse_args()
     
     logger.info(f"Benchmarking {args.framework} implementation")
@@ -682,6 +835,38 @@ def main():
     # This is a placeholder - in a real implementation, we would dynamically load
     # the framework-specific implementation functions
     logger.warning("This is a placeholder implementation. In a real scenario, you would need to implement framework-specific functions.")
+    
+    # Consistency evaluation example
+    if args.consistency:
+        logger.info("Consistency evaluation enabled - this would run multiple benchmark iterations")
+        logger.info(f"Configuration: {args.consistency_runs} runs, {args.consistency_strategy} strategy")
+        if args.consistency_parallel:
+            logger.info("Parallel execution enabled")
+        if args.consistency_seeds:
+            logger.info(f"Using custom seeds: {args.consistency_seeds}")
+        
+        # In a real implementation, this would call run_consistency_evaluation()
+        # with the actual task configuration
+        """
+        import asyncio
+        
+        # Example task configuration
+        task_config = {
+            'name': args.task or 'simple_code_generation',
+            'description': 'Example task for consistency evaluation',
+            'requirements': ['Generate working code', 'Include error handling']
+        }
+        
+        # Run consistency evaluation
+        consistency_results = asyncio.run(run_consistency_evaluation(args, task_config))
+        
+        if consistency_results:
+            logger.info("Consistency evaluation completed successfully")
+            logger.info(f"Consensus decision: {consistency_results.get('consensus', {}).get('consensus_decision', 'Unknown')}")
+            logger.info(f"Reliability score: {consistency_results.get('reliability', {}).get('reliability_score', 'Unknown')}")
+        else:
+            logger.error("Consistency evaluation failed")
+        """
     
     # Example of how this might be used:
     """

@@ -164,6 +164,8 @@ class SemanticKernelAdapter(AgentAdapter):
     VCS integration, and comprehensive telemetry using Semantic Kernel's plugin architecture.
     """
     
+    name = "Semantic Kernel AI Dev Squad"
+    
     def __init__(self, config: Optional[Dict[str, Any]] = None):
         """Initialize the Semantic Kernel adapter."""
         if not SEMANTIC_KERNEL_AVAILABLE:

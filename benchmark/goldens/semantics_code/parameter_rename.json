@@ -1,0 +1,27 @@
+{
+  "test_id": "sem_code_001", 
+  "description": "Parameter name change - should be equivalent",
+  "mismatch_type": "semantics_code",
+  "expected_resolution": "equivalent",
+  "golden": {
+    "content": "def calculate_total(price, tax_rate):\n    return price * (1 + tax_rate)",
+    "hash": "sha256:golden_code_001"
+  },
+  "candidate": {
+    "content": "def calculate_total(amount, rate):\n    return amount * (1 + rate)",
+    "hash": "sha256:candidate_code_001"
+  },
+  "ast_normalized_equal": true,
+  "expected_confidence": 0.92,
+  "test_assertions": [
+    "ast_normalized_equal",
+    "same_function_signature_arity",
+    "identical_logic_flow"
+  ],
+  "test_execution": {
+    "test_cases": [
+      {"args": [100, 0.1], "expected": 110.0},
+      {"args": [50, 0.05], "expected": 52.5}
+    ]
+  }
+}

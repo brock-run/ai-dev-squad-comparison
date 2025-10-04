@@ -1,0 +1,1 @@
+# Contract tests for AI Dev Squad Enhancement Platform

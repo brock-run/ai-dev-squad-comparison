@@ -1,0 +1,9 @@
+groups:
+- name: phase2_resolution
+  rules:
+  - record: phase2:labels_total
+    expr: sum by (mismatch_type, label) (increase(app_label_decisions_total[1d]))
+  - record: phase2:kappa_overall
+    expr: phase2_kappa_overall  # pushed by CI job (validate_labels.py) via Pushgateway
+  - record: phase2:fp_rate
+    expr: increase(resolutions_false_positive_total[7d]) / increase(resolutions_applied_total[7d])
