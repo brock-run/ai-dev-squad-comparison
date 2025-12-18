@@ -9,8 +9,8 @@
     "test:coverage": "jest --coverage --config jest.config.js"
   },
   "dependencies": {
-    "n8n": "^1.0.0",
-    "n8n-nodes-base": "^1.0.0",
+    "n8n": "^2.0.3",
+    "n8n-nodes-base": "^2.1.1",
     "dotenv": "^16.0.0",
     "axios": "^1.6.0",
     "octokit": "^3.1.0"
